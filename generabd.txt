@@ -1,0 +1,32 @@
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS bdLegado;
+USE bdLegado;
+
+-- Tabla de Rol
+CREATE TABLE rol (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(255)
+);
+
+-- Tabla de Usuario
+CREATE TABLE usuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    apellido_paterno VARCHAR(50),
+    apellido_materno VARCHAR(50),
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    contraseña VARCHAR(255) NOT NULL,
+    genero VARCHAR(20),
+    telefono VARCHAR(20),
+    pais VARCHAR(50) NOT NULL,
+    ciudad VARCHAR(50) NOT NULL,
+    estado BOOLEAN NOT NULL DEFAULT TRUE,
+    id_rol INT,
+    FOREIGN KEY (id_rol) REFERENCES rol(id)
+);
+
+-- Insertar Roles por Defecto
+INSERT INTO rol (nombre, descripcion) VALUES
+('Administrador', 'Acceso completo al sistema'),
+('Usuario', 'Acceso limitado al sistema');
