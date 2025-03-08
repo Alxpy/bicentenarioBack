@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class AuthLoginDTO(BaseModel):
-    correo: str
-    contrasena: str
+    email: str
+    password: str
     
 class AuthLogoutDTO(BaseModel):
     token: str

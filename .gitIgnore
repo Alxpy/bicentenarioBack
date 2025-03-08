@@ -11,3 +11,5 @@ token.pickle
 security
 
 credentials.json
+
+.env

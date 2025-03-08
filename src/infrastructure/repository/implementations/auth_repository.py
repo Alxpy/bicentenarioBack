@@ -18,7 +18,7 @@ class AuthRepository(IAuthRepositoryAbstract):
                 cursor.execute("""
                     SELECT id, id_rol, nombre, correo, contrasena, cantIntentos, estado, email_verified_at, ultimoIntentoFallido
                     FROM usuario WHERE correo = %s
-                """, (auth_login_dto.correo,))
+                """, (auth_login_dto.email,))
                 result = cursor.fetchone()
 
                 if not result:
@@ -38,7 +38,7 @@ class AuthRepository(IAuthRepositoryAbstract):
                                         (result["id"],))
                             self.connection.commit()
 
-                if not bcrypt.checkpw(auth_login_dto.contrasena.encode('utf-8'), result["contrasena"].encode('utf-8')):
+                if not bcrypt.checkpw(auth_login_dto.password.encode('utf-8'), result["contrasena"].encode('utf-8')):
                     
                     cursor.execute("""
                         UPDATE usuario 
