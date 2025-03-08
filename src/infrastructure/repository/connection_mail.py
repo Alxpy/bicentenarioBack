@@ -29,11 +29,12 @@ def authenticate():
     return creds
 
 def get_gmail_service():
-    """Devuelve el servicio Gmail autenticado sin caché de archivo."""
+    
     try:
-        creds = authenticate()  # Llama a tu función de autenticación
-        service = build('gmail', 'v1', credentials=creds, cache_discovery=False)  # Desactiva el caché
+        creds = authenticate() 
+        service = build('gmail', 'v1', credentials=creds, cache_discovery=False) 
         return service
     except HttpError as error:
-        print(f"❌ Error en la conexión con Gmail: {error}")
+        print(f"Error en la conexión con Gmail: {error}")
         return None
+    

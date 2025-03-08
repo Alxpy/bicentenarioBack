@@ -16,4 +16,7 @@ class EmailService(IEmailServiceAbstract):
     async def sendEmail_to_notify_new_login(self, email: EmailDTO) -> bool:
         return await self.email_repository.sendEmail_to_notify_new_login(email)
 
+    
+    async def sendEmail_to_verify_email(self, email: EmailDTO) -> bool:
+        return await self.email_repository.sendEmail_to_verify_email(email)
 

@@ -1,5 +1,4 @@
-
-from src.presentation.dto.auth_dto import AuthLoginDTO, AuthLogoutDTO
+from src.presentation.dto.auth_dto import AuthLoginDTO, AuthLogoutDTO, AuthVerifyCodeDTO
 from src.core.abstractions.infrastructure.repository.auth_repository_abstract import IAuthRepositoryAbstract
 from src.core.abstractions.services.auth_service_abstract import IAuthServiceAbstract
 
@@ -14,7 +13,9 @@ class AuthService(IAuthServiceAbstract):
     
     async def logout(self, auth_logout_dto: AuthLogoutDTO) -> None:
         return await self.auth_repository.logout(auth_logout_dto)
+
+    async def verify_code_login(self, auth_verify: AuthVerifyCodeDTO) -> bool:
+        return await self.auth_repository.verify_code_login(auth_verify)
     
-       
-
-
+    async def verify_code_email(self, auth_verify: AuthVerifyCodeDTO) -> bool:
+        return await self.auth_repository.verify_code_email(auth_verify)

@@ -6,3 +6,7 @@ class AuthLoginDTO(BaseModel):
     
 class AuthLogoutDTO(BaseModel):
     token: str
+
+class AuthVerifyCodeDTO(BaseModel):
+    email: str
+    code: str
