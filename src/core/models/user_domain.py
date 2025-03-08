@@ -1,6 +1,7 @@
 # Domain Model
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 class UsuarioDomain(BaseModel):
     id: Optional[int] = None
@@ -15,6 +16,9 @@ class UsuarioDomain(BaseModel):
     ciudad: str
     estado:int
     id_rol: Optional[int] = None
+    email_verfied_at: datetime
+    codeValidation: Optional[str] = None
+    cantIntentos: Optional[int] = None
 
 
     
