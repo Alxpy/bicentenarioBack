@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from src.core.abstractions.services.auth_service_abstract import IAuthServiceAbstract
 from src.core.dependency_injection.dependency_injection import build_auth_service
-from src.presentation.dto.auth_dto import AuthLoginDTO, AuthLogoutDTO
+from src.presentation.dto.auth_dto import AuthLoginDTO, AuthLogoutDTO, AuthVerifyCodeDTO
 from fastapi.responses import JSONResponse
 
 auth_controller = APIRouter(prefix="/api/v1", tags=["auth"])
@@ -32,3 +32,27 @@ async def logout(auth_logout_dto: AuthLogoutDTO, auth_service: IAuthServiceAbstr
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Error en el logout: {str(e)}"
         )
+
+@auth_controller.get("/verify/{email}/{code}")
+async def verify_code_login(email: str, code: str, auth_service: IAuthServiceAbstract = Depends(build_auth_service)):
+    """
+    Endpoint para verificar el código de autenticación enviado por email.
+    """
+    if await auth_service.verify_code_login(AuthVerifyCodeDTO(email=email, code=code)):
+        return JSONResponse(content={"detail": "Código de autenticación correcto"}, status_code=status.HTTP_200_OK)
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Código de autenticación incorrecto"
+    )
+    
+@auth_controller.get("/verify/email/{email}/{code}")
+async def verify_code_email(email: str, code: str, auth_service: IAuthServiceAbstract = Depends(build_auth_service)):
+    """
+    Endpoint para verificar el código de autenticación enviado por email.
+    """
+    if await auth_service.verify_code_email(AuthVerifyCodeDTO(email=email, code=code)):
+        return JSONResponse(content={"detail": "Código de autenticación correcto"}, status_code=status.HTTP_200_OK)
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Código de autenticación incorrecto"
+    )

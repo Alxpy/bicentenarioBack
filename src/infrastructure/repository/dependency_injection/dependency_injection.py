@@ -1,6 +1,7 @@
 from src.infrastructure.repository.connection import get_connection
 from src.infrastructure.repository.connection_mail import get_gmail_service
 
+
 def get_db_connection():
     connection = get_connection()
     try:

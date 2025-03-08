@@ -21,7 +21,7 @@ class EmailRepository(IEmailRepositoryAbstract):
     
 
     
-    async def sendEmail_to_verify_email(self, email: EmailDTO) -> bool:
+    async def sendEmail_to_notify_new_login(self, email: EmailDTO) -> bool:
         print(f"Enviando correo a: {email.email}")
 
         try:
@@ -70,10 +70,6 @@ class EmailRepository(IEmailRepositoryAbstract):
 
         
     async def sendEmail_to_change_password(self, email: EmailDTO) -> bool:
-        pass
-
-
-    async def sendEmail_to_notify_new_login(self, email: EmailDTO) -> bool:
         pass
     
     async def sendEmail_to_verify_email(self, email: EmailDTO) -> bool:

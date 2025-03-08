@@ -24,7 +24,7 @@ class AuthRepository(IAuthRepositoryAbstract):
                 if not result:
                     return None, "Correo no registrado."
 
-                now = datetime.datetime.now()
+                now = datetime.now()
 
                 if result["cantIntentos"] >= 3:
                     if result["ultimoIntentoFallido"]:
@@ -103,7 +103,7 @@ class AuthRepository(IAuthRepositoryAbstract):
                 cursor.execute("SELECT * FROM usuario WHERE correo = %s AND codeValidacion = %s", (auth_verify.email, auth_verify.code))
                 result = cursor.fetchone()
                 if result:
-                    cursor.execute("UPDATE usuario SET email_verified_at = %s WHERE correo = %s", (datetime.datetime.now(), auth_verify.email))
+                    cursor.execute("UPDATE usuario SET email_verified_at = %s WHERE correo = %s", (datetime.now(), auth_verify.email))
                     self.connection.commit()
                     return True
                 return False
