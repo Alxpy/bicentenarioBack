@@ -12,103 +12,128 @@ class AuthRepository(IAuthRepositoryAbstract):
         self.secret = os.getenv("JWT_SECRET", "default_secret")
         self.blacklist = set()
 
-    async def login(self, auth_login_dto: AuthLoginDTO) -> Tuple[Optional[str], str]:
+    async def login(self, auth_login_dto: AuthLoginDTO) -> dict:
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute("""
-                    SELECT id, id_rol, nombre, correo, contrasena, cantIntentos, estado, email_verified_at, ultimoIntentoFallido
-                    FROM usuario WHERE correo = %s
+                    SELECT 
+                        u.id, 
+                        u.nombre, 
+                        u.correo, 
+                        u.contrasena, 
+                        u.cantIntentos, 
+                        u.estado, 
+                        u.email_verified_at, 
+                        u.ultimoIntentoFallido, 
+                        GROUP_CONCAT(ur.id_rol) AS roles
+                    FROM usuario AS u
+                    INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
+                    WHERE u.correo = %s
+                    GROUP BY u.id;
+
                 """, (auth_login_dto.email,))
                 result = cursor.fetchone()
-
+                
                 if not result:
-                    return None, "Correo no registrado."
-
+                    return {"success": False, "message": "Credenciales incorrectas."}
+                
                 now = datetime.now()
-
+                
                 if result["cantIntentos"] >= 3:
                     if result["ultimoIntentoFallido"]:
                         ultimo_intento = result["ultimoIntentoFallido"]
                         diferencia = now - ultimo_intento
 
                         if diferencia.total_seconds() < 300:
-                            return None, "Demasiados intentos fallidos. Intenta de nuevo en unos minutos."
+                            return {"success": False, "message": "Demasiados intentos. Inténtelo más tarde."}
                         else:
-                            cursor.execute("UPDATE usuario SET cantIntentos = 0, ultimoIntentoFallido = NULL WHERE id = %s", 
-                                        (result["id"],))
+                            cursor.execute("UPDATE usuario SET cantIntentos = 0, ultimoIntentoFallido = NULL WHERE id = %s", (result["id"],))
                             self.connection.commit()
 
                 if not bcrypt.checkpw(auth_login_dto.password.encode('utf-8'), result["contrasena"].encode('utf-8')):
-                    
                     cursor.execute("""
                         UPDATE usuario 
                         SET cantIntentos = cantIntentos + 1, ultimoIntentoFallido = %s 
                         WHERE id = %s
                     """, (now, result["id"]))
                     self.connection.commit()
-                    return None, "Contraseña incorrecta."
+
+                    if result["cantIntentos"] + 1 >= 3:
+                        cursor.execute("UPDATE usuario SET estado = 3 WHERE id = %s", (result["id"],))
+                        self.connection.commit()
+                        return {"success": False, "message": "Cuenta bloqueada por intentos fallidos."}
+
+                    return {"success": False, "message": "Credenciales incorrectas."}
 
                 if result["email_verified_at"] is None:
-                    return None, "Correo electrónico no verificado. Por favor, revisa tu bandeja de entrada."
+                    return {"success": False, "message": "Correo no verificado. Revise su bandeja de entrada."}
 
-                if result["estado"] != 1:
-                    return None, "Cuenta activa."
+                if result["estado"] == 2:
+                    return {"success": False, "message": "Cuenta inactiva."}
+                elif result["estado"] == 1:
+                    return {"success": False, "message": "Cuenta activa."}
+                elif result["estado"] == 3:
+                    return {"success": False, "message": "Cuenta bloqueada."}
 
-                cursor.execute("UPDATE usuario SET estado = 1, cantIntentos = 0, ultimoIntentoFallido = NULL WHERE id = %s", 
-                            (result["id"],))
+                cursor.execute("UPDATE usuario SET estado = 2, cantIntentos = 0, ultimoIntentoFallido = NULL WHERE id = %s", (result["id"],))
                 self.connection.commit()
 
-                token = jwt.encode({
-                    "id": result["id"],
-                    "rol": result["id_rol"],
-                    "nombre": result["nombre"],
-                    "correo": result["correo"]
-                }, self.secret, algorithm="HS256")
+                try:
+                    payload = {
+                        "id": result["id"],
+                        "roles": result["roles"],
+                        "nombre": result["nombre"],
+                        "correo": result["correo"]
+                    }
+                    token = jwt.encode(payload, self.secret, algorithm="HS256")
+                except Exception as err:
+                    print(f"Error: {err}")
+                    return
 
-                return token, "Inicio de sesión exitoso."
-        except Exception as e:
-            print({"Error": str(e)})  
-            return None, "Error interno del servidor."
+                return {"success": True, "message": "Inicio de sesión exitoso.", "token": token}
+        except Exception as err:
+            print(f"Error: {err}")
+            return {"success": False, "message": "Error interno del servidor."}
 
-    async def logout(self, auth_logout_dto: AuthLogoutDTO) -> None:
+    async def logout(self, auth_logout_dto: AuthLogoutDTO) -> dict:
         try:
             decoded_token = jwt.decode(auth_logout_dto.token, self.secret, algorithms=["HS256"])
             self.blacklist.add(auth_logout_dto.token)
             with self.connection.cursor() as cursor:
-                cursor.execute("UPDATE usuario SET estado = 0 WHERE id = %s", (decoded_token["id"],))
+                cursor.execute("UPDATE usuario SET estado = 1 WHERE id = %s", (decoded_token["id"],))
                 self.connection.commit()
+            return {"success": True, "message": "Cierre de sesión exitoso."}
         except jwt.ExpiredSignatureError:
-            print("Token expirado")
+                return {"success": False, "message": "Token expirado."}
         except jwt.InvalidTokenError:
-            print("Token inválido")
-        except (Exception, self.connection.Error) as e:
-            print({"Error": str(e)})
-    
-    
-    async def verify_code_login(self, auth_verify: AuthVerifyCodeDTO) -> bool:
+            return {"success": False, "message": "Token inválido."}
+        except jwt.DecodeError:
+            return {"success": False, "message": "Error en la decodificación del token."}
+        except Exception:
+            return {"success": False, "message": "Error interno del servidor."}
+        except Exception:
+            return {"success": False, "message": "Error interno del servidor."}
+        
+    async def verify_code_login(self, auth_verify: AuthVerifyCodeDTO) -> dict:
         try:
             with self.connection.cursor(dictionary=True) as cursor:
-                cursor.execute("SELECT * FROM usuario WHERE correo = %s AND codigo = %s", (auth_verify.email, auth_verify.code))
+                cursor.execute("SELECT id FROM usuario WHERE correo = %s AND codeValidacion = %s", (auth_verify.email, auth_verify.code))
                 result = cursor.fetchone()
                 if result:
-                    return True
-                return False
-        except (Exception, self.connection.Error) as e:
-            print({"Error": str(e)})
-            return False
-    
-    async def verify_code_email(self, auth_verify: AuthVerifyCodeDTO) -> bool:
+                    return {"success": True, "message": "Código válido."}
+                return {"success": False, "message": "Código inválido o correo incorrecto."}
+        except Exception:
+            return {"success": False, "message": "Error interno del servidor."}
+
+    async def verify_code_email(self, auth_verify: AuthVerifyCodeDTO) -> dict:
         try:
             with self.connection.cursor(dictionary=True) as cursor:
-                cursor.execute("SELECT * FROM usuario WHERE correo = %s AND codeValidacion = %s", (auth_verify.email, auth_verify.code))
+                cursor.execute("SELECT id FROM usuario WHERE correo = %s AND codeValidacion = %s", (auth_verify.email, auth_verify.code))
                 result = cursor.fetchone()
                 if result:
                     cursor.execute("UPDATE usuario SET email_verified_at = %s WHERE correo = %s", (datetime.now(), auth_verify.email))
                     self.connection.commit()
-                    return True
-                return False
-        except (Exception, self.connection.Error) as e:
-            print({"Error": str(e)})
-            return False
-            
-    
+                    return {"success": True, "message": "Correo verificado correctamente."}
+                return {"success": False, "message": "Código inválido o correo incorrecto."}
+        except Exception:
+            return {"success": False, "message": "Error interno del servidor."}

@@ -3,7 +3,7 @@ from src.presentation.dto.user_dto import UsuarioDTO
 
 def map_usuario_domain_to_dto(usuarioDTO: UsuarioDTO) -> UsuarioDTO:
     return UsuarioDTO(
-        id=usuarioDTO.id,
+        id=0,
         nombre=usuarioDTO.nombre,
         apellidoPaterno=usuarioDTO.apellidoPaterno,
         apellidoMaterno=usuarioDTO.apellidoMaterno,
@@ -13,6 +13,6 @@ def map_usuario_domain_to_dto(usuarioDTO: UsuarioDTO) -> UsuarioDTO:
         telefono=usuarioDTO.telefono,
         pais=usuarioDTO.pais,
         ciudad=usuarioDTO.ciudad,
-        estado=usuarioDTO.estado,
-        id_rol=usuarioDTO.id_rol
+        estado=0,
+        id_rol=2
     )

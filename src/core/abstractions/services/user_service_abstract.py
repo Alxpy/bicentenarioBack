@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from src.core.models.user_domain import UsuarioDomain
+from src.presentation.dto.user_dto import UsuarioDTO
 
 class IUsuarioService(ABC):
 
@@ -12,7 +13,7 @@ class IUsuarioService(ABC):
         pass
     
     @abstractmethod
-    async def create_usuario(self, usuario: UsuarioDomain) -> int:
+    async def create_usuario(self, usuario: UsuarioDTO) -> None:
         pass
     
     @abstractmethod

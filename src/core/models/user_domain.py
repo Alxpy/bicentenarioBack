@@ -16,10 +16,10 @@ class UsuarioDomain(BaseModel):
     ciudad: str
     estado:int
     id_rol: Optional[int] = None
-    email_verfied_at: datetime
-    codeValidation: Optional[str] = None
+    email_verified_at: Optional[datetime] = None
+    codeValidacion: Optional[str] = None
     cantIntentos: Optional[int] = None
-
+    ultimoIntentoFallido: Optional[datetime] = None
 
     
     

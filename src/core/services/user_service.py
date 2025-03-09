@@ -1,6 +1,7 @@
 from src.core.abstractions.infrastructure.repository.user_repository_abstract import IUsuarioRepository
 from src.core.abstractions.services.user_service_abstract import IUsuarioService
 from src.core.models.user_domain import UsuarioDomain
+from src.presentation.dto.user_dto import UsuarioDTO
 
 class UsuarioService(IUsuarioService):
     
@@ -17,7 +18,7 @@ class UsuarioService(IUsuarioService):
         return await self.usuario_repository.get_all_usuarios()
     
     
-    async def create_usuario(self, usuario: UsuarioDomain) -> int:
+    async def create_usuario(self, usuario: UsuarioDTO) -> None:
         return await self.usuario_repository.create_usuario(usuario)
     
     

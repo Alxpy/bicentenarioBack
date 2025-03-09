@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from typing import Optional
 
 class UsuarioDTO(BaseModel):
-    id: Optional[int]
     nombre: str
     apellidoPaterno: str
     apellidoMaterno: str
@@ -12,8 +11,6 @@ class UsuarioDTO(BaseModel):
     telefono: str
     pais: str
     ciudad: str
-    estado:bool
-    id_rol: int
 
 class UpdateDataUserDTO(BaseModel):
     nombre: str
@@ -24,7 +21,6 @@ class UpdateDataUserDTO(BaseModel):
     telefono: str
     pais: str
     ciudad: str
-    estado:bool
 
 class ChangeRoleUserDTO(BaseModel):
     id_rol: int
