@@ -21,9 +21,10 @@ class UserRepository(IUsuarioRepository):
                                     u.estado, 
                                     u.email_verified_at, 
                                     u.ultimoIntentoFallido, 
-                                    GROUP_CONCAT(ur.id_rol) AS roles
+                                    GROUP_CONCAT(r.nombre_rol) AS roles
                                 FROM usuario AS u
                                 INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
+                                INNER JOIN rol AS r ON r.id = ur.id_rol
                                 WHERE u.id = %s
                                 GROUP BY u.id;
                                """, (id,))
@@ -47,10 +48,11 @@ class UserRepository(IUsuarioRepository):
                                 u.estado, 
                                 u.email_verified_at, 
                                 u.ultimoIntentoFallido, 
-                                GROUP_CONCAT(ur.id_rol) AS roles
-                            FROM usuario AS u
-                            INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
-                            GROUP BY u.id;
+                                GROUP_CONCAT(r.nombre_rol) AS roles
+                                FROM usuario AS u
+                                INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
+                                INNER JOIN rol AS r ON r.id = ur.id_rol
+                                GROUP BY u.id;
                 """)
                 result = cursor.fetchall()
                 if result:
@@ -72,7 +74,15 @@ class UserRepository(IUsuarioRepository):
                      usuario.genero, usuario.telefono, usuario.pais, usuario.ciudad)
                 )
                 self.connection.commit()
-                return {"success": True, "message": "Usuario Creado"}
+            with self.connection.cursor() as cursor:
+                cursor.execute("""
+                            INSERT INTO usuario_rol (id_usuario, id_rol)
+                            SELECT u.id, r.id
+                            FROM usuario u, rol r
+                            WHERE u.correo = %s AND r.nombre_rol LIKE 'usuario'
+                               """,(usuario.correo,))
+                self.connection.commit()
+            return {"success": True, "message": "Usuario Creado"}
         except mysql.connector.IntegrityError:
             return {"success": False, "message": "El correo electrónico ya está registrado."}
         except Exception:
@@ -85,11 +95,11 @@ class UserRepository(IUsuarioRepository):
                     """
                     UPDATE usuario 
                     SET nombre = %s, apellidoPaterno = %s, apellidoMaterno = %s, correo = %s, contrasena = %s, 
-                        genero = %s, telefono = %s, pais = %s, ciudad = %s, estado = %s, id_rol = %s
+                        genero = %s, telefono = %s, pais = %s, ciudad = %s
                     WHERE id = %s
                     """,
                     (usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno, usuario.correo, usuario.contrasena,
-                     usuario.genero, usuario.telefono, usuario.pais, usuario.ciudad, usuario.estado, usuario.id_rol, id)
+                     usuario.genero, usuario.telefono, usuario.pais, usuario.ciudad, id)
                 )
                 if cursor.rowcount == 0:
                     return {"success": False, "message": "Usuario no encontrado."}
@@ -104,7 +114,7 @@ class UserRepository(IUsuarioRepository):
     async def delete_usuario(self, id: int):
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute("DELETE FROM usuario WHERE id = %s", (id,))
+                cursor.execute("UPDATE usuario SET estado = 3  WHERE id = %s", (id,))
                 if cursor.rowcount == 0:
                     return {"success": False, "message": "Usuario no encontrado."}
                 self.connection.commit()

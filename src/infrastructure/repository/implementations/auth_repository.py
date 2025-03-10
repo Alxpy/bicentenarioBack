@@ -25,9 +25,10 @@ class AuthRepository(IAuthRepositoryAbstract):
                         u.estado, 
                         u.email_verified_at, 
                         u.ultimoIntentoFallido, 
-                        GROUP_CONCAT(ur.id_rol) AS roles
+                        GROUP_CONCAT(r.nombre_rol) AS roles
                     FROM usuario AS u
                     INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
+                    INNER JOIN rol AS r ON r.id = ur.id_rol
                     WHERE u.correo = %s
                     GROUP BY u.id;
 
@@ -70,12 +71,10 @@ class AuthRepository(IAuthRepositoryAbstract):
 
                 if result["estado"] == 2:
                     return {"success": False, "message": "Cuenta inactiva."}
-                elif result["estado"] == 1:
-                    return {"success": False, "message": "Cuenta activa."}
                 elif result["estado"] == 3:
                     return {"success": False, "message": "Cuenta bloqueada."}
 
-                cursor.execute("UPDATE usuario SET estado = 2, cantIntentos = 0, ultimoIntentoFallido = NULL WHERE id = %s", (result["id"],))
+                cursor.execute("UPDATE usuario SET estado = 1, cantIntentos = 0, ultimoIntentoFallido = NULL WHERE id = %s", (result["id"],))
                 self.connection.commit()
 
                 try:
@@ -100,7 +99,7 @@ class AuthRepository(IAuthRepositoryAbstract):
             decoded_token = jwt.decode(auth_logout_dto.token, self.secret, algorithms=["HS256"])
             self.blacklist.add(auth_logout_dto.token)
             with self.connection.cursor() as cursor:
-                cursor.execute("UPDATE usuario SET estado = 1 WHERE id = %s", (decoded_token["id"],))
+                cursor.execute("UPDATE usuario SET estado = 0 WHERE id = %s", (decoded_token["id"],))
                 self.connection.commit()
             return {"success": True, "message": "Cierre de sesión exitoso."}
         except jwt.ExpiredSignatureError:
