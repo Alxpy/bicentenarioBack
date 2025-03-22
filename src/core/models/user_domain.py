@@ -14,8 +14,8 @@ class UsuarioDomain(BaseModel):
     telefono: str
     pais: str
     ciudad: str
-    estado:int
-    id_rol: Optional[int] = None
+    estado:Optional[int] = None
+    roles: Optional[list[str]] = None
     email_verified_at: Optional[datetime] = None
     codeValidacion: Optional[str] = None
     cantIntentos: Optional[int] = None
