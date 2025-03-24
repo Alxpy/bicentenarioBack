@@ -8,9 +8,7 @@ __pycache__
 *.pyzw
 token.pickle
 
-security
 
 credentials.json
-
-.env
-.env
+node_modules
+package-lock.json
