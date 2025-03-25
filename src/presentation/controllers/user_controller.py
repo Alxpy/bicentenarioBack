@@ -13,8 +13,7 @@ async def register(
     usuario: UsuarioDTO,
     user_service: IUsuarioService = Depends(build_usuario_service)):
     try:
-        response = await user_service.create_usuario(usuario)
-        return {"response": response}
+        return await user_service.create_usuario(usuario)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -22,8 +21,7 @@ async def register(
 async def get_usuarios(
     user_service: IUsuarioService = Depends(build_usuario_service)):
     try:
-        usuarios = await user_service.get_all_usuarios()
-        return {"response": usuarios}
+        return await user_service.get_all_usuarios()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
@@ -32,8 +30,7 @@ async def get_usuario(
     id: int,
     user_service: IUsuarioService = Depends(build_usuario_service)):
     try:
-        usuario = await user_service.get_usuario(id)
-        return {"response": usuario}
+        return await user_service.get_usuario(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
@@ -54,36 +51,18 @@ async def update_usuario(
             pais=usuarioUpdate.pais,
             ciudad=usuarioUpdate.ciudad,
         )
-        response = await user_service.update_usuario(id, updateUsuario)
-        return {"response": response}
+        return await user_service.update_usuario(id, updateUsuario)
+        
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @user_controller.put("/password/{id}")
 async def change_password(
     id: int,
-    nueva_contrasena: str = Form(...),
+    nueva_contrasena: str ,
     user_service: IUsuarioService = Depends(build_usuario_service)):
     try:
-        user:UsuarioDomain = await user_service.get_usuario(id)
-        
-        update_usuario = UsuarioDomain(
-            id= user.id,
-            nombre= user.nombre,
-            apellidoPaterno= user.apellidoPaterno,
-            apellidoMaterno= user.apellidoMaterno,
-            correo= user.correo,
-            contrasena= bcrypt.hashpw(nueva_contrasena.encode('utf-8'), bcrypt.gensalt()),
-            genero= user.genero,
-            telefono= user.telefono,
-            pais= user.pais,
-            ciudad= user.ciudad,
-            estado= user.estado,
-            id_rol= user.id_rol
-        )
-        
-        await user_service.update_usuario(id, update_usuario)
-        return {"response": "Contraseña actualizada"}
+        return await user_service.change_password(id, nueva_contrasena)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
@@ -92,7 +71,6 @@ async def delete_usuario(
     id: int,
     user_service: IUsuarioService = Depends(build_usuario_service)):
     try:
-        await user_service.delete_usuario(id)
-        return {"response": "Usuario eliminado"}
+        return await user_service.delete_usuario(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

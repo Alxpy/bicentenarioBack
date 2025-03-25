@@ -99,18 +99,10 @@ class UserRepository(IUsuarioRepository):
                 usuario.ciudad
             ]
             
-            if usuario.contrasena is not None:
-                update_values.append(usuario.contrasena)
-            else:
-                update_values.append(None)
-            
             set_clause = """
                 SET nombre = %s, apellidoPaterno = %s, apellidoMaterno = %s, correo = %s, 
                     genero = %s, telefono = %s, pais = %s, ciudad = %s
             """
-            
-            if usuario.contrasena is not None:
-                set_clause += ", contrasena = %s"
 
             with self.connection.cursor() as cursor:
                 cursor.execute(f"""
@@ -132,6 +124,17 @@ class UserRepository(IUsuarioRepository):
             print(f"Error: {err}")
             return Response(status=500, success=False, message=f"Error interno del servidor. Detalles: {str(err)}")
 
+    async def change_password(self, id: int, password: str) -> Response:
+        try:
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            with self.connection.cursor() as cursor:
+                cursor.execute("UPDATE usuario SET contrasena = %s WHERE id = %s", (hashed_password, id))
+                if cursor.rowcount == 0:
+                    return Response(status=404, success=False, message="Usuario no encontrado.")
+                self.connection.commit()
+                return Response(status=200, success=True, message="Contraseña actualizada correctamente.")
+        except Exception:
+            return Response(status=500, success=False, message="Error interno del servidor.")
 
 
     async def delete_usuario(self, id: int) -> Response:

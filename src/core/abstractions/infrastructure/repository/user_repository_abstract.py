@@ -20,7 +20,12 @@ class IUsuarioRepository(ABC):
         pass
     
     @abstractmethod
+    async def change_password(self, id: int, password: str) -> None:
+        pass
+    
+    @abstractmethod
     async def delete_usuario(self, id: int) -> None:
         pass
+    
     
     

@@ -25,6 +25,8 @@ class UsuarioService(IUsuarioService):
     async def update_usuario(self, id: int, usuario: UsuarioDomain) -> None:
         return await self.usuario_repository.update_usuario(id, usuario)
     
+    async def change_password(self, id, password):
+        return await self.usuario_repository.change_password(id, password)
     
     async def delete_usuario(self, id: int) -> None:
         return await self.usuario_repository.delete_usuario(id)
