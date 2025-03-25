@@ -19,6 +19,10 @@ class IUsuarioService(ABC):
     @abstractmethod
     async def update_usuario(self, id: int, usuario: UsuarioDomain) -> None:
         pass
+
+    @abstractmethod
+    async def change_password(self, id: int, password: str) -> None:
+        pass
     
     @abstractmethod
     async def delete_usuario(self, id: int) -> None:
