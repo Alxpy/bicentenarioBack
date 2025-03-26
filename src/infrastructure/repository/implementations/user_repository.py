@@ -7,7 +7,8 @@ from src.core.abstractions.infrastructure.repository.user_repository_abstract im
 from src.core.models.user_domain import UsuarioDomain
 from src.presentation.dto.user_dto import UsuarioDTO
 from src.resources.responses.response import Response
-from src.infrastructure.constants.database_constants import *
+from src.infrastructure.constants.http_codes import *
+from src.infrastructure.constants.messages import *
 from src.infrastructure.queries.user_queries import *
 
 class UserRepository(IUsuarioRepository):
