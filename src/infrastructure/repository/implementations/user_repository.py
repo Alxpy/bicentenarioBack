@@ -1,149 +1,257 @@
 import bcrypt
-import jwt
 import mysql.connector
+from mysql.connector import pooling
+from typing import Optional
+
 from src.core.abstractions.infrastructure.repository.user_repository_abstract import IUsuarioRepository
 from src.core.models.user_domain import UsuarioDomain
 from src.presentation.dto.user_dto import UsuarioDTO
 from src.resources.responses.response import Response
+from src.infrastructure.constants.database_constants import *
+from src.infrastructure.queries.user_queries import *
 
 class UserRepository(IUsuarioRepository):
-    def __init__(self, connection: object) -> None:
-        self.connection = connection
+    def __init__(self, connection_pool) -> None:
+        self.connection_pool = connection_pool
+
+    def _get_connection(self):
+        """Obtiene una conexión del pool"""
+        return self.connection_pool
 
     async def get_usuario(self, id: int) -> Response:
+        conn = None
         try:
-            with self.connection.cursor(dictionary=True) as cursor:
-                cursor.execute("""
-                    SELECT u.id, u.nombre, u.apellidoPaterno, u.apellidoMaterno, u.correo, u.contrasena, u.genero, u.telefono, 
-                    u.pais, u.ciudad, u.estado, u.email_verified_at, u.ultimoIntentoFallido, u.codeValidacion, u.cantIntentos, u.imagen, 
-                    GROUP_CONCAT(r.nombre_rol) AS roles
-                    FROM usuario AS u
-                    INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
-                    INNER JOIN rol AS r ON r.id = ur.id_rol
-                    WHERE u.id = %s
-                    GROUP BY u.id;
-                """, (id,))
+            conn = self._get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(GET_USER_BY_ID, (id,))
                 result = cursor.fetchone()
-                if result:
-                    # Convertir el campo 'roles' de string a lista
-                    roles = result['roles'].split(',') if result['roles'] else []
-                    result['roles'] = roles  # Actualiza 'roles' con la lista
-                    return Response(status=200, success=True, message="Usuario encontrado.", data=UsuarioDomain(**result))
-                return Response(status=404, success=False, message="Usuario no encontrado.")
+                
+                if not result:
+                    return Response(
+                        status=HTTP_404_NOT_FOUND, 
+                        success=False, 
+                        message=USER_NOT_FOUND_MSG
+                    )
+                
+                # Convertir roles a lista
+                result['roles'] = result['roles'].split(',') if result['roles'] else []
+                
+                return Response(
+                    status=HTTP_200_OK,
+                    success=True,
+                    message="Usuario encontrado.",
+                    data=UsuarioDomain(**result)
+                )
         except Exception as e:
-            return Response(status=500, success=False, message=f"Error interno del servidor. Detalles: {str(e)}")
-
+            return Response(
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            )
+        finally:
+            if conn:
+                conn.close()
 
     async def get_all_usuarios(self) -> Response:
+        conn = None
         try:
-            with self.connection.cursor(dictionary=True) as cursor:
-                cursor.execute("""
-                    SELECT 
-                        u.id, u.nombre, u.apellidoPaterno, u.apellidoMaterno, u.correo, u.contrasena, u.cantIntentos, 
-                        u.estado, u.email_verified_at, u.ultimoIntentoFallido, u.genero, u.telefono, u.pais, u.ciudad,
-                        GROUP_CONCAT(r.nombre_rol) AS roles
-                    FROM usuario AS u
-                    INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
-                    INNER JOIN rol AS r ON r.id = ur.id_rol
-                    GROUP BY u.id;
-                """)
+            conn = self._get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(GET_ALL_USERS)
                 result = cursor.fetchall()
-                if result:                    
-                    for usuario in result:
-                        roles = usuario['roles'].split(',') if usuario['roles'] else []
-                        usuario['roles'] = roles 
-                    
-                    usuarios = [UsuarioDomain(**usuario) for usuario in result]
-                    return Response(status=200, success=True, message="Usuarios encontrados.", data=usuarios)
-                return Response(status=404, success=False, message="No hay usuarios registrados.")
+                
+                if not result:
+                    return Response(
+                        status=HTTP_404_NOT_FOUND,
+                        success=False,
+                        message=NO_USERS_MSG
+                    )
+                
+                # Convertir roles a lista para cada usuario
+                for usuario in result:
+                    usuario['roles'] = usuario['roles'].split(',') if usuario['roles'] else []
+                
+                usuarios = [UsuarioDomain(**usuario) for usuario in result]
+                return Response(
+                    status=HTTP_200_OK,
+                    success=True,
+                    message=USERS_FOUND_MSG,
+                    data=usuarios
+                )
         except Exception as e:
-            return Response(status=500, success=False, message=f"Error interno del servidor. Detalles: {str(e)}")
-
-
+            return Response(
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            )
+        finally:
+            if conn:
+                conn.close()
 
     async def create_usuario(self, usuario: UsuarioDTO) -> Response:
+        conn = None
         try:
-            with self.connection.cursor() as cursor:
-                hashed_password = bcrypt.hashpw(usuario.contrasena.encode('utf-8'), bcrypt.gensalt())
-                cursor.execute("""
-                    INSERT INTO usuario (nombre, apellidoPaterno, apellidoMaterno, correo, contrasena, genero, telefono, pais, ciudad)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno, usuario.correo, hashed_password,
-                      usuario.genero, usuario.telefono, usuario.pais, usuario.ciudad))
-                self.connection.commit()
-
-            with self.connection.cursor() as cursor:
-                cursor.execute("""
-                    INSERT INTO usuario_rol (id_usuario, id_rol)
-                    SELECT u.id, r.id
-                    FROM usuario u, rol r
-                    WHERE u.correo = %s AND r.nombre_rol LIKE 'usuario'
-                """, (usuario.correo,))
-                self.connection.commit()
-            return Response(status=201, success=True, message="Usuario creado correctamente.")
-        except mysql.connector.IntegrityError:
-            return Response(status=400, success=False, message="El correo electrónico ya está registrado.")
-        except Exception:
-            return Response(status=500, success=False, message="Error interno del servidor.")
+            conn = self._get_connection()
+            conn.start_transaction()
+            
+            hashed_password = bcrypt.hashpw(usuario.contrasena.encode('utf-8'), bcrypt.gensalt())
+            
+            with conn.cursor() as cursor:
+                # Insertar usuario
+                cursor.execute(CREATE_USER, (
+                    usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno,
+                    usuario.correo, hashed_password, usuario.genero,
+                    usuario.telefono, usuario.pais, usuario.ciudad
+                ))
+                
+                # Asignar rol por defecto
+                cursor.execute(ASSIGN_DEFAULT_ROLE)
+                
+                conn.commit()
+                return Response(
+                    status=HTTP_201_CREATED,
+                    success=True,
+                    message=USER_CREATED_MSG
+                )
+                
+        except mysql.connector.IntegrityError as e:
+            if conn:
+                conn.rollback()
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                success=False,
+                message=EMAIL_EXISTS_MSG if "Duplicate entry" in str(e) else str(e)
+            )
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return Response(
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            )
+        finally:
+            if conn:
+                conn.close()
 
     async def update_usuario(self, id: int, usuario: UsuarioDomain) -> Response:
+        conn = None
         try:
-            update_values = [
-                usuario.nombre,
-                usuario.apellidoPaterno,
-                usuario.apellidoMaterno,
-                usuario.correo,
-                usuario.genero,
-                usuario.telefono,
-                usuario.pais,
-                usuario.ciudad
-            ]
+            conn = self._get_connection()
+            conn.start_transaction()
             
-            set_clause = """
-                SET nombre = %s, apellidoPaterno = %s, apellidoMaterno = %s, correo = %s, 
-                    genero = %s, telefono = %s, pais = %s, ciudad = %s
-            """
-
-            with self.connection.cursor() as cursor:
-                cursor.execute(f"""
-                    UPDATE usuario 
-                    {set_clause}
-                    WHERE id = %s
-                """, (*update_values, id))
-
-                if cursor.rowcount == 0:
-                    return Response(status=404, success=False, message="Usuario no encontrado.")
+            with conn.cursor() as cursor:
+                cursor.execute(UPDATE_USER, (
+                    usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno,
+                    usuario.correo, usuario.genero, usuario.telefono,
+                    usuario.pais, usuario.ciudad, id
+                ))
                 
-                self.connection.commit()
-                return Response(status=200, success=True, message="Usuario actualizado correctamente.")
-        
+                if cursor.rowcount == 0:
+                    conn.rollback()
+                    return Response(
+                        status=HTTP_404_NOT_FOUND,
+                        success=False,
+                        message=USER_NOT_FOUND_MSG
+                    )
+                
+                conn.commit()
+                return Response(
+                    status=HTTP_200_OK,
+                    success=True,
+                    message=USER_UPDATED_MSG
+                )
+                
         except mysql.connector.IntegrityError as e:
-            return Response(status=400, success=False, message=f"Error de integridad en la actualización: {str(e)}")
-        
-        except Exception as err:
-            print(f"Error: {err}")
-            return Response(status=500, success=False, message=f"Error interno del servidor. Detalles: {str(err)}")
+            if conn:
+                conn.rollback()
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                success=False,
+                message=f"Error de integridad: {str(e)}"
+            )
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return Response(
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            )
+        finally:
+            if conn:
+                conn.close()
 
     async def change_password(self, id: int, password: str) -> Response:
+        conn = None
         try:
+            conn = self._get_connection()
+            conn.start_transaction()
+            
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            with self.connection.cursor() as cursor:
-                cursor.execute("UPDATE usuario SET contrasena = %s WHERE id = %s", (hashed_password, id))
+            
+            with conn.cursor() as cursor:
+                cursor.execute(UPDATE_PASSWORD, (hashed_password, id))
+                
                 if cursor.rowcount == 0:
-                    return Response(status=404, success=False, message="Usuario no encontrado.")
-                self.connection.commit()
-                return Response(status=200, success=True, message="Contraseña actualizada correctamente.")
-        except Exception:
-            return Response(status=500, success=False, message="Error interno del servidor.")
-
+                    conn.rollback()
+                    return Response(
+                        status=HTTP_404_NOT_FOUND,
+                        success=False,
+                        message=USER_NOT_FOUND_MSG
+                    )
+                
+                conn.commit()
+                return Response(
+                    status=HTTP_200_OK,
+                    success=True,
+                    message=PASSWORD_UPDATED_MSG
+                )
+                
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return Response(
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            )
+        finally:
+            if conn:
+                conn.close()
 
     async def delete_usuario(self, id: int) -> Response:
+        conn = None
         try:
-            with self.connection.cursor() as cursor:
-                cursor.execute("UPDATE usuario SET estado = 3 WHERE id = %s", (id,))
+            conn = self._get_connection()
+            conn.start_transaction()
+            
+            with conn.cursor() as cursor:
+                cursor.execute(DELETE_USER, (id,))
+                
                 if cursor.rowcount == 0:
-                    return Response(status=404, success=False, message="Usuario no encontrado.")
-                self.connection.commit()
-                return Response(status=200, success=True, message="Usuario eliminado correctamente.")
-        except Exception:
-            return Response(status=500, success=False, message="Error interno del servidor.")
+                    conn.rollback()
+                    return Response(
+                        status=HTTP_404_NOT_FOUND,
+                        success=False,
+                        message=USER_NOT_FOUND_MSG
+                    )
+                
+                conn.commit()
+                return Response(
+                    status=HTTP_200_OK,
+                    success=True,
+                    message=USER_DELETED_MSG
+                )
+                
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return Response(
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            )
+        finally:
+            if conn:
+                conn.close()
