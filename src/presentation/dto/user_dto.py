@@ -28,3 +28,7 @@ class ChangeRoleUserDTO(BaseModel):
 class ChangePasswordUserDTO(BaseModel):
     contrasena: str
     nueva_contrasena: str
+
+class NewPasswordDTO(BaseModel):
+    correo: str
+    nueva_contrasena: str

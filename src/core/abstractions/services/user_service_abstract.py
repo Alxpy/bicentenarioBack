@@ -21,7 +21,7 @@ class IUsuarioService(ABC):
         pass
 
     @abstractmethod
-    async def change_password(self, id: int, password: str) -> None:
+    async def change_password(self, correo:str, password: str) -> None:
         pass
     
     @abstractmethod

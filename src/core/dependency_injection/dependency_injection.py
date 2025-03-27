@@ -1,5 +1,5 @@
 from fastapi import Depends
-from src.infrastructure.repository.connection import get_connection
+from src.infrastructure.repository.dependency_injection.dependency_injection import get_connection
 from src.infrastructure.repository.connection_mail import get_gmail_service
 
 from src.infrastructure.repository.implementations.user_repository import UserRepository
