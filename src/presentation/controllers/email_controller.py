@@ -14,8 +14,7 @@ async def send_email(
     Endpoint para enviar un correo electrónico y verificar.
     """
     try:
-        await email_service.sendEmail_to_verify_email(EmailDTO(email=email))
-        return JSONResponse(content={"detail": "Email enviado exitosamente"}, status_code=status.HTTP_200_OK)
+        return await email_service.sendEmail_to_verify_email(EmailDTO(email=email))        
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -30,8 +29,22 @@ async def send_email(
     Endpoint para enviar un correo electrónico y verificar el login.
     """
     try:
-        await email_service.sendEmail_to_notify_new_login(EmailDTO(email=email_dto))
-        return JSONResponse(content={"detail": "Email enviado exitosamente"}, status_code=status.HTTP_200_OK)
+        return await email_service.sendEmail_to_notify_new_login(EmailDTO(email=email_dto))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error al enviar el email: {str(e)}"
+       )
+        
+@email_controller.get("/send_email/recovery_password/{email}")
+async def send_email(
+    email: str, 
+    email_service: IEmailServiceAbstract = Depends(build_email_service)):
+    """
+    Endpoint para enviar un correo electrónico y recuperar la contraseña.
+    """
+    try:
+        return await email_service.sendEmail_to_change_password(EmailDTO(email=email))
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

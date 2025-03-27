@@ -183,7 +183,7 @@ class UserRepository(IUsuarioRepository):
             if conn:
                 conn.close()
 
-    async def change_password(self, id: int, password: str) -> Response:
+    async def change_password(self, correo:str, password: str) -> Response:
         conn = None
         try:
             conn = self._get_connection()
@@ -192,7 +192,7 @@ class UserRepository(IUsuarioRepository):
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             
             with conn.cursor() as cursor:
-                cursor.execute(UPDATE_PASSWORD, (hashed_password, id))
+                cursor.execute(UPDATE_PASSWORD, (hashed_password, correo))
                 
                 if cursor.rowcount == 0:
                     conn.rollback()

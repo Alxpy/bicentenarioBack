@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from src.core.abstractions.services.user_service_abstract import IUsuarioService
 from src.core.dependency_injection.dependency_injection import build_usuario_service
-from src.presentation.dto.user_dto import UsuarioDTO, UpdateDataUserDTO
+from src.presentation.dto.user_dto import UsuarioDTO, UpdateDataUserDTO, NewPasswordDTO
 from src.presentation.mappers.user_mapper import map_usuario_domain_to_dto
 from src.core.models.user_domain import UsuarioDomain
 import bcrypt
+from time import sleep
 
 user_controller = APIRouter(prefix="/api/v1", tags=["user"])
 
@@ -56,13 +57,16 @@ async def update_usuario(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@user_controller.put("/password/{id}")
+@user_controller.put("/password")
 async def change_password(
-    id: int,
-    nueva_contrasena: str ,
+    new_password: NewPasswordDTO,
     user_service: IUsuarioService = Depends(build_usuario_service)):
     try:
-        return await user_service.change_password(id, nueva_contrasena)
+        #haz que duerma 5s  
+        
+        sleep(5)
+        
+        return await user_service.change_password(new_password.correo, new_password.nueva_contrasena)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     

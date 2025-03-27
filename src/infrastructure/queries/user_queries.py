@@ -27,6 +27,11 @@ CREATE_USER = """
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 """
 
+CREATE_USER_CODE = """
+   UPDATE usuario SET codeValidacion = %s 
+    WHERE correo = %s
+"""
+
 ASSIGN_DEFAULT_ROLE = """
     INSERT INTO usuario_rol (id_usuario, id_rol)
     SELECT LAST_INSERT_ID(), r.id
@@ -43,10 +48,12 @@ UPDATE_USER = """
 
 UPDATE_CODE_VALIDATION = """
     UPDATE usuario 
-    SET codeValidacion = %s, code_expiration = DATE_ADD(NOW(), INTERVAL %s MINUTE) 
+    SET codeValidacion = %s 
     WHERE correo = %s
 """
 
-UPDATE_PASSWORD = "UPDATE usuario SET contrasena = %s WHERE id = %s"
+UPDATE_PASSWORD = "UPDATE usuario SET contrasena = %s WHERE correo = %s"
+
+REMOVE_CODE_VALIDATION = "UPDATE usuario SET codeValidacion = NULL WHERE correo = %s"
 
 DELETE_USER = "UPDATE usuario SET estado = 3 WHERE id = %s"
