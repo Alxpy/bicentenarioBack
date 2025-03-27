@@ -18,6 +18,17 @@ USER_UPDATED_MSG = "Usuario actualizado correctamente."
 USERS_FOUND_MSG = "Usuarios encontrados."
 NO_USERS_MSG = "No hay usuarios registrados."
 
+#Mensaje de categoría de noticia
+CATEGORIA_NOTICIA_NOT_FOUND_MSG = "Categoría de noticia no encontrada."
+CATEGORIA_NOTICIA_FOUND_MSG = "Categoría de noticia encontrada."
+CATEGORIAS_NOTICIA_FOUND_MSG = "Categorías de noticia encontradas."
+CATEGORIA_NOTICIA_CREATED_MSG = "Categoría de noticia creada correctamente."
+CATEGORIA_NOTICIA_UPDATED_MSG = "Categoría de noticia actualizada correctamente."
+CATEGORIA_NOTICIA_DELETED_MSG = "Categoría de noticia eliminada correctamente."
+NO_CATEGORIAS_NOTICIA_MSG = "No hay categorías de noticia registradas."
+CATEGORIA_NOTICIA_EXISTS_MSG = "La categoría de noticia ya existe."
+
+
 # Mensajes de autenticación
 INVALID_CREDENTIALS_MSG = "Credenciales incorrectas."
 TOO_MANY_ATTEMPTS_MSG = "Demasiados intentos. Inténtelo más tarde."
