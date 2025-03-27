@@ -30,3 +30,13 @@ CODE_UPDATE_ERROR_MSG = "Error al actualizar el código de verificación."
 VERIFICATION_EMAIL_SUBJECT = "Verificación de correo electrónico"
 LOGIN_NOTIFICATION_SUBJECT = "Nuevo inicio de sesión detectado"
 PASSWORD_RESET_SUBJECT = "Restablecimiento de contraseña"
+
+# Mensajes de categoría de noticia
+CATEGORIA_NOTICIA_NOT_FOUND_MSG = "Categoría de noticia no encontrada."
+CATEGORIA_NOTICIA_FOUND_MSG = "Categoría de noticia encontrada."
+CATEGORIAS_NOTICIA_FOUND_MSG = "Categorías de noticia encontradas."
+CATEGORIA_NOTICIA_CREATED_MSG = "Categoría de noticia creada correctamente."
+CATEGORIA_NOTICIA_UPDATED_MSG = "Categoría de noticia actualizada correctamente."
+CATEGORIA_NOTICIA_DELETED_MSG = "Categoría de noticia eliminada correctamente."
+NO_CATEGORIAS_NOTICIA_MSG = "No hay categorías de noticia registradas."
+CATEGORIA_NOTICIA_EXISTS_MSG = "La categoría de noticia ya existe."

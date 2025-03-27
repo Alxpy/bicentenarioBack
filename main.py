@@ -7,6 +7,7 @@ from src.presentation.controllers.user_controller import user_controller
 from src.presentation.controllers.auth_controller import auth_controller
 from src.presentation.controllers.email_controller import email_controller
 from src.presentation.controllers.token_controller import token_controller
+from src.presentation.controllers.categoriaNoticia_controller import categoriaNoticia_controller
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ app.include_router(user_controller)
 app.include_router(auth_controller)
 app.include_router(email_controller)
 app.include_router(token_controller)
+app.include_router(categoriaNoticia_controller)
 
 if __name__ == "__main__":
     import uvicorn
