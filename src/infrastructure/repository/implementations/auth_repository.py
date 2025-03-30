@@ -18,6 +18,18 @@ class AuthRepository(IAuthRepositoryAbstract):
         self.secret = os.getenv("JWT_SECRET", "default_secret")
         self.blacklist: Set[str] = set()
 
+    async def generate_token(self, user: dict, roles: list):
+        print(user)
+        token_payload = {
+            "id": user["id"],
+            "roles": roles,
+            "nombre": user["nombre"],
+            "correo": user["correo"],
+            "exp": datetime.utcnow() + timedelta(minutes=TOKEN_EXPIRATION_MINUTES),
+            "iss": "bicentenario",    
+        }
+    
+        return jwt.encode(token_payload, self.secret, algorithm=JWT_ALGORITHM)
 
     async def _fetch_user(self, email: str) -> Optional[dict]:
         """Consulta los datos del usuario usando el context manager"""
@@ -85,19 +97,10 @@ class AuthRepository(IAuthRepositoryAbstract):
                     message=ACCOUNT_LOCKED_MSG
                 )
                 
-            # 5. Actualizar estado y generar token
             await self._update_user_status(user["id"], 1, reset_attempts=True)                
             roles = user['roles'].split(',') if isinstance(user['roles'], str) else user['roles']
-                
-            token_payload = {
-                "id": user["id"],
-                "roles": roles,
-                "nombre": user["nombre"],
-                "correo": user["correo"],
-                "exp": datetime.now() + timedelta(minutes=TOKEN_EXPIRATION_MINUTES)
-            }
-                
-            token = jwt.encode(token_payload, self.secret, algorithm=JWT_ALGORITHM)
+        
+            token = await self.generate_token(user, roles)
                 
             return Response(
                 status=HTTP_200_OK,
@@ -114,6 +117,7 @@ class AuthRepository(IAuthRepositoryAbstract):
             )
                 
         except Exception as e:
+            print(e)
             return Response(
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
                 success=False,
