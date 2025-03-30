@@ -14,6 +14,9 @@ from src.core.services.email_service import EmailService
 from src.infrastructure.repository.implementations.categoriaNoticia_repository import CategoriaNoticiaRepository
 from src.core.services.categoriaNoticia_service import CategoriaNoticiaService
 
+from src.infrastructure.repository.implementations.noticia_repository import NoticiaRepository
+from src.core.services.noticia_service import NoticiaService
+
 
 def build_usuario_service(
     connection = Depends(get_connection),
@@ -36,4 +39,7 @@ def build_categoriaNoticia_service(
 ):
     return CategoriaNoticiaService(CategoriaNoticiaRepository(connection))
 
-
+def build_noticia_service(
+    connection = Depends(get_connection),
+):
+    return NoticiaService(NoticiaRepository(connection))

@@ -40,3 +40,16 @@ CATEGORIA_NOTICIA_UPDATED_MSG = "Categoría de noticia actualizada correctamente
 CATEGORIA_NOTICIA_DELETED_MSG = "Categoría de noticia eliminada correctamente."
 NO_CATEGORIAS_NOTICIA_MSG = "No hay categorías de noticia registradas."
 CATEGORIA_NOTICIA_EXISTS_MSG = "La categoría de noticia ya existe."
+
+# Mensajes de noticia
+NOTICIA_NOT_FOUND_MSG= "Noticia no encontrada."
+NOTICIA_FOUND_MSG= "Noticia encontrada."
+NOTICIAS_FOUND_MSG= "Noticias encontradas."
+NOTICIA_CREATED_MSG= "Noticia creada correctamente."
+NO_NOTICIA_MDG= "No hay noticias registradas."
+NOTICIA_UPDATED_MSG= "Noticia actualizada correctamente."
+NOTICIA_DELETED_MSG= "Noticia eliminada correctamente."
+NOTICIA_EXISTS_MSG= "La noticia ya existe."
+FECHA_PUBLICACION_EXISTS_MSG= "La fecha de publicación ya existe."
+NO_FECHA_PUBLICACION_MSG= "No hay fecha de publicación registrada."
+
