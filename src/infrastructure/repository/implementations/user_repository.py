@@ -49,9 +49,7 @@ class UserRepository(IUsuarioRepository):
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
             )
-        finally:
-            if conn:
-                conn.close()
+
 
     async def get_all_usuarios(self) -> Response:
         conn = None
@@ -85,9 +83,7 @@ class UserRepository(IUsuarioRepository):
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
             )
-        finally:
-            if conn:
-                conn.close()
+        
 
     async def create_usuario(self, usuario: UsuarioDTO) -> Response:
         conn = None
@@ -131,9 +127,7 @@ class UserRepository(IUsuarioRepository):
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
             )
-        finally:
-            if conn:
-                conn.close()
+        
 
     async def update_usuario(self, id: int, usuario: UsuarioDomain) -> Response:
         conn = None
@@ -179,9 +173,7 @@ class UserRepository(IUsuarioRepository):
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
             )
-        finally:
-            if conn:
-                conn.close()
+        
 
     async def change_password(self, id: int, password: str) -> Response:
         conn = None
@@ -217,9 +209,7 @@ class UserRepository(IUsuarioRepository):
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
             )
-        finally:
-            if conn:
-                conn.close()
+        
 
     async def delete_usuario(self, id: int) -> Response:
         conn = None
@@ -253,6 +243,4 @@ class UserRepository(IUsuarioRepository):
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
             )
-        finally:
-            if conn:
-                conn.close()
+        
