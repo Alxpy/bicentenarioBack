@@ -17,6 +17,8 @@ from src.core.services.categoriaNoticia_service import CategoriaNoticiaService
 from src.infrastructure.repository.implementations.noticia_repository import NoticiaRepository
 from src.core.services.noticia_service import NoticiaService
 
+from src.infrastructure.repository.implementations.tipoDocumento_repository import TipoDocumentoRepository
+from src.core.services.tipoDocumento_service import TipoDocumentoService
 
 def build_usuario_service(
     connection = Depends(get_connection),
@@ -43,3 +45,8 @@ def build_noticia_service(
     connection = Depends(get_connection),
 ):
     return NoticiaService(NoticiaRepository(connection))
+
+def build_tipoDocumento_service(
+    connection = Depends(get_connection),
+):
+    return TipoDocumentoService(TipoDocumentoRepository(connection))

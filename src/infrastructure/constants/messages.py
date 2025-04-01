@@ -53,3 +53,13 @@ NOTICIA_EXISTS_MSG= "La noticia ya existe."
 FECHA_PUBLICACION_EXISTS_MSG= "La fecha de publicación ya existe."
 NO_FECHA_PUBLICACION_MSG= "No hay fecha de publicación registrada."
 
+# Mensajes de tipo de documento
+TIPO_DOCUMENTO_NOT_FOUND_MSG = "Tipo de documento no encontrado."
+TIPO_DOCUMENTO_FOUND_MSG = "Tipo de documento encontrado."
+TIPO_DOCUMENTOS_FOUND_MSG = "Tipos de documento encontrados."
+TIPO_DOCUMENTO_CREATED_MSG = "Tipo de documento creado correctamente."
+NO_TIPOS_DOCUMENTO_MSG = "No hay tipos de documento registrados."
+TIPO_DOCUMENTO_UPDATED_MSG = "Tipo de documento actualizado correctamente."
+TIPO_DOCUMENTO_DELETED_MSG = "Tipo de documento eliminado correctamente."
+TIPO_DOCUMENTO_EXISTS_MSG = "El tipo de documento ya existe."
+
