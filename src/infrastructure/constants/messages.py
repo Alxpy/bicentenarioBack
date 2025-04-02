@@ -30,3 +30,58 @@ CODE_UPDATE_ERROR_MSG = "Error al actualizar el código de verificación."
 VERIFICATION_EMAIL_SUBJECT = "Verificación de correo electrónico"
 LOGIN_NOTIFICATION_SUBJECT = "Nuevo inicio de sesión detectado"
 PASSWORD_RESET_SUBJECT = "Restablecimiento de contraseña"
+
+# Mensajes de categoría de noticia
+CATEGORIA_NOTICIA_NOT_FOUND_MSG = "Categoría de noticia no encontrada."
+CATEGORIA_NOTICIA_FOUND_MSG = "Categoría de noticia encontrada."
+CATEGORIAS_NOTICIA_FOUND_MSG = "Categorías de noticia encontradas."
+CATEGORIA_NOTICIA_CREATED_MSG = "Categoría de noticia creada correctamente."
+CATEGORIA_NOTICIA_UPDATED_MSG = "Categoría de noticia actualizada correctamente."
+CATEGORIA_NOTICIA_DELETED_MSG = "Categoría de noticia eliminada correctamente."
+NO_CATEGORIAS_NOTICIA_MSG = "No hay categorías de noticia registradas."
+CATEGORIA_NOTICIA_EXISTS_MSG = "La categoría de noticia ya existe."
+
+# Mensajes de noticia
+NOTICIA_NOT_FOUND_MSG= "Noticia no encontrada."
+NOTICIA_FOUND_MSG= "Noticia encontrada."
+NOTICIAS_FOUND_MSG= "Noticias encontradas."
+NOTICIA_CREATED_MSG= "Noticia creada correctamente."
+NO_NOTICIA_MDG= "No hay noticias registradas."
+NOTICIA_UPDATED_MSG= "Noticia actualizada correctamente."
+NOTICIA_DELETED_MSG= "Noticia eliminada correctamente."
+NOTICIA_EXISTS_MSG= "La noticia ya existe."
+FECHA_PUBLICACION_EXISTS_MSG= "La fecha de publicación ya existe."
+NO_FECHA_PUBLICACION_MSG= "No hay fecha de publicación registrada."
+
+# Mensajes de tipo de documento
+TIPO_DOCUMENTO_NOT_FOUND_MSG = "Tipo de documento no encontrado."
+TIPO_DOCUMENTO_FOUND_MSG = "Tipo de documento encontrado."
+TIPO_DOCUMENTOS_FOUND_MSG = "Tipos de documento encontrados."
+TIPO_DOCUMENTO_CREATED_MSG = "Tipo de documento creado correctamente."
+NO_TIPOS_DOCUMENTO_MSG = "No hay tipos de documento registrados."
+TIPO_DOCUMENTO_UPDATED_MSG = "Tipo de documento actualizado correctamente."
+TIPO_DOCUMENTO_DELETED_MSG = "Tipo de documento eliminado correctamente."
+TIPO_DOCUMENTO_EXISTS_MSG = "El tipo de documento ya existe."
+
+# Mensajes de biblioteca
+BIBLIOTECA_NOT_FOUND_MSG = "Biblioteca no encontrada."
+BIBLIOTECA_FOUND_MSG= "Biblioteca encontrada."
+BIBLIOTECAS_FOUND_MSG= "Bibliotecas encontradas."
+NO_BIBLIOTECA_MSG= "No hay biblioteca registrada."
+BIBLIOTECA_EXIST_MSG= "La biblioteca ya existe."
+BIBLIOTECA_CREATED_MSG= "Biblioteca creada correctamente."
+FECHA_PUBLICACION_BIBLIOTECA_EXISTS_MSG= "La fecha de publicación ya existe."
+NO_FECHA_PUBLICACION_BIBLIOTECA_MSG= "No hay fecha de publicación registrada."
+TITLE_BIBLIOTECA_EXISTS_MSG= "El título de la biblioteca ya existe."
+NO_TITLE_BIBLIOTECA_MSG= "No hay título de biblioteca registrado."
+AUTOR_BIBLIOTECA_EXISTS_MSG= "El autor de la biblioteca ya existe."
+NO_AUTOR_BIBLIOTECA_MSG= "No hay autor de biblioteca registrado."
+CATEGORIA_BIBLIOTECA_EXISTS_MSG= "La categoría de biblioteca ya existe."
+NO_CATEGORIA_BIBLIOTECA_MSG= "No hay categoría de biblioteca registrada."
+FECHA_BIBLIOTECA_EXISTS_MSG= "La fecha de biblioteca ya existe."
+NO_FECHA_BIBLIOTECA_MSG= "No hay fecha de biblioteca registrada."
+BIBLIOTECA_UPDATED_MSG= "Biblioteca actualizada correctamente."
+BIBLIOTECA_DELETED_MSG= "Biblioteca eliminada correctamente."
+
+
+
