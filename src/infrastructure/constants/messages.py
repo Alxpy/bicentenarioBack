@@ -63,3 +63,25 @@ TIPO_DOCUMENTO_UPDATED_MSG = "Tipo de documento actualizado correctamente."
 TIPO_DOCUMENTO_DELETED_MSG = "Tipo de documento eliminado correctamente."
 TIPO_DOCUMENTO_EXISTS_MSG = "El tipo de documento ya existe."
 
+# Mensajes de biblioteca
+BIBLIOTECA_NOT_FOUND_MSG = "Biblioteca no encontrada."
+BIBLIOTECA_FOUND_MSG= "Biblioteca encontrada."
+BIBLIOTECAS_FOUND_MSG= "Bibliotecas encontradas."
+NO_BIBLIOTECA_MSG= "No hay biblioteca registrada."
+BIBLIOTECA_EXIST_MSG= "La biblioteca ya existe."
+BIBLIOTECA_CREATED_MSG= "Biblioteca creada correctamente."
+FECHA_PUBLICACION_BIBLIOTECA_EXISTS_MSG= "La fecha de publicación ya existe."
+NO_FECHA_PUBLICACION_BIBLIOTECA_MSG= "No hay fecha de publicación registrada."
+TITLE_BIBLIOTECA_EXISTS_MSG= "El título de la biblioteca ya existe."
+NO_TITLE_BIBLIOTECA_MSG= "No hay título de biblioteca registrado."
+AUTOR_BIBLIOTECA_EXISTS_MSG= "El autor de la biblioteca ya existe."
+NO_AUTOR_BIBLIOTECA_MSG= "No hay autor de biblioteca registrado."
+CATEGORIA_BIBLIOTECA_EXISTS_MSG= "La categoría de biblioteca ya existe."
+NO_CATEGORIA_BIBLIOTECA_MSG= "No hay categoría de biblioteca registrada."
+FECHA_BIBLIOTECA_EXISTS_MSG= "La fecha de biblioteca ya existe."
+NO_FECHA_BIBLIOTECA_MSG= "No hay fecha de biblioteca registrada."
+BIBLIOTECA_UPDATED_MSG= "Biblioteca actualizada correctamente."
+BIBLIOTECA_DELETED_MSG= "Biblioteca eliminada correctamente."
+
+
+

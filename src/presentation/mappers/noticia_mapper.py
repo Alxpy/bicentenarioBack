@@ -9,6 +9,5 @@ def map_noticia_domain_to_dto(noticia: NoticiaDomain) -> NoticiaDTO:
         contenido=noticia.contenido,
         imagen=noticia.imagen,
         idCategoria=noticia.idCategoria,
-        idUsuario=noticia.idUsuario,
         fecha_publicacion=noticia.fecha_publicacion,
     )
