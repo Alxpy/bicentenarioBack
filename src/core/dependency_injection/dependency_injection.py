@@ -23,6 +23,9 @@ from src.core.services.tipoDocumento_service import TipoDocumentoService
 from src.infrastructure.repository.implementations.biblioteca_repository import BibliotecaRepository
 from src.core.services.biblioteca_service import BibliotecaService
 
+from src.infrastructure.repository.implementations.ubicacion_repository import UbicacionRepository
+from src.core.services.ubicacion_service import UbicacionService
+
 def build_usuario_service(
     connection = Depends(get_connection),
 ):
@@ -58,3 +61,8 @@ def build_biblioteca_service(
     connection = Depends(get_connection),
 ):
     return BibliotecaService(BibliotecaRepository(connection))
+
+def build_ubicacion_service(
+    connection = Depends(get_connection),
+):
+    return UbicacionService(UbicacionRepository(connection))

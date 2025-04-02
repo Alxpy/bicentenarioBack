@@ -83,5 +83,17 @@ NO_FECHA_BIBLIOTECA_MSG= "No hay fecha de biblioteca registrada."
 BIBLIOTECA_UPDATED_MSG= "Biblioteca actualizada correctamente."
 BIBLIOTECA_DELETED_MSG= "Biblioteca eliminada correctamente."
 
+# Mensajes de ubicación
+UBICACION_NOT_FOUND_MSG = "Ubicación no encontrada."
+UBICACION_FOUND_MSG = "Ubicación encontrada."
+UBICACIONES_FOUND_MSG = "Ubicaciones encontradas."
+NO_UBICACION_MDG = "No hay ubicaciones registradas."
+UBICACION_NAME_EXISTS_MSG = "La ubicación ya existe."
+NO_UBICACION_NAME_MSG = "No hay ubicación registrada."
+UBICACION_CREATED_MSG = "Ubicación creada correctamente."
+UBICACCION_UPDATED_MSG = "Ubicación actualizada correctamente."
+UBICACION_DELETED_MSG = "Ubicación eliminada correctamente."
+
+
 
 
