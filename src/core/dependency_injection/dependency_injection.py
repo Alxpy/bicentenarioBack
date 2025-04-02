@@ -20,6 +20,9 @@ from src.core.services.noticia_service import NoticiaService
 from src.infrastructure.repository.implementations.tipoDocumento_repository import TipoDocumentoRepository
 from src.core.services.tipoDocumento_service import TipoDocumentoService
 
+from src.infrastructure.repository.implementations.biblioteca_repository import BibliotecaRepository
+from src.core.services.biblioteca_service import BibliotecaService
+
 def build_usuario_service(
     connection = Depends(get_connection),
 ):
@@ -50,3 +53,8 @@ def build_tipoDocumento_service(
     connection = Depends(get_connection),
 ):
     return TipoDocumentoService(TipoDocumentoRepository(connection))
+
+def build_biblioteca_service(
+    connection = Depends(get_connection),
+):
+    return BibliotecaService(BibliotecaRepository(connection))
