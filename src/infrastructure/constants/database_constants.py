@@ -36,3 +36,26 @@ JWT_ALGORITHM = "HS256"
 TOKEN_EXPIRATION_MINUTES = 30
 MAX_LOGIN_ATTEMPTS = 3
 LOGIN_BLOCK_TIME_MINUTES = 5
+
+
+#Mensaje de categoría de noticia
+CATEGORIA_NOTICIA_NOT_FOUND_MSG = "Categoría de noticia no encontrada."
+CATEGORIA_NOTICIA_FOUND_MSG = "Categoría de noticia encontrada."
+CATEGORIAS_NOTICIA_FOUND_MSG = "Categorías de noticia encontradas."
+CATEGORIA_NOTICIA_CREATED_MSG = "Categoría de noticia creada correctamente."
+CATEGORIA_NOTICIA_UPDATED_MSG = "Categoría de noticia actualizada correctamente."
+CATEGORIA_NOTICIA_DELETED_MSG = "Categoría de noticia eliminada correctamente."
+NO_CATEGORIAS_NOTICIA_MSG = "No hay categorías de noticia registradas."
+CATEGORIA_NOTICIA_EXISTS_MSG = "La categoría de noticia ya existe."
+
+
+# Mensajes de noticia
+NOTICIA_NOT_FOUND_MSG= "Noticia no encontrada."
+NOTICIA_FOUND_MSG= "Noticia encontrada."
+NOTICIAS_FOUND_MSG= "Noticias encontradas."
+NOTICIA_CREATED_MSG= "Noticia creada correctamente."
+NOTICIA_UPDATED_MSG= "Noticia actualizada correctamente."
+NOTICIA_DELETED_MSG= "Noticia eliminada correctamente."
+NOTICIA_EXISTS_MSG= "La noticia ya existe."
+NO_NOTICIA_MDG= "No hay noticias registradas."
+
