@@ -12,6 +12,7 @@ from src.presentation.controllers.noticia_controller import noticia_controller
 from src.presentation.controllers.tipoDocumento_controller import tipoDocumento_controller
 from src.presentation.controllers.biblioteca_controller import biblioteca_controller
 from src.presentation.controllers.ubicacion_controller import ubicacion_controller
+from src.presentation.controllers.cultura_controller import cultura_controller
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -36,6 +37,8 @@ app.include_router(noticia_controller)
 app.include_router(tipoDocumento_controller)
 app.include_router(biblioteca_controller)
 app.include_router(ubicacion_controller)
+app.include_router(cultura_controller)
+
 
 if __name__ == "__main__":
     import uvicorn

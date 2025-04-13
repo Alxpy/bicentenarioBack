@@ -8,9 +8,11 @@ class NoticiaDomain(BaseModel):
     resumen: str
     contenido: str
     imagen: Optional[str] = None
-    idCategoria: Optional[int] = None
+    id_Categoria: Optional[int] = None
+    id_usuario: Optional[int] = None
     nombre_categoria: Optional[str] = None
     fecha_publicacion: Optional[datetime] = None
+    
 
     
 

@@ -26,6 +26,10 @@ from src.core.services.biblioteca_service import BibliotecaService
 from src.infrastructure.repository.implementations.ubicacion_repository import UbicacionRepository
 from src.core.services.ubicacion_service import UbicacionService
 
+from src.infrastructure.repository.implementations.cultura_repository import CulturaRepository
+from src.core.services.cultura_service import CulturaService
+
+
 def build_usuario_service(
     connection = Depends(get_connection),
 ):
@@ -66,3 +70,8 @@ def build_ubicacion_service(
     connection = Depends(get_connection),
 ):
     return UbicacionService(UbicacionRepository(connection))
+
+def build_cultura_service(
+    connection = Depends(get_connection),
+):
+    return CulturaService(CulturaRepository(connection))

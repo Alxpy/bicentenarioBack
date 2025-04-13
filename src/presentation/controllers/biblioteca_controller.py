@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from src.core.abstractions.services.biblioteca_service_abstract import IBibliotecaService
 from src.core.dependency_injection.dependency_injection import build_biblioteca_service
-from src.presentation.dto.biblioteca_dto import BibliotecaDTO
+from src.presentation.dto.biblioteca_dto import *
 from src.presentation.mappers.biblioteca_mapper import map_biblioteca_domain_to_dto
 from src.core.models.biblioteca_domain import BibliotecaDomain
 
@@ -72,9 +72,10 @@ async def get_biblioteca_by_fecha(
 @biblioteca_controller.put("/biblioteca/{id}")
 async def update_biblioteca(
     id: int,
-    bibliotecaUpdate: BibliotecaDTO,
+    bibliotecaUpdate: BibliotecaUpdateDTO,
     biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)):
-    try:        
+    try: 
+        bliblioteca:BibliotecaDomain = await biblioteca_service.get_biblioteca_by_id(id)       
         updateBibliotca=BibliotecaDomain(
             id=id,
             titulo=bibliotecaUpdate.titulo,
@@ -83,6 +84,7 @@ async def update_biblioteca(
             fecha_publicacion=bibliotecaUpdate.fecha_publicacion,
             edicion=bibliotecaUpdate.edicion,
             id_tipo=bibliotecaUpdate.id_tipo,
+            id_usuario=bliblioteca.id_usuario,
             fuente=bibliotecaUpdate.fuente,
             enlace=bibliotecaUpdate.enlace,
         )
