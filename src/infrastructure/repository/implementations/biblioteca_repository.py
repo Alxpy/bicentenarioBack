@@ -197,6 +197,7 @@ class BibliotecaRepository(IBibliotecaRepository):
                     biblioteca_dto.imagen,
                     biblioteca_dto.fecha_publicacion,
                     biblioteca_dto.edicion,
+                    biblioteca_dto.id_usuario,
                     biblioteca_dto.id_tipo,
                     biblioteca_dto.fuente,
                     biblioteca_dto.enlace

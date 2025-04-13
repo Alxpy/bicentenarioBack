@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from src.core.abstractions.services.noticia_service_abstract import INoticiaService
 from src.core.dependency_injection.dependency_injection import build_noticia_service
-from src.presentation.dto.noticia_dto import NoticiaDTO
+from src.presentation.dto.noticia_dto import *
 from src.presentation.mappers.noticia_mapper import map_noticia_domain_to_dto
 from src.core.models.noticia_domain import NoticiaDomain
+
 
 noticia_controller = APIRouter(prefix="/api/v1", tags=["noticia"])
 
@@ -33,11 +34,12 @@ async def get_noticia(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
-@noticia_controller.get("/noticia/{fecha_publicacion}")
-async def get_noticia(
+@noticia_controller.get("/noticia/Fecha/{fechapublicacion}")
+async def get_noticia_fecha_publicacion(
     fecha_publicacion: str,
     noticia_service: INoticiaService = Depends(build_noticia_service)):
     try:
+        input
         return await noticia_service.get_noticia_by_fecha(fecha_publicacion)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -63,7 +65,7 @@ async def get_noticia_by_title(
 @noticia_controller.put("/noticia/{id}")
 async def update_noticia(
     id: int,
-    noticiaUpdate: NoticiaDTO,
+    noticiaUpdate: NoticiaUpdateDTO,
     noticia_service: INoticiaService = Depends(build_noticia_service)):
     try:        
         noticia: NoticiaDomain = await noticia_service.get_noticia_by_id(id)
@@ -72,7 +74,8 @@ async def update_noticia(
             resumen=noticiaUpdate.resumen,
             contenido=noticiaUpdate.contenido,
             imagen=noticiaUpdate.imagen,
-            idCategoria=noticiaUpdate.idCategoria,            
+            id_Categoria=noticiaUpdate.id_Categoria,  
+            fecha_publicacion=noticiaUpdate.fecha_publicacion,
         )
         return await noticia_service.update_noticia(id, updateNoticia)
         
