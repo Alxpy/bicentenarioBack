@@ -84,4 +84,7 @@ BIBLIOTECA_UPDATED_MSG= "Biblioteca actualizada correctamente."
 BIBLIOTECA_DELETED_MSG= "Biblioteca eliminada correctamente."
 
 
+# Mensajes de rol
+ROLES_NOT_FOUND_MSG = "Roles no encontrados."
+ROLES_FOUND_MSG = "Roles encontrados."
 
