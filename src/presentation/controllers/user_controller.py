@@ -20,7 +20,8 @@ async def register(
 
 @user_controller.get("/usuarios")
 async def get_usuarios(
-    user_service: IUsuarioService = Depends(build_usuario_service)):
+    user_service: IUsuarioService = Depends(build_usuario_service)
+    ):
     try:
         return await user_service.get_all_usuarios()
     except Exception as e:

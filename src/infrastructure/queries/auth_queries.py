@@ -6,7 +6,7 @@ GET_USER_BY_EMAIL = """
     FROM usuario AS u
     INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
     INNER JOIN rol AS r ON r.id = ur.id_rol
-    WHERE u.correo = %s
+    WHERE u.correo like %s
     GROUP BY u.id;
 """
 
