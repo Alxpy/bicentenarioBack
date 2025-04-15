@@ -83,6 +83,52 @@ NO_FECHA_BIBLIOTECA_MSG= "No hay fecha de biblioteca registrada."
 BIBLIOTECA_UPDATED_MSG= "Biblioteca actualizada correctamente."
 BIBLIOTECA_DELETED_MSG= "Biblioteca eliminada correctamente."
 
+# Mensajes de ubicación
+UBICACION_NOT_FOUND_MSG = "Ubicación no encontrada."
+UBICACION_FOUND_MSG = "Ubicación encontrada."
+UBICACIONES_FOUND_MSG = "Ubicaciones encontradas."
+NO_UBICACION_MDG = "No hay ubicaciones registradas."
+UBICACION_NAME_EXISTS_MSG = "La ubicación ya existe."
+NO_UBICACION_NAME_MSG = "No hay ubicación registrada."
+UBICACION_CREATED_MSG = "Ubicación creada correctamente."
+UBICACCION_UPDATED_MSG = "Ubicación actualizada correctamente."
+UBICACION_DELETED_MSG = "Ubicación eliminada correctamente."
+
+# Mensajes de cultura
+CULTURA_NOT_FOUND_MSG = "Cultura no encontrada."
+CULTURA_FOUND_MSG = "Cultura encontrada." 
+CULTURAS_FOUND_MSG = "Culturas encontradas."
+NO_CULTURAS_MSG = "No hay culturas registradas."
+CULTURA_CREATED_MSG = "Cultura creada correctamente."
+CULTURA_UPDATED_MSG = "Cultura actualizada correctamente."
+CULTURA_DELETED_MSG = "Cultura eliminada correctamente."
+NO_CULTURA_MDG = "No hay cultura registrada."
+CULTURA_BY_UBICACION_MSG = "Cultura por ubicación encontrada."
+NO_CULTURA_BY_UBICACION_MSG = "No hay cultura por ubicación registrada."
+CULTURA_BY_ID_MSG = "Cultura por ID encontrada."
+CULTURA_BY_ID_NOT_FOUND_MSG = "Cultura por ID no encontrada."
+CULTURA_BY_NOMBRE_UBICACION_MSG = "Cultura por nombre y ubicación encontrada."
+CULTURA_BY_NOMBRE_MSG = "Cultura por nombre encontrada."
+CULTURA_NAME_EXISTS_MSG = "La cultura ya existe."
+NO_CULTURA_NAME_MSG = "No hay cultura registrada."
+CULTURA_CREATED_MSG = "Cultura creada correctamente."
+
+
+# Mensajes de presidente
+PRESIDENTE_NOT_FOUND_MSG = "Presidente no encontrado."
+PRESIDENTE_FOUND_MSG = "Presidente encontrado."
+PRESIDENTES_FOUND_MSG = "Presidentes encontrados."
+NO_PRESIDENTE_MSG = "No hay presidente registrado."
+PRESIDENTE_BY_NAMBRE_MSG = "Presidente por nombre encontrado."
+NO_PRESIDENTE_BY_NOMBRE_MSG = "No hay presidente por nombre registrado."
+PRESIDENTE_CREATED_MSG = "Presidente creado correctamente."
+NO_PRESIDENTE_CREATED_MSG = "No hay presidente creado."
+PRESIDENTE_UPDATED_MSG = "Presidente actualizado correctamente."
+NO_PRESIDENTE_UPDATED_MSG = "No hay presidente actualizado."
+PRESIDENTE_DELETED_MSG = "Presidente eliminado correctamente."
+NO_PRESIDENTE_MDG = "No hay presidentes registrados."
+
+
 
 # Mensajes de rol
 ROLES_NOT_FOUND_MSG = "Roles no encontrados."
