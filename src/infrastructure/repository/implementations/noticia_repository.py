@@ -79,6 +79,7 @@ class NoticiaRepository(INoticiaRepository):
     async def get_noticia_by_fecha(self, fecha: str) -> Response:
         conn = None
         try:
+
             conn = self._get_connection()
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute(GET_NOTICIA_BY_FECHA, (fecha,))
@@ -168,7 +169,8 @@ class NoticiaRepository(INoticiaRepository):
                     noticia.resumen,
                     noticia.contenido,
                     noticia.imagen,
-                    noticia.idCategoria,
+                    noticia.id_Categoria,
+                    noticia.id_usuario,
                     noticia.fecha_publicacion
                 ))
                 conn.commit()
@@ -201,7 +203,7 @@ class NoticiaRepository(INoticiaRepository):
                     noticia.resumen,
                     noticia.contenido,
                     noticia.imagen,
-                    noticia.idCategoria,
+                    noticia.id_Categoria,
                     noticia.fecha_publicacion,
                     id
                 ))
