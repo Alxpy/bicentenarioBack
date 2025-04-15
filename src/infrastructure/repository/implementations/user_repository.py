@@ -89,7 +89,6 @@ class UserRepository(IUsuarioRepository):
         conn = None
         try:
             conn = self._get_connection()
-            conn.start_transaction()
             
             hashed_password = bcrypt.hashpw(usuario.contrasena.encode('utf-8'), bcrypt.gensalt())
             
@@ -133,9 +132,8 @@ class UserRepository(IUsuarioRepository):
         conn = None
         try:
             conn = self._get_connection()
-            conn.start_transaction()
             
-            with conn.cursor() as cursor:
+            with self.connection_pool.cursor() as cursor:
                 cursor.execute(UPDATE_USER, (
                     usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno,
                     usuario.correo, usuario.genero, usuario.telefono,
@@ -214,10 +212,8 @@ class UserRepository(IUsuarioRepository):
     async def delete_usuario(self, id: int) -> Response:
         conn = None
         try:
-            conn = self._get_connection()
-            conn.start_transaction()
-            
-            with conn.cursor() as cursor:
+       
+            with self.connection_pool.cursor() as cursor:
                 cursor.execute(DELETE_USER, (id,))
                 
                 if cursor.rowcount == 0:

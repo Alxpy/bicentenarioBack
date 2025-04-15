@@ -23,6 +23,7 @@ from src.core.services.tipoDocumento_service import TipoDocumentoService
 from src.infrastructure.repository.implementations.biblioteca_repository import BibliotecaRepository
 from src.core.services.biblioteca_service import BibliotecaService
 
+
 from src.infrastructure.repository.implementations.ubicacion_repository import UbicacionRepository
 from src.core.services.ubicacion_service import UbicacionService
 
@@ -31,6 +32,10 @@ from src.core.services.cultura_service import CulturaService
 
 from src.infrastructure.repository.implementations.presidente_repository import PresidenteRepository
 from src.core.services.presidente_service import PresidenteService
+
+
+from src.infrastructure.repository.implementations.rol_repository import RolRepository
+from src.core.services.role_service import RolService
 
 
 def build_usuario_service(
@@ -69,6 +74,7 @@ def build_biblioteca_service(
 ):
     return BibliotecaService(BibliotecaRepository(connection))
 
+
 def build_ubicacion_service(
     connection = Depends(get_connection),
 ):
@@ -83,3 +89,9 @@ def build_presidente_service(
     connection = Depends(get_connection),
 ):
     return PresidenteService(PresidenteRepository(connection))
+
+def build_rol_service(
+    connection = Depends(get_connection),
+):
+    return RolService(RolRepository(connection))
+

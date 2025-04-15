@@ -130,4 +130,7 @@ NO_PRESIDENTE_MDG = "No hay presidentes registrados."
 
 
 
+# Mensajes de rol
+ROLES_NOT_FOUND_MSG = "Roles no encontrados."
+ROLES_FOUND_MSG = "Roles encontrados."
 
