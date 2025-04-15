@@ -1,6 +1,7 @@
 import logging
 import os
 from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.presentation.controllers.user_controller import user_controller
@@ -20,7 +21,7 @@ from src.presentation.controllers.rol_controller import rol_controller
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-load_dotenv()
+
 
 app = FastAPI()
 
