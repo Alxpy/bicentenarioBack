@@ -9,6 +9,7 @@ class BibliotecaDomain(BaseModel):
     imagen: Optional[str] = None
     fecha_publicacion: Optional[date] = None
     edicion:str
+    id_usuario: Optional[int] = None
     id_tipo:Optional[int] = None
     tipo:Optional[str] = None
     fuente:str
