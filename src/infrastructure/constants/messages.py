@@ -114,6 +114,19 @@ NO_CULTURA_NAME_MSG = "No hay cultura registrada."
 CULTURA_CREATED_MSG = "Cultura creada correctamente."
 
 
+# Mensajes de presidente
+PRESIDENTE_NOT_FOUND_MSG = "Presidente no encontrado."
+PRESIDENTE_FOUND_MSG = "Presidente encontrado."
+PRESIDENTES_FOUND_MSG = "Presidentes encontrados."
+NO_PRESIDENTE_MSG = "No hay presidente registrado."
+PRESIDENTE_BY_NAMBRE_MSG = "Presidente por nombre encontrado."
+NO_PRESIDENTE_BY_NOMBRE_MSG = "No hay presidente por nombre registrado."
+PRESIDENTE_CREATED_MSG = "Presidente creado correctamente."
+NO_PRESIDENTE_CREATED_MSG = "No hay presidente creado."
+PRESIDENTE_UPDATED_MSG = "Presidente actualizado correctamente."
+NO_PRESIDENTE_UPDATED_MSG = "No hay presidente actualizado."
+PRESIDENTE_DELETED_MSG = "Presidente eliminado correctamente."
+NO_PRESIDENTE_MDG = "No hay presidentes registrados."
 
 
 

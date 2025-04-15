@@ -13,6 +13,7 @@ from src.presentation.controllers.tipoDocumento_controller import tipoDocumento_
 from src.presentation.controllers.biblioteca_controller import biblioteca_controller
 from src.presentation.controllers.ubicacion_controller import ubicacion_controller
 from src.presentation.controllers.cultura_controller import cultura_controller
+from src.presentation.controllers.presidente_controller import presidente_controller
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -38,6 +39,7 @@ app.include_router(tipoDocumento_controller)
 app.include_router(biblioteca_controller)
 app.include_router(ubicacion_controller)
 app.include_router(cultura_controller)
+app.include_router(presidente_controller)
 
 
 if __name__ == "__main__":
