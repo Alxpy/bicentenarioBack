@@ -29,6 +29,9 @@ from src.core.services.ubicacion_service import UbicacionService
 from src.infrastructure.repository.implementations.cultura_repository import CulturaRepository
 from src.core.services.cultura_service import CulturaService
 
+from src.infrastructure.repository.implementations.presidente_repository import PresidenteRepository
+from src.core.services.presidente_service import PresidenteService
+
 
 def build_usuario_service(
     connection = Depends(get_connection),
@@ -75,3 +78,8 @@ def build_cultura_service(
     connection = Depends(get_connection),
 ):
     return CulturaService(CulturaRepository(connection))
+
+def build_presidente_service(
+    connection = Depends(get_connection),
+):
+    return PresidenteService(PresidenteRepository(connection))
