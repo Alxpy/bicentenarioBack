@@ -1,13 +1,12 @@
 GET_USER_BY_EMAIL = """
-    SELECT u.id, u.nombre, u.apellidoPaterno, u.apellidoMaterno, u.correo, 
-    u.contrasena, u.genero, u.telefono, u.pais, u.ciudad, u.estado, 
-    u.email_verified_at, u.ultimoIntentoFallido, u.codeValidacion, 
-    u.cantIntentos, u.imagen, GROUP_CONCAT(r.nombre_rol) AS roles
-    FROM usuario AS u
-    INNER JOIN usuario_rol AS ur ON ur.id_usuario = u.id
-    INNER JOIN rol AS r ON r.id = ur.id_rol
-    WHERE u.correo like %s
-    GROUP BY u.id;
+    SELECT u.*, 
+       (SELECT GROUP_CONCAT(r.nombre_rol) 
+        FROM usuario_rol ur 
+        JOIN rol r ON ur.id_rol = r.id 
+        WHERE ur.id_usuario = u.id) AS roles
+FROM usuario u
+WHERE u.correo LIKE %s;
+
 """
 
 UPDATE_USER_STATUS = """

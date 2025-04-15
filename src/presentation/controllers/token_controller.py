@@ -30,7 +30,7 @@ async def get_data(token: str = Query(..., description="Token JWT recibido del f
 
 @token_controller.get("/validate")
 async def validate_token(
-    token: str = Query(..., description="Token JWT recibido del front"),
+    token: str = Query(None, description="Token JWT recibido del front"),
     required_roles: list[str] = Query([], description="Roles requeridos para la ruta")
 ):
     """
