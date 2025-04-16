@@ -1,193 +1,180 @@
 import mysql.connector
-from mysql.connector import Error
-from typing import Optional
+from mysql.connector import Error, IntegrityError
+import logging
+logger = logging.getLogger(__name__)
 
 from src.core.abstractions.infrastructure.repository.cultura_repository_abstract import ICulturaRepository
 from src.core.models.cultura_domain import CulturaDomain
 from src.presentation.dto.cultura_dto import CulturaDTO
-from src.resources.responses.response import Response
+from src.presentation.responses.response_factory import Response, success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
 from src.infrastructure.queries.cultura_queries import *
 
 class CulturaRepository(ICulturaRepository):
-    def __init__(self, connection_pool) -> None:
-        self.connection_pool = connection_pool
+    def __init__(self, connection) -> None:
+        self.connection = connection
     
-    def _get_connection(self):
-        """Obtiene una conexión del pool"""
-        return self.connection_pool
-    
+
     async def get_all_culturas(self) -> Response:
-        conn = None
         try:
-            conn = self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
+            with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(GET_ALL_CULTARAS)
                 result = cursor.fetchall()
                 
                 if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND, 
-                        success=False, 
-                        message=NO_CULTURAS_MSG
+                    return error_response(
+                        message=NO_CULTURAS_MSG,
+                        status=HTTP_404_NOT_FOUND
                     )
                 
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=CULTURAS_FOUND_MSG,
-                    data=[CulturaDomain(**row) for row in result]
+                return success_response(
+                    data=[CulturaDomain(**row) for row in result],
+                    message=CULTURAS_FOUND_MSG
                 )
+                
         except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error("Error en get_all_culturas: %s", e)
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-    
+
     async def get_cultura_by_id(self, id: int) -> Response:
-        conn = None
         try:
-            conn = self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
+            with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(GET_CULTURA_BY_ID, (id,))
                 result = cursor.fetchone()
                 
                 if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=CULTURA_BY_ID_NOT_FOUND_MSG
+                    return error_response(
+                        message=CULTURA_BY_ID_NOT_FOUND_MSG,
+                        status=HTTP_404_NOT_FOUND
                     )
                 
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=CULTURA_BY_ID_MSG,
-                    data=CulturaDomain(**result)
+                return success_response(
+                    data=CulturaDomain(**result),
+                    message=CULTURA_BY_ID_MSG
                 )
+                
         except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error("Error en get_cultura_by_id: %s", e)
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-    
+
     async def get_cultura_by_nombre(self, nombre: str) -> Response:
-        conn = None
         try:
-            conn = self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
+            with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(GET_CULTURA_BY_NOMBRE, (nombre,))
                 result = cursor.fetchone()
                 
-                if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=CULTURA_BY_NOMBRE_MSG
-                    )
-                
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=CULTURA_BY_NOMBRE_MSG,
-                    data=CulturaDomain(**result)
+                return success_response(
+                    data=CulturaDomain(**result) if result else None,
+                    message=CULTURA_BY_NOMBRE_MSG if result else CULTURA_BY_NOMBRE_NOT_FOUND_MSG
                 )
+                
         except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error("Error en get_cultura_by_nombre: %s", e)
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-    
+
     async def get_cultura_by_ubicacion(self, ubicacion: str) -> Response:
-        conn = None
         try:
-            conn = self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
+            with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(GET_CULTURA_BY_UBICACION, (ubicacion,))
                 result = cursor.fetchall()
                 
-                if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=CULTURA_BY_UBICACION_MSG
+                return success_response(
+                    data=[CulturaDomain(**row) for row in result] if result else [],
+                    message=CULTURA_BY_UBICACION_MSG if result else CULTURA_BY_UBICACION_NOT_FOUND_MSG
+                )
+                
+        except Exception as e:
+            logger.error("Error en get_cultura_by_ubicacion: %s", e)
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+    async def create_cultura(self, cultura: CulturaDTO) -> Response:
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(
+                    CREATE_CULTURA, 
+                    (cultura.nombre, cultura.imagen, cultura.descripcion, cultura.id_ubicacion)
+                )
+                self.connection.commit()
+                
+                return success_response(
+                    message=CULTURA_CREATED_MSG,
+                    status=HTTP_201_CREATED
+                )
+                
+        except IntegrityError as e:
+            logger.error("Error de integridad en create_cultura: %s", e)
+            return error_response(
+                message=CULTURA_EXISTS_MSG,
+                status=HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logger.error("Error en create_cultura: %s", e)
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+    async def update_cultura(self, id: int, cultura: CulturaDomain) -> Response:
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(
+                    UPDATE_CULTURA,
+                    (cultura.nombre, cultura.imagen, cultura.descripcion, cultura.id_ubicacion, id)
+                )
+                self.connection.commit()
+                
+                if cursor.rowcount == 0:
+                    return error_response(
+                        message=CULTURA_NOT_FOUND_MSG,
+                        status=HTTP_404_NOT_FOUND
                     )
                 
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=CULTURA_BY_UBICACION_MSG,
-                    data=[CulturaDomain(**row) for row in result]
-                )
-        except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
-            )
-    
-    async def create_cultura(self, cultura: CulturaDTO) -> Response:
-        conn = None
-        try:
-            conn = self._get_connection()
-            with conn.cursor() as cursor:
-                cursor.execute(CREATE_CULTURA, (cultura.nombre, cultura.imagen, cultura.descripcion, cultura.id_ubicacion))
-                conn.commit()
-                
-                return Response(
-                    status=HTTP_201_CREATED,
-                    success=True,
-                    message=CULTURA_CREATED_MSG
-                )
-        except Error as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
-            )
-    
-    async def update_cultura(self, id: int, cultura: CulturaDomain) -> Response:
-        conn = None
-        try:
-            conn = self._get_connection()
-            with conn.cursor() as cursor:
-                cursor.execute(UPDATE_CULTURA, (cultura.nombre, cultura.imagen, cultura.descripcion, cultura.id_ubicacion, id))
-                conn.commit()
-                
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
+                return success_response(
                     message=CULTURA_UPDATED_MSG
                 )
-        except Error as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
-            )
-    
-    async def delete_cultura(self, id: int) -> Response:
-        conn = None
-        try:
-            conn = self._get_connection()
-            with conn.cursor() as cursor:
-                cursor.execute(DELETE_CULTURA, (id,))
-                conn.commit()
                 
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
+        except Exception as e:
+            logger.error("Error en update_cultura: %s", e)
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
+ 
+
+    async def delete_cultura(self, id: int) -> Response:
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(DELETE_CULTURA, (id,))
+                self.connection.commit()
+                
+                if cursor.rowcount == 0:
+                    return error_response(
+                        message=CULTURA_NOT_FOUND_MSG,
+                        status=HTTP_404_NOT_FOUND
+                    )
+                
+                return success_response(
                     message=CULTURA_DELETED_MSG
                 )
-        except Error as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+                
+        except Exception as e:
+            logger.error("Error en delete_cultura: %s", e)
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-    
-    
