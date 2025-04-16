@@ -16,6 +16,9 @@ from src.presentation.controllers.ubicacion_controller import ubicacion_controll
 from src.presentation.controllers.cultura_controller import cultura_controller
 from src.presentation.controllers.presidente_controller import presidente_controller
 from src.presentation.controllers.rol_controller import rol_controller
+from src.presentation.controllers.multimedia_controller import multimedia_controller
+from src.presentation.controllers.multimedia_historia_controller import multimedia_historia_controller
+from src.presentation.controllers.multimedia_cultura_controller import multimedia_cultura_controller
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -45,6 +48,9 @@ app.include_router(ubicacion_controller)
 app.include_router(cultura_controller)
 app.include_router(presidente_controller)
 app.include_router(rol_controller)
+app.include_router(multimedia_controller)
+app.include_router(multimedia_historia_controller)
+app.include_router(multimedia_cultura_controller)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 import mysql.connector
-from mysql.connector import Error
+from mysql.connector import pooling
 from typing import Optional
 
 from src.core.abstractions.infrastructure.repository.cultura_repository_abstract import ICulturaRepository
