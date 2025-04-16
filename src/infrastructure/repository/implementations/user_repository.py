@@ -12,12 +12,9 @@ from src.infrastructure.constants.messages import *
 from src.infrastructure.queries.user_queries import *
 
 class UserRepository(IUsuarioRepository):
-    def __init__(self, connection_pool) -> None:
-        self.connection_pool = connection_pool
+    def __init__(self, connection) -> None:
+        self.connection = connection
 
-    def _get_connection(self):
-        """Obtiene una conexión del pool"""
-        return self.connection_pool
 
     async def get_usuario(self, id: int) -> Response:
         conn = None
@@ -28,23 +25,22 @@ class UserRepository(IUsuarioRepository):
                 result = cursor.fetchone()
                 
                 if not result:
-                    return Response(
+                    return Response[None](
                         status=HTTP_404_NOT_FOUND, 
                         success=False, 
                         message=USER_NOT_FOUND_MSG
                     )
                 
-                # Convertir roles a lista
                 result['roles'] = result['roles'].split(',') if result['roles'] else []
                 
-                return Response(
+                return Response[UsuarioDomain](
                     status=HTTP_200_OK,
                     success=True,
                     message="Usuario encontrado.",
                     data=UsuarioDomain(**result)
                 )
         except Exception as e:
-            return Response(
+            return Response[None](
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
@@ -60,7 +56,7 @@ class UserRepository(IUsuarioRepository):
                 result = cursor.fetchall()
                 
                 if not result:
-                    return Response(
+                    return Response[None](
                         status=HTTP_404_NOT_FOUND,
                         success=False,
                         message=NO_USERS_MSG
@@ -71,14 +67,14 @@ class UserRepository(IUsuarioRepository):
                     usuario['roles'] = usuario['roles'].split(',') if usuario['roles'] else []
                 
                 usuarios = [UsuarioDomain(**usuario) for usuario in result]
-                return Response(
+                return Response[list[UsuarioDomain]](
                     status=HTTP_200_OK,
                     success=True,
                     message=USERS_FOUND_MSG,
                     data=usuarios
                 )
         except Exception as e:
-            return Response(
+            return Response[None](
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
@@ -86,13 +82,11 @@ class UserRepository(IUsuarioRepository):
         
 
     async def create_usuario(self, usuario: UsuarioDTO) -> Response:
-        conn = None
         try:
-            conn = self._get_connection()
             
             hashed_password = bcrypt.hashpw(usuario.contrasena.encode('utf-8'), bcrypt.gensalt())
             
-            with conn.cursor() as cursor:
+            with self.connection.cursor() as cursor:
                 # Insertar usuario
                 cursor.execute(CREATE_USER, (
                     usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno,
@@ -103,25 +97,25 @@ class UserRepository(IUsuarioRepository):
                 # Asignar rol por defecto
                 cursor.execute(ASSIGN_DEFAULT_ROLE)
                 
-                conn.commit()
-                return Response(
+                self.connection.commit()
+                return Response[None](
                     status=HTTP_201_CREATED,
                     success=True,
                     message=USER_CREATED_MSG
                 )
                 
         except mysql.connector.IntegrityError as e:
-            if conn:
-                conn.rollback()
-            return Response(
+            if self.connection:
+                self.connection.rollback()
+            return Response[None](
                 status=HTTP_400_BAD_REQUEST,
                 success=False,
                 message=EMAIL_EXISTS_MSG if "Duplicate entry" in str(e) else str(e)
             )
         except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
+            if self.connection:
+                self.connection.rollback()
+            return Response[None](
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
@@ -129,11 +123,9 @@ class UserRepository(IUsuarioRepository):
         
 
     async def update_usuario(self, id: int, usuario: UsuarioDomain) -> Response:
-        conn = None
         try:
-            conn = self._get_connection()
             
-            with self.connection_pool.cursor() as cursor:
+            with self.connection.cursor() as cursor:
                 cursor.execute(UPDATE_USER, (
                     usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno,
                     usuario.correo, usuario.genero, usuario.telefono,
@@ -141,32 +133,32 @@ class UserRepository(IUsuarioRepository):
                 ))
                 
                 if cursor.rowcount == 0:
-                    conn.rollback()
-                    return Response(
+                    self.connection.rollback()
+                    return Response[None](
                         status=HTTP_404_NOT_FOUND,
                         success=False,
                         message=USER_NOT_FOUND_MSG
                     )
                 
-                conn.commit()
-                return Response(
+                self.connection.commit()
+                return Response[None](
                     status=HTTP_200_OK,
                     success=True,
                     message=USER_UPDATED_MSG
                 )
                 
         except mysql.connector.IntegrityError as e:
-            if conn:
-                conn.rollback()
-            return Response(
+            if self.connection:
+                self.connection.rollback()
+            return Response[None](
                 status=HTTP_400_BAD_REQUEST,
                 success=False,
                 message=f"Error de integridad: {str(e)}"
             )
         except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
+            if self.connection:
+                self.connection.rollback()
+            return Response[None](
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
@@ -174,35 +166,32 @@ class UserRepository(IUsuarioRepository):
         
 
     async def change_password(self, correo:str, password: str) -> Response:
-        conn = None
         try:
-            conn = self._get_connection()
-            conn.start_transaction()
             
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             
-            with conn.cursor() as cursor:
+            with self.connection.cursor() as cursor:
                 cursor.execute(UPDATE_PASSWORD, (hashed_password, correo))
                 
                 if cursor.rowcount == 0:
-                    conn.rollback()
-                    return Response(
+                    self.connection.rollback()
+                    return Response[None](
                         status=HTTP_404_NOT_FOUND,
                         success=False,
                         message=USER_NOT_FOUND_MSG
                     )
                 
-                conn.commit()
-                return Response(
+                self.connection.commit()
+                return Response[None](
                     status=HTTP_200_OK,
                     success=True,
                     message=PASSWORD_UPDATED_MSG
                 )
                 
         except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
+            if self.connection:
+                self.connection.rollback()
+            return Response[None](
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
@@ -210,31 +199,30 @@ class UserRepository(IUsuarioRepository):
         
 
     async def delete_usuario(self, id: int) -> Response:
-        conn = None
         try:
        
-            with self.connection_pool.cursor() as cursor:
+            with self.connection.cursor() as cursor:
                 cursor.execute(DELETE_USER, (id,))
                 
                 if cursor.rowcount == 0:
-                    conn.rollback()
-                    return Response(
+                    self.connection.rollback()
+                    return Response[None](
                         status=HTTP_404_NOT_FOUND,
                         success=False,
                         message=USER_NOT_FOUND_MSG
                     )
                 
-                conn.commit()
-                return Response(
+                self.connection.commit()
+                return Response[None](
                     status=HTTP_200_OK,
                     success=True,
                     message=USER_DELETED_MSG
                 )
                 
         except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
+            if self.connection:
+                self.connection.rollback()
+            return Response[None](
                 status=HTTP_500_INTERNAL_SERVER_ERROR,
                 success=False,
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
