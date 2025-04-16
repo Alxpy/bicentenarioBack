@@ -6,10 +6,10 @@ from src.core.models.user_domain import UsuarioDomain
 from src.resources.responses.response import Response
 
 
-user_controller = APIRouter(prefix="/api/v1/users", tags=["users"])
+user_controller = APIRouter(prefix="/api/v1/user", tags=["user"])
 
 @user_controller.post(
-    "/register",
+    "",
     summary="Register user",
     description="Creates a new user in the system.",
     response_model=Response[None]
@@ -24,7 +24,7 @@ async def register(
         raise HTTPException(status_code=400, detail=str(e))
 
 @user_controller.get(
-    "/all",
+    "",
     summary="Get all users",
     description="Returns a list of all registered users.",
     response_model=Response[list[UsuarioDomain]]

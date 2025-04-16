@@ -52,6 +52,7 @@ NOTICIA_DELETED_MSG= "Noticia eliminada correctamente."
 NOTICIA_EXISTS_MSG= "La noticia ya existe."
 FECHA_PUBLICACION_EXISTS_MSG= "La fecha de publicación ya existe."
 NO_FECHA_PUBLICACION_MSG= "No hay fecha de publicación registrada."
+NO_NOTICIA_MSG= "No hay noticia registrada."
 
 # Mensajes de tipo de documento
 TIPO_DOCUMENTO_NOT_FOUND_MSG = "Tipo de documento no encontrado."
@@ -62,6 +63,7 @@ NO_TIPOS_DOCUMENTO_MSG = "No hay tipos de documento registrados."
 TIPO_DOCUMENTO_UPDATED_MSG = "Tipo de documento actualizado correctamente."
 TIPO_DOCUMENTO_DELETED_MSG = "Tipo de documento eliminado correctamente."
 TIPO_DOCUMENTO_EXISTS_MSG = "El tipo de documento ya existe."
+TIPOS_DOCUMENTO_FOUND_MSG = "Tipos de documento encontrados."
 
 # Mensajes de biblioteca
 BIBLIOTECA_NOT_FOUND_MSG = "Biblioteca no encontrada."
@@ -87,12 +89,13 @@ BIBLIOTECA_DELETED_MSG= "Biblioteca eliminada correctamente."
 UBICACION_NOT_FOUND_MSG = "Ubicación no encontrada."
 UBICACION_FOUND_MSG = "Ubicación encontrada."
 UBICACIONES_FOUND_MSG = "Ubicaciones encontradas."
-NO_UBICACION_MDG = "No hay ubicaciones registradas."
-UBICACION_NAME_EXISTS_MSG = "La ubicación ya existe."
+NO_UBICACION_MSG = "No hay ubicaciones registradas."
+UBICACION_EXISTS_MSG = "La ubicación ya existe."
 NO_UBICACION_NAME_MSG = "No hay ubicación registrada."
 UBICACION_CREATED_MSG = "Ubicación creada correctamente."
-UBICACCION_UPDATED_MSG = "Ubicación actualizada correctamente."
+UBICACION_UPDATED_MSG = "Ubicación actualizada correctamente."
 UBICACION_DELETED_MSG = "Ubicación eliminada correctamente."
+
 
 # Mensajes de cultura
 CULTURA_NOT_FOUND_MSG = "Cultura no encontrada."
@@ -112,8 +115,9 @@ CULTURA_BY_NOMBRE_MSG = "Cultura por nombre encontrada."
 CULTURA_NAME_EXISTS_MSG = "La cultura ya existe."
 NO_CULTURA_NAME_MSG = "No hay cultura registrada."
 CULTURA_CREATED_MSG = "Cultura creada correctamente."
-
-
+CULTURA_BY_NOMBRE_NOT_FOUND_MSG = "Cultura por nombre no encontrada."
+CULTURA_BY_UBICACION_NOT_FOUND_MSG = "Cultura por ubicación no encontrada."
+CULTURA_EXISTS_MSG= "La cultura ya existe."
 # Mensajes de presidente
 PRESIDENTE_NOT_FOUND_MSG = "Presidente no encontrado."
 PRESIDENTE_FOUND_MSG = "Presidente encontrado."
@@ -127,6 +131,7 @@ PRESIDENTE_UPDATED_MSG = "Presidente actualizado correctamente."
 NO_PRESIDENTE_UPDATED_MSG = "No hay presidente actualizado."
 PRESIDENTE_DELETED_MSG = "Presidente eliminado correctamente."
 NO_PRESIDENTE_MDG = "No hay presidentes registrados."
+PRESIDENTE_EXISTS_MSG = "El presidente ya existe."
 
 
 
