@@ -128,6 +128,40 @@ NO_PRESIDENTE_UPDATED_MSG = "No hay presidente actualizado."
 PRESIDENTE_DELETED_MSG = "Presidente eliminado correctamente."
 NO_PRESIDENTE_MDG = "No hay presidentes registrados."
 
+# Mensajes de multimedia
+MULTIMEDIA_NOT_FOUND_MSG = "Multimedia no encontrada."
+MULTIMEDIA_FOUND_MSG= "Multimedia encontrada."
+MULTIMEDIA_CREATED_MSG= "Multimedia creada correctamente."
+MULTIMEDIA_UPDATED_MSG= "Multimedia actualizada correctamente."
+MULTIMEDIA_DELETED_MSG= "Multimedia eliminada correctamente."
+NO_MULTIMEDIA_MSG= "No hay multimedia registrada."
+MULTIMEDIA_EXISTS_MSG= "La multimedia ya existe."
+MULTIMEDIA_BY_ID_MSG= "Multimedia por ID encontrada."
+MULTIMEDIA_BY_ID_NOT_FOUND_MSG= "Multimedia por ID no encontrada."
+
+#Mensajes multimedia historia
+MULTIMEDIA_HISTORIA_NOT_FOUND_MSG = "Multimedia historia no encontrada."
+MULTIMEDIA_HISTORIA_FOUND_MSG = "Multimedia historia encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_USER_MSG = "Multimedia historia por ID encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_HISTORIA_NOT_FOUND_MSG = "Multimedia historia por ID HISTORIA no encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_HISTORIA_MSG = "Multimedia historia por ID HISTORIA encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_MULTIMEDIA_NOT_FOUND_MSG = "Multimedia historia por ID MULTIMEDIA no encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_MULTIMEDIA_MSG = "Multimedia historia por ID MULTIMEDIA encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_NOT_FOUND_MSG = "Multimedia historia por ID no encontrada."
+MULTIMEDIA_HISTORIA_CREATED_MSG = "Multimedia historia creada correctamente."
+MULTIMEDIA_HISTORIA_DELETED_MSG = "Multimedia historia eliminada correctamente."
+
+# Mensajes multimedia cultura
+MULTIMEDIA_CULTURA_NOT_FOUND_MSG = "Multimedia cultura no encontrada."
+MULTIMEDIA_CULTURA_FOUND_MSG = "Multimedia cultura encontrada."
+MULTIMEDIA_CULTURA_BY_ID_USER_MSG = "Multimedia cultura por ID encontrada."
+MULTIMEDIA_CULTURA_BY_ID_CULTURA_NOT_FOUND_MSG = "Multimedia cultura por ID CULTURA no encontrada."
+MULTIMEDIA_CULTURA_BY_ID_CULTURA_MSG = "Multimedia cultura por ID CULTURA encontrada."
+MULTIMEDIA_CULTURA_BY_ID_MULTIMEDIA_NOT_FOUND_MSG = "Multimedia cultura por ID MULTIMEDIA no encontrada."
+MULTIMEDIA_CULTURA_BY_ID_MULTIMEDIA_MSG = "Multimedia cultura por ID MULTIMEDIA encontrada."
+MULTIMEDIA_CULTURA_BY_ID_NOT_FOUND_MSG = "Multimedia cultura por ID no encontrada."
+MULTIMEDIA_CULTURA_CREATED_MSG = "Multimedia cultura creada correctamente."
+MULTIMEDIA_CULTURA_DELETED_MSG = "Multimedia cultura eliminada correctamente."
 
 
 # Mensajes de rol

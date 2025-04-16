@@ -64,8 +64,7 @@ class UserRepository(IUsuarioRepository):
                         status=HTTP_404_NOT_FOUND,
                         success=False,
                         message=NO_USERS_MSG
-                    )
-                
+                    )            
                 # Convertir roles a lista para cada usuario
                 for usuario in result:
                     usuario['roles'] = usuario['roles'].split(',') if usuario['roles'] else []
