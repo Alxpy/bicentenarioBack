@@ -8,6 +8,8 @@ USER_DELETED_MSG = "Usuario eliminado correctamente."
 USER_UPDATED_MSG = "Usuario actualizado correctamente."
 USERS_FOUND_MSG = "Usuarios encontrados."
 NO_USERS_MSG = "No hay usuarios registrados."
+USER_FOUND_MSG = "Usuario encontrado."
+
 
 # Mensajes de autenticación
 INVALID_CREDENTIALS_MSG = "Credenciales incorrectas."
@@ -21,6 +23,7 @@ INVALID_TOKEN_MSG = "Token inválido."
 INVALID_CODE_MSG = "Código inválido o correo incorrecto."
 EMAIL_VERIFIED_MSG = "Correo verificado correctamente."
 INTERNAL_ERROR_MSG = "Error interno del servidor."
+VALID_CODE_MSG = "Código válido."
 
 # Mensajes de email
 EMAIL_SENT_SUCCESS_MSG = "Correo enviado correctamente."

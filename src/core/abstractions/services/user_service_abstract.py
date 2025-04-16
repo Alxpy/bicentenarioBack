@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from src.core.models.user_domain import UsuarioDomain
-from src.presentation.dto.user_dto import UsuarioDTO
+from src.presentation.dto.user_dto import UsuarioDTO,NewPasswordDTO
 
 class IUsuarioService(ABC):
 
@@ -21,7 +21,7 @@ class IUsuarioService(ABC):
         pass
 
     @abstractmethod
-    async def change_password(self, correo:str, password: str) -> None:
+    async def change_password(self, data: NewPasswordDTO) -> None:
         pass
     
     @abstractmethod
