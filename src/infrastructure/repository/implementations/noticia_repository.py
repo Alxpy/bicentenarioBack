@@ -20,7 +20,6 @@ class NoticiaRepository(INoticiaRepository):
 
     async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> List[dict]:
         """Ejecuta una consulta y retorna los resultados"""
-        
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
