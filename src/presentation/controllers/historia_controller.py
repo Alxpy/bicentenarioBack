@@ -36,7 +36,7 @@ async def get_historia(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("/titulo/{titulo}", response_model=Response[HistoriaDomain])
+@historia_controller.get("/title/{titulo}", response_model=Response[HistoriaDomain])
 async def get_historia_by_titulo(
     titulo: str,
     historia_service: IHistoriaService = Depends(build_historia_service)):
@@ -45,16 +45,16 @@ async def get_historia_by_titulo(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("/ubicacion/{ubicacion}", response_model=Response[list[HistoriaDomain]])
+@historia_controller.get("/location/{ubi}", response_model=Response[list[HistoriaDomain]])
 async def get_historia_by_ubicacion(
-    ubicacion: str,
+    ubi: str,
     historia_service: IHistoriaService = Depends(build_historia_service)):
     try:
-        return await historia_service.get_historia_by_ubicacion(ubicacion)
+        return await historia_service.get_historia_by_ubicacion(ubi)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("/categoria/{categoria}", response_model=Response[list[HistoriaDomain]])
+@historia_controller.get("/categorie/{categoria}", response_model=Response[list[HistoriaDomain]])
 async def get_historia_by_categoria(
     categoria: str,
     historia_service: IHistoriaService = Depends(build_historia_service)):

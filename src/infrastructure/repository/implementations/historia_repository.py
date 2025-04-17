@@ -27,6 +27,15 @@ class HistoriaRepository(IHistoriaRepository):
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
     
+    async def _execute_query_all(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+        """Ejecuta una consulta y retorna los resultados"""
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall()
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
+    
     async def _execute_update(self, query: str, params: tuple = None) -> int:
         """Ejecuta una consulta de actualización y retorna el rowcount"""
         try:
@@ -97,14 +106,17 @@ class HistoriaRepository(IHistoriaRepository):
     
     async def get_historia_by_ubicacion(self, ubicacion: str) -> Response:
         try:
-            result = await self._execute_query(GET_HISTORIA_BY_UBICACION, (ubicacion,))
+            result = await self._execute_query_all(GET_HISTORIA_BY_UBICACION, (ubicacion,))
             if not result:
                 return error_response(
                     message=HISTORIA_BY_UBICACION_NOT_FOUND_MSG,
                     status=HTTP_404_NOT_FOUND
                 )
+            historias = [HistoriaDomain(**row) for row in result]
+            logger.debug(f"Historia objects: {historias}")
+            
             return success_response(
-                data=[HistoriaDomain(**row) for row in result],
+                data=historias,  
                 message=HISTORIA_FOUND_MSG
             )
         except Exception as e:
