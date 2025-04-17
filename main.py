@@ -23,7 +23,7 @@ from src.presentation.controllers.historia_controller import historia_controller
 from src.presentation.controllers.file_controller import routerfile
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(filename='app.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
