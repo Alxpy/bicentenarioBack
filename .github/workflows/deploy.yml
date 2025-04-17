@@ -35,6 +35,9 @@ jobs:
         source venv/bin/activate
         for req in requirements*.txt; do pip install -r "$req"; done
 
+    - name: Copiar recursos esenciales
+      run: cp /home/ironroot/alxpy/bicentenarioBack/*.json ./
+      
     - name: Run tests (opcional)
       run: |
         source venv/bin/activate
