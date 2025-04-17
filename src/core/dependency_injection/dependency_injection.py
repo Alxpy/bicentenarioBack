@@ -45,7 +45,11 @@ from src.core.services.multimedia_historia_service import MultimediaHistoriaServ
 from src.infrastructure.repository.implementations.multimedia_cultura_repository import MultimediaCulturaRepository
 from src.core.services.multimedia_cultura_service import MultimediaCulturaService
 
+from src.infrastructure.repository.implementations.categoria_historia_repository import CategoriaHistoriaRepository
+from src.core.services.categoria_historia_service import CategoriaHistoriaService
 
+from src.infrastructure.repository.implementations.historia_repository import HistoriaRepository
+from src.core.services.historia_service import HistoriaService
 
 def build_usuario_service(
     connection = Depends(get_connection),
@@ -119,3 +123,12 @@ def build_multimedia_cultura_service(
 ):
    return MultimediaCulturaService(MultimediaCulturaRepository(connection))
 
+def build_categoria_historia_service(
+    connection = Depends(get_connection),
+):
+    return CategoriaHistoriaService(CategoriaHistoriaRepository(connection))
+
+def build_historia_service(
+    connection = Depends(get_connection),
+):
+    return HistoriaService(HistoriaRepository(connection))

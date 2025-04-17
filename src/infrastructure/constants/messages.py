@@ -163,6 +163,32 @@ MULTIMEDIA_CULTURA_BY_ID_NOT_FOUND_MSG = "Multimedia cultura por ID no encontrad
 MULTIMEDIA_CULTURA_CREATED_MSG = "Multimedia cultura creada correctamente."
 MULTIMEDIA_CULTURA_DELETED_MSG = "Multimedia cultura eliminada correctamente."
 
+# Mensajes Categoria Historia
+CATEGORIA_HISTORIA_NOT_FOUND_MSG = "Categoría de historia no encontrada."
+CATEGORIA_HISTORIA_FOUND_MSG = "Categoría de historia encontrada."
+CATEGORIAS_HISTORIA_FOUND_MSG = "Categorías de historia encontradas."
+CATEGORIA_HISTORIA_CREATED_MSG = "Categoría de historia creada correctamente."
+CATEGORIA_HISTORIA_UPDATED_MSG = "Categoría de historia actualizada correctamente."
+CATEGORIA_HISTORIA_DELETED_MSG = "Categoría de historia eliminada correctamente."
+NO_CATEGORIAS_HISTORIA_MSG = "No hay categorías de historia registradas."
+CATEGORIA_HISTORIA_EXISTS_MSG = "La categoría de historia ya existe."
+
+# Mensajes historia
+HISTORIA_NOT_FOUND_MSG = "Historia no encontrada."
+HISTORIA_FOUND_MSG = "Historia encontrada."
+HISTORIAS_FOUND_MSG = "Historias encontradas."
+HISTORIA_CREATED_MSG = "Historia creada correctamente."
+HISTORIA_UPDATED_MSG = "Historia actualizada correctamente."
+HISTORIA_BY_TITULO_MSG = "Historia por título encontrada."
+HISTORIA_BY_TITULO_NOT_FOUND_MSG = "Historia por título no encontrada."
+HISTORIA_BY_UBICACION_MSG = "Historia por ubicación encontrada."
+HISTORIA_BY_UBICACION_NOT_FOUND_MSG = "Historia por ubicación no encontrada."
+HISTORIA_BY_CATEGORIA_MSG = "Historia por categoría encontrada."
+HISTORIA_BY_CATEGORIA_NOT_FOUND_MSG = "Historia por categoría no encontrada."
+HISTORIA_BY_ID_MSG = "Historia por ID encontrada."
+HISTORIA_BY_ID_NOT_FOUND_MSG = "Historia por ID no encontrada."
+HISTORIA_DELETED_MSG= "Historia eliminada correctamente."
+
 
 # Mensajes de rol
 ROLES_NOT_FOUND_MSG = "Roles no encontrados."

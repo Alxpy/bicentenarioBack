@@ -19,7 +19,8 @@ from src.presentation.controllers.rol_controller import rol_controller
 from src.presentation.controllers.multimedia_controller import multimedia_controller
 from src.presentation.controllers.multimedia_historia_controller import multimedia_historia_controller
 from src.presentation.controllers.multimedia_cultura_controller import multimedia_cultura_controller
-
+from src.presentation.controllers.categoria_historia_controller import categoria_historia_controller
+from src.presentation.controllers.historia_controller import historia_controller
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -51,7 +52,8 @@ app.include_router(rol_controller)
 app.include_router(multimedia_controller)
 app.include_router(multimedia_historia_controller)
 app.include_router(multimedia_cultura_controller)
-
+app.include_router(categoria_historia_controller)
+app.include_router(historia_controller)
 
 if __name__ == "__main__":
     import uvicorn
