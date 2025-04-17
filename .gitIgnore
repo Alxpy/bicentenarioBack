@@ -13,3 +13,9 @@ credentials.json
 oval-silicon-389906-e50d60027c3d.json
 node_modules
 package-lock.json
+
+actions-runner/_work/
+*.pyc
+__pycache__/
+token.pickle
+venv/
