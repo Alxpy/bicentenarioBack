@@ -1,155 +1,159 @@
 import mysql.connector
-from mysql.connector import pooling
-from typing import Optional
+import logging
+from mysql.connector import pooling, IntegrityError
+from typing import List, Optional
 
 from src.core.abstractions.infrastructure.repository.categoriaNoticia_repository_abstract import ICategoriaNoticiaRepository
 from src.core.models.categoriaNoticia_domain import CategoriaNoticiaDomain
 from src.presentation.dto.categoriaNoticia_dto import CategoriaNoticiaDTO
-from src.resources.responses.response import Response
+from src.presentation.responses.response_factory import Response, success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
 from src.infrastructure.queries.categoriaNoticia_queries import *
 
+logger = logging.getLogger(__name__)
+
 class CategoriaNoticiaRepository(ICategoriaNoticiaRepository):
-    def __init__(self, connection_pool) -> None:
-        self.connection_pool = connection_pool
-    
-    def _get_connection(self):
-        """Obtiene una conexión del pool"""
-        return self.connection_pool
-    
-    async def get_categoria_noticia(self, id: int) -> Response:
-        conn=None
+    def __init__(self, connection) -> None:
+        self.connection = connection
+
+
+    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+        """Ejecuta una consulta y retorna los resultados"""
         try:
-            conn=self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(GET_CATEGORIA_NOTICIA_BY_ID,(id,))
-                result=cursor.fetchone()
-                
-                if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=CATEGORIA_NOTICIA_NOT_FOUND_MSG
-                    )
-                
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message="Categoria de noticia encontrada.",
-                    data=CategoriaNoticiaDomain(**result)
-                )
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall() if fetch_all else cursor.fetchone()
         except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error(f"Error executing query: {str(e)}")
+
+    async def _execute_update(self, query: str, params: tuple = None) -> int:
+        """Ejecuta una consulta de actualización y retorna el rowcount"""
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(query, params or ())
+                self.connection.commit()
+                return cursor.rowcount
+        except Exception as e:
+            logger.error(f"Error executing update: {str(e)}")
+
+    async def get_categoria_noticia(self, id: int) -> Response:
+        """Obtiene una categoría de noticia por su ID"""
+        try:
+            result = await self._execute_query(GET_CATEGORIA_NOTICIA_BY_ID, (id,))
+            
+            if not result:
+                logger.info(f"Categoría de noticia no encontrada con ID: {id}")
+                return error_response(
+                    message=CATEGORIA_NOTICIA_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
+                )
+            
+            logger.info(f"Categoría de noticia encontrada ID: {id}")
+            return success_response(
+                data=CategoriaNoticiaDomain(**result),
+                message=CATEGORIA_NOTICIA_FOUND_MSG
+            )
+            
+        except Exception as e:
+            logger.error(f"Error obteniendo categoría de noticia ID {id}: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        
     async def get_all_categorias_noticia(self) -> Response:
-        conn=None
+        """Obtiene todas las categorías de noticia"""
         try:
-            conn=self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(GET_ALL_CATEGORIAS_NOTICIA)
-                result=cursor.fetchall()
-                
-                if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=NO_CATEGORIAS_NOTICIA_MSG
-                    )
-                
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message="Categorias de noticia encontradas.",
-                    data=[CategoriaNoticiaDomain(**categoria) for categoria in result]
-                )
+            result = await self._execute_query(GET_ALL_CATEGORIAS_NOTICIA, fetch_all=True)
+            
+            logger.info(f"Encontradas {len(result) if result else 0} categorías de noticia")
+            return success_response(
+                data=[CategoriaNoticiaDomain(**categoria) for categoria in result] if result else [],
+                message=CATEGORIAS_NOTICIA_FOUND_MSG if result else NO_CATEGORIAS_NOTICIA_MSG
+            )
+            
         except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error(f"Error obteniendo categorías de noticia: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
 
     async def create_categoria_noticia(self, categoria_noticia: CategoriaNoticiaDTO) -> Response:
-        conn=None
+        """Crea una nueva categoría de noticia"""
         try:
-            conn=self._get_connection()
-            with conn.cursor() as cursor:
-                cursor.execute(CREATE_CATEGORIA_NOTICIA,(categoria_noticia.nombre_categoria,))
-                conn.commit()
-                return Response(
-                    status=HTTP_201_CREATED,
-                    success=True,
-                    message=CATEGORIA_NOTICIA_CREATED_MSG
-                )
-        except mysql.connector.Error as e:
-            if e.errno==1062:
-                return Response(
-                    status=HTTP_400_BAD_REQUEST,
-                    success=False,
-                    message=CATEGORIA_NOTICIA_EXISTS_MSG
-                )
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            rowcount = await self._execute_update(
+                CREATE_CATEGORIA_NOTICIA,
+                (categoria_noticia.nombre_categoria,)
             )
-    
-    async def update_categoria_noticia(self, id: int, categoria_noticia: CategoriaNoticiaDomain) -> Response:
-        conn=None
-        try:
-            conn=self._get_connection()
-            with conn.cursor() as cursor:
-                cursor.execute(UPDATE_CATEGORIA_NOTICIA,(categoria_noticia.nombre_categoria,id))
-                if cursor.rowcount==0:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=CATEGORIA_NOTICIA_NOT_FOUND_MSG
-                    )
-                conn.commit()
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=CATEGORIA_NOTICIA_UPDATED_MSG
-                )
-        except mysql.connector.Error as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
-            )
-
             
-    async def delete_categoria_noticia(self, id: int) -> Response:
-        conn=None
-        try:
-            conn=self._get_connection()
-            with conn.cursor() as cursor:
-                cursor.execute(DELETE_CATEGORIA_NOTICIA_BY_ID,(id,))
-                if cursor.rowcount==0:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=CATEGORIA_NOTICIA_NOT_FOUND_MSG
-                    )
-                conn.commit()
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=CATEGORIA_NOTICIA_DELETED_MSG
-                )
-        except mysql.connector.Error as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.info(f"Categoría de noticia creada: {categoria_noticia.nombre_categoria}")
+            return success_response(
+                message=CATEGORIA_NOTICIA_CREATED_MSG,
+                status=HTTP_201_CREATED
+            )
+            
+        except IntegrityError as e:
+            logger.error(f"Error de integridad al crear categoría: {str(e)}")
+            return error_response(
+                message=CATEGORIA_NOTICIA_EXISTS_MSG,
+                status=HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logger.error(f"Error creando categoría de noticia: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    
-    
+    async def update_categoria_noticia(self, id: int, categoria_noticia: CategoriaNoticiaDomain) -> Response:
+        """Actualiza una categoría de noticia existente"""
+        try:
+            rowcount = await self._execute_update(
+                UPDATE_CATEGORIA_NOTICIA,
+                (categoria_noticia.nombre_categoria, id)
+            )
+            
+            if rowcount == 0:
+                logger.info(f"Intento de actualizar categoría no existente ID: {id}")
+                return error_response(
+                    message=CATEGORIA_NOTICIA_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
+                )
+            
+            logger.info(f"Categoría de noticia actualizada ID: {id}")
+            return success_response(
+                message=CATEGORIA_NOTICIA_UPDATED_MSG
+            )
+            
+        except Exception as e:
+            logger.error(f"Error actualizando categoría de noticia ID {id}: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    async def delete_categoria_noticia(self, id: int) -> Response:
+        """Elimina una categoría de noticia"""
+        try:
+            rowcount = await self._execute_update(DELETE_CATEGORIA_NOTICIA_BY_ID, (id,))
+            
+            if rowcount == 0:
+                logger.info(f"Intento de eliminar categoría no existente ID: {id}")
+                return error_response(
+                    message=CATEGORIA_NOTICIA_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
+                )
+            
+            logger.info(f"Categoría de noticia eliminada ID: {id}")
+            return success_response(
+                message=CATEGORIA_NOTICIA_DELETED_MSG
+            )
+            
+        except Exception as e:
+            logger.error(f"Error eliminando categoría de noticia ID {id}: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )

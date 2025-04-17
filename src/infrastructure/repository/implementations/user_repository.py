@@ -1,241 +1,247 @@
 import bcrypt
 import mysql.connector
-from mysql.connector import pooling
-from typing import Optional
+import logging
+from mysql.connector import IntegrityError
+from typing import List, Optional
 
 from src.core.abstractions.infrastructure.repository.user_repository_abstract import IUsuarioRepository
 from src.core.models.user_domain import UsuarioDomain
-from src.presentation.dto.user_dto import UsuarioDTO
-from src.resources.responses.response import Response
+from src.presentation.dto.user_dto import UsuarioDTO, NewPasswordDTO
+from src.presentation.responses.response_factory import Response, success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
 from src.infrastructure.queries.user_queries import *
+from src.infrastructure.queries.auth_queries import VERIFY_EMAIL
+
+logger = logging.getLogger(__name__)
 
 class UserRepository(IUsuarioRepository):
-    def __init__(self, connection_pool) -> None:
-        self.connection_pool = connection_pool
+    def __init__(self, connection) -> None:
+        self.connection = connection
 
-    def _get_connection(self):
-        """Obtiene una conexión del pool"""
-        return self.connection_pool
+
+    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+        """Ejecuta una consulta y retorna los resultados"""
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall() if fetch_all else cursor.fetchone()
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
+
+    async def _execute_update(self, query: str, params: tuple = None) -> int:
+        """Ejecuta una consulta de actualización y retorna el rowcount"""
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(query, params or ())
+                self.connection.commit()
+                return cursor.rowcount
+        except Exception as e:
+            logger.error(f"Error executing update: {str(e)}")
 
     async def get_usuario(self, id: int) -> Response:
-        conn = None
+        """Obtiene un usuario por su ID"""
         try:
-            conn = self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(GET_USER_BY_ID, (id,))
-                result = cursor.fetchone()
-                
-                if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND, 
-                        success=False, 
-                        message=USER_NOT_FOUND_MSG
-                    )
-                
-                # Convertir roles a lista
-                result['roles'] = result['roles'].split(',') if result['roles'] else []
-                
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message="Usuario encontrado.",
-                    data=UsuarioDomain(**result)
+            result = await self._execute_query(GET_USER_BY_ID, (id,))
+            
+            if not result:
+                logger.info(f"Usuario no encontrado con ID: {id}")
+                return error_response(
+                    message=USER_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
                 )
-        except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            
+            # Convertir roles a lista
+            result['roles'] = result['roles'].split(',') if result['roles'] else []
+            logger.info(f"Usuario encontrado ID: {id}")
+            
+            return success_response(
+                data=UsuarioDomain(**result),
+                message=USER_FOUND_MSG
             )
-
+            
+        except Exception as e:
+            logger.error(f"Error obteniendo usuario ID {id}: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     async def get_all_usuarios(self) -> Response:
-        conn = None
+        """Obtiene todos los usuarios registrados"""
         try:
-            conn = self._get_connection()
-            with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(GET_ALL_USERS)
-                result = cursor.fetchall()
-                
-                if not result:
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=NO_USERS_MSG
-                    )            
-                # Convertir roles a lista para cada usuario
-                for usuario in result:
-                    usuario['roles'] = usuario['roles'].split(',') if usuario['roles'] else []
-                
-                usuarios = [UsuarioDomain(**usuario) for usuario in result]
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=USERS_FOUND_MSG,
-                    data=usuarios
+            result = await self._execute_query(GET_ALL_USERS, fetch_all=True)
+            
+            if not result:
+                logger.info("No se encontraron usuarios")
+                return error_response(
+                    message=NO_USERS_MSG,
+                    status=HTTP_404_NOT_FOUND
                 )
-        except Exception as e:
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            
+            # Convertir roles a lista para cada usuario
+            for usuario in result:
+                usuario['roles'] = usuario['roles'].split(',') if usuario['roles'] else []
+            
+            logger.info(f"Encontrados {len(result)} usuarios")
+            return success_response(
+                data=[UsuarioDomain(**usuario) for usuario in result],
+                message=USERS_FOUND_MSG
             )
-        
+            
+        except Exception as e:
+            logger.error(f"Error obteniendo usuarios: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     async def create_usuario(self, usuario: UsuarioDTO) -> Response:
-        conn = None
+        """Crea un nuevo usuario"""
         try:
-            conn = self._get_connection()
-            
             hashed_password = bcrypt.hashpw(usuario.contrasena.encode('utf-8'), bcrypt.gensalt())
             
+            conn = self._get_connection()
             with conn.cursor() as cursor:
                 # Insertar usuario
                 cursor.execute(CREATE_USER, (
-                    usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno,
-                    usuario.correo, hashed_password, usuario.genero,
-                    usuario.telefono, usuario.pais, usuario.ciudad
+                    usuario.nombre, 
+                    usuario.apellidoPaterno, 
+                    usuario.apellidoMaterno,
+                    usuario.correo, 
+                    hashed_password, 
+                    usuario.genero,
+                    usuario.telefono, 
+                    usuario.pais, 
+                    usuario.ciudad
                 ))
                 
                 # Asignar rol por defecto
                 cursor.execute(ASSIGN_DEFAULT_ROLE)
-                
                 conn.commit()
-                return Response(
-                    status=HTTP_201_CREATED,
-                    success=True,
-                    message=USER_CREATED_MSG
+                
+                logger.info(f"Usuario creado con email: {usuario.correo}")
+                return success_response(
+                    message=USER_CREATED_MSG,
+                    status=HTTP_201_CREATED
                 )
                 
-        except mysql.connector.IntegrityError as e:
-            if conn:
-                conn.rollback()
-            return Response(
-                status=HTTP_400_BAD_REQUEST,
-                success=False,
-                message=EMAIL_EXISTS_MSG if "Duplicate entry" in str(e) else str(e)
+        except IntegrityError as e:
+            logger.error(f"Error de integridad al crear usuario: {str(e)}")
+            return error_response(
+                message=EMAIL_EXISTS_MSG if "Duplicate entry" in str(e) else str(e),
+                status=HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error(f"Error creando usuario: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
 
     async def update_usuario(self, id: int, usuario: UsuarioDomain) -> Response:
-        conn = None
+        """Actualiza un usuario existente"""
         try:
-            conn = self._get_connection()
+            rowcount = await self._execute_update(UPDATE_USER, (
+                usuario.nombre, 
+                usuario.apellidoPaterno, 
+                usuario.apellidoMaterno,
+                usuario.correo, 
+                usuario.genero, 
+                usuario.telefono,
+                usuario.pais, 
+                usuario.ciudad, 
+                id
+            ))
             
-            with self.connection_pool.cursor() as cursor:
-                cursor.execute(UPDATE_USER, (
-                    usuario.nombre, usuario.apellidoPaterno, usuario.apellidoMaterno,
-                    usuario.correo, usuario.genero, usuario.telefono,
-                    usuario.pais, usuario.ciudad, id
-                ))
-                
-                if cursor.rowcount == 0:
-                    conn.rollback()
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=USER_NOT_FOUND_MSG
-                    )
-                
-                conn.commit()
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=USER_UPDATED_MSG
+            if rowcount == 0:
+                logger.info(f"Intento de actualizar usuario no existente ID: {id}")
+                return error_response(
+                    message=USER_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
                 )
-                
-        except mysql.connector.IntegrityError as e:
-            if conn:
-                conn.rollback()
-            return Response(
-                status=HTTP_400_BAD_REQUEST,
-                success=False,
-                message=f"Error de integridad: {str(e)}"
+            
+            logger.info(f"Usuario actualizado ID: {id}")
+            return success_response(
+                message=USER_UPDATED_MSG
+            )
+            
+        except IntegrityError as e:
+            logger.error(f"Error de integridad al actualizar usuario ID {id}: {str(e)}")
+            return error_response(
+                message=f"Error de integridad: {str(e)}",
+                status=HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error(f"Error actualizando usuario ID {id}: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
 
-    async def change_password(self, correo:str, password: str) -> Response:
-        conn = None
+    async def change_password(self, data: NewPasswordDTO) -> Response:
+        """Cambia la contraseña de un usuario"""
         try:
+            hashed_password = bcrypt.hashpw(data.password.encode('utf-8'), bcrypt.gensalt())
+            
             conn = self._get_connection()
-            conn.start_transaction()
-            
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            
             with conn.cursor() as cursor:
-                cursor.execute(UPDATE_PASSWORD, (hashed_password, correo))
+                # Verificar código de verificación
+                cursor.execute(VERIFY_EMAIL, (data.correo, data.code))
+                user = cursor.fetchone()
                 
-                if cursor.rowcount == 0:
-                    conn.rollback()
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=USER_NOT_FOUND_MSG
+                if not user:
+                    logger.info(f"Código inválido para usuario: {data.correo}")
+                    return error_response(
+                        message=INVALID_CODE_MSG,
+                        status=HTTP_400_BAD_REQUEST
                     )
                 
-                conn.commit()
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
+                # Actualizar contraseña
+                rowcount = await self._execute_update(
+                    UPDATE_PASSWORD, 
+                    (hashed_password, data.correo)
+                )
+                
+                if rowcount == 0:
+                    logger.info(f"Usuario no encontrado al cambiar contraseña: {data.correo}")
+                    return error_response(
+                        message=USER_NOT_FOUND_MSG,
+                        status=HTTP_404_NOT_FOUND
+                    )
+                
+                logger.info(f"Contraseña actualizada para usuario: {data.correo}")
+                return success_response(
                     message=PASSWORD_UPDATED_MSG
                 )
                 
         except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            logger.error(f"Error cambiando contraseña: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
 
     async def delete_usuario(self, id: int) -> Response:
-        conn = None
+        """Elimina un usuario"""
         try:
-       
-            with self.connection_pool.cursor() as cursor:
-                cursor.execute(DELETE_USER, (id,))
-                
-                if cursor.rowcount == 0:
-                    conn.rollback()
-                    return Response(
-                        status=HTTP_404_NOT_FOUND,
-                        success=False,
-                        message=USER_NOT_FOUND_MSG
-                    )
-                
-                conn.commit()
-                return Response(
-                    status=HTTP_200_OK,
-                    success=True,
-                    message=USER_DELETED_MSG
+            rowcount = await self._execute_update(DELETE_USER, (id,))
+            
+            if rowcount == 0:
+                logger.info(f"Intento de eliminar usuario no existente ID: {id}")
+                return error_response(
+                    message=USER_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
                 )
-                
-        except Exception as e:
-            if conn:
-                conn.rollback()
-            return Response(
-                status=HTTP_500_INTERNAL_SERVER_ERROR,
-                success=False,
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}"
+            
+            logger.info(f"Usuario eliminado ID: {id}")
+            return success_response(
+                message=USER_DELETED_MSG
             )
-        
+            
+        except Exception as e:
+            logger.error(f"Error eliminando usuario ID {id}: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )

@@ -6,8 +6,15 @@ GET_USER_BY_EMAIL = """
         WHERE ur.id_usuario = u.id) AS roles
 FROM usuario u
 WHERE u.correo LIKE %s;
-
 """
+
+GET_USER_ROLES = """
+    SELECT r.nombre_rol 
+    FROM usuario_rol ur 
+    JOIN rol r ON ur.id_rol = r.id 
+    WHERE ur.id_usuario = %s;
+"""
+
 
 UPDATE_USER_STATUS = """
     UPDATE usuario 
