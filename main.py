@@ -5,14 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-# Cargar variables de entorno
 load_dotenv()
 
-# Configuración de logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Importación de routers
 from src.presentation.controllers.auth_controller import auth_router
 from src.presentation.controllers.biblioteca_controller import biblioteca_router
 from src.presentation.controllers.categoriaNoticia_controller import category_router
@@ -31,10 +28,8 @@ from src.presentation.controllers.presidente_controller import president_router
 from src.presentation.controllers.rol_controller import rol_router
 from src.presentation.controllers.user_controller import user_router
 
-# Creación de la aplicación FastAPI
 app = FastAPI()
 
-# Configuración de CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -43,7 +38,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Registro de routers en orden alfabético
 app.include_router(auth_router)
 app.include_router(biblioteca_router)
 app.include_router(history_category_router)
@@ -62,7 +56,6 @@ app.include_router(president_router)
 app.include_router(rol_router)
 app.include_router(user_router)
 
-# Punto de entrada principal
 if __name__ == "__main__":
     uvicorn.run(
         app,
