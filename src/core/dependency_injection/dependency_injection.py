@@ -53,6 +53,8 @@ from src.core.services.historia_service import HistoriaService
 
 from src.core.services.file_storage_service import FileStorageService
 
+from src.core.services.file_storage_service import FileStorageService
+
 def build_usuario_service(
     connection = Depends(get_connection),
 ):

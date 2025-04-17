@@ -1,0 +1,34 @@
+name: Deploy FastAPI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Create virtual environment
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+
+    - name: Install all requirements files
+      run: |
+        source venv/bin/activate
+        for req in requirements*.txt; do pip install -r "$req"; done
+
+    - name: Copiar recursos esenciales
+      run: cp /home/ironroot/alxpy/bicentenarioBack/*.json ./
+
+    - name: Run FastAPI app with uvicorn
+      run: |
+        source venv/bin/activate
+        nohup uvicorn main:app --host 0.0.0.0 --port 8000 --reload &
+
+    - name: Ver logs de la aplicación
+      run: tail -n 20 /home/ironroot/alxpy/bicentenarioBack/actions-runner/_work/bicentenarioBack/bicentenarioBack/app.log
