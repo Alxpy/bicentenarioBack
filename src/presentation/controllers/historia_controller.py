@@ -5,78 +5,157 @@ from src.presentation.dto.historia_dto import HistoriaPostDTO, HistoriaUpdateDTO
 from src.presentation.responses.base_response import Response
 from src.core.models.historia_domain import HistoriaDomain
 
-historia_controller = APIRouter(
+historia_router = APIRouter(
     prefix="/api/v1/history",
-    tags=["historia"]
+    tags=["History"]
 )
 
-@historia_controller.post("", response_model=Response[None])
-async def create_historia(
+# ─────────────────────────────────────────────
+# 📌 Create a new history entry
+# ─────────────────────────────────────────────
+@historia_router.post(
+    "",
+    response_model=Response[None],
+    summary="Create a new history entry",
+    description="Adds a new historical record with its title, description, image, location, and associated category."
+)
+async def create_history(
     historia: HistoriaPostDTO,
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
         return await historia_service.create_historia(historia)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("", response_model=Response[list[HistoriaDomain]])
-async def get_historias(
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+
+# ─────────────────────────────────────────────
+# 📚 Get all history entries
+# ─────────────────────────────────────────────
+@historia_router.get(
+    "",
+    response_model=Response[list[HistoriaDomain]],
+    summary="List all history entries",
+    description="Retrieves a list of all historical records stored in the system."
+)
+async def get_histories(
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
         return await historia_service.get_all_historia()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("/{id}", response_model=Response[HistoriaDomain])
-async def get_historia(
+
+# ─────────────────────────────────────────────
+# 🔍 Get a specific history entry by ID
+# ─────────────────────────────────────────────
+@historia_router.get(
+    "/{id}",
+    response_model=Response[HistoriaDomain],
+    summary="Get history by ID",
+    description="Fetches a specific historical record using its unique identifier."
+)
+async def get_history_by_id(
     id: int,
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
         return await historia_service.get_historia_by_id(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("/title/{titulo}", response_model=Response[HistoriaDomain])
-async def get_historia_by_titulo(
-    titulo: str,
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+
+# ─────────────────────────────────────────────
+# 🔍 Search history by title
+# ─────────────────────────────────────────────
+@historia_router.get(
+    "/ByTitle/{title}",
+    response_model=Response[HistoriaDomain],
+    summary="Search history by title",
+    description="Searches for a historical record by its title (case-sensitive match)."
+)
+async def get_history_by_title(
+    title: str,
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
-        return await historia_service.get_historia_by_titulo(titulo)
+        return await historia_service.get_historia_by_titulo(title)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("/location/{ubi}", response_model=Response[list[HistoriaDomain]])
-async def get_historia_by_ubicacion(
-    ubi: str,
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+
+# ─────────────────────────────────────────────
+# 📍 Filter history by location
+# ─────────────────────────────────────────────
+@historia_router.get(
+    "/ByLocation/{location}",
+    response_model=Response[list[HistoriaDomain]],
+    summary="Filter history by location",
+    description="Retrieves all historical records associated with a specific location."
+)
+async def get_history_by_location(
+    location: str,
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
-        return await historia_service.get_historia_by_ubicacion(ubi)
+        return await historia_service.get_historia_by_ubicacion(location)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.get("/categorie/{categoria}", response_model=Response[list[HistoriaDomain]])
-async def get_historia_by_categoria(
-    categoria: str,
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+
+# ─────────────────────────────────────────────
+# 🗂️ Filter history by category
+# ─────────────────────────────────────────────
+@historia_router.get(
+    "/ByCategory/{category}",
+    response_model=Response[list[HistoriaDomain]],
+    summary="Filter history by category",
+    description="Retrieves all historical records classified under a specific category."
+)
+async def get_history_by_category(
+    category: str,
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
-        return await historia_service.get_historia_by_categoria(categoria)
+        return await historia_service.get_historia_by_categoria(category)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.put("/{id}", response_model=Response[None])
-async def update_historia(
+
+# ─────────────────────────────────────────────
+# ✏️ Update a history entry by ID
+# ─────────────────────────────────────────────
+@historia_router.put(
+    "/{id}",
+    response_model=Response[None],
+    summary="Update a history entry",
+    description="Updates the data of a specific historical record using its ID. Partial updates are supported."
+)
+async def update_history(
     id: int,
     historia: HistoriaUpdateDTO,
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
         return await historia_service.update_historia(id, historia)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@historia_controller.delete("/{id}", response_model=Response[None])
-async def delete_historia(
+
+# ─────────────────────────────────────────────
+# 🗑️ Delete a history entry by ID
+# ─────────────────────────────────────────────
+@historia_router.delete(
+    "/{id}",
+    response_model=Response[None],
+    summary="Delete a history entry",
+    description="Removes a historical record from the database using its ID. This action is irreversible."
+)
+async def delete_history(
     id: int,
-    historia_service: IHistoriaService = Depends(build_historia_service)):
+    historia_service: IHistoriaService = Depends(build_historia_service)
+):
     try:
         return await historia_service.delete_historia(id)
     except Exception as e:

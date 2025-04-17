@@ -5,56 +5,87 @@ from src.presentation.dto.categoria_historia_dto import CategoriaHistoriaDTO
 from src.presentation.responses.base_response import Response
 from src.core.models.categoria_historia_domain import CategoriaHistoriaDomain
 
-categoria_historia_controller = APIRouter(
-    prefix="/api/v1/categories_history",
-    tags=["categoria_historia"]
+history_category_router = APIRouter(
+    prefix="/api/v1/historyCategories",
+    tags=["History Categories"],
+    responses={404: {"description": "Category not found"}}
 )
 
-@categoria_historia_controller.post("", response_model=Response[None])
-async def create_categoria_historia(
-    categoria_historia: CategoriaHistoriaDTO,
-    categoria_historia_service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)):
+@history_category_router.post(
+    "",
+    response_model=Response[None],
+    summary="Create history category",
+    description="Creates a new category for historical content classification. Requires unique category name."
+)
+async def create_history_category(
+    category: CategoriaHistoriaDTO,
+    service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)
+):
     try:
-        return await categoria_historia_service.create_categoria_historia(categoria_historia)
+        return await service.create_categoria_historia(category)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoria_historia_controller.get("", response_model=Response[list[CategoriaHistoriaDomain]])
-async def get_categoria_historia(
-    categoria_historia_service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)):
+@history_category_router.get(
+    "",
+    response_model=Response[list[CategoriaHistoriaDomain]],
+    summary="List all history categories",
+    description="Retrieves complete list of available historical content categories."
+)
+async def get_all_history_categories(
+    service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)
+):
     try:
-        return await categoria_historia_service.get_all_categorias_historia()
+        return await service.get_all_categorias_historia()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoria_historia_controller.get("/{id}", response_model=Response[CategoriaHistoriaDomain])
-async def get_categoria_historia_by_id(
+@history_category_router.get(
+    "/{id}",
+    response_model=Response[CategoriaHistoriaDomain],
+    summary="Get history category details",
+    description="Retrieves complete information about a specific historical content category."
+)
+async def get_history_category(
     id: int,
-    categoria_historia_service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)):
+    service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)
+):
     try:
-        return await categoria_historia_service.get_categoria_historia(id)
+        return await service.get_categoria_historia(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoria_historia_controller.put("/{id}", response_model=Response[None])
-async def update_categoria_historia(
+@history_category_router.put(
+    "/{id}",
+    response_model=Response[None],
+    summary="Update history category",
+    description="Modifies the name and description of an existing historical content category."
+)
+async def update_history_category(
     id: int,
-    categoria_historia_update: CategoriaHistoriaDTO,
-    categoria_historia_service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)):
+    category_update: CategoriaHistoriaDTO,
+    service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)
+):
     try:
-        update_categoria_historia = CategoriaHistoriaDomain(
-            nombre=categoria_historia_update.nombre,
-            descripcion=categoria_historia_update.descripcion
+        updated_category = CategoriaHistoriaDomain(
+            nombre=category_update.nombre,
+            descripcion=category_update.descripcion
         )
-        return await categoria_historia_service.update_categoria_historia(id, update_categoria_historia)
+        return await service.update_categoria_historia(id, updated_category)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoria_historia_controller.delete("/{id}", response_model=Response[None])
-async def delete_categoria_historia(
+@history_category_router.delete(
+    "/{id}",
+    response_model=Response[None],
+    summary="Delete history category",
+    description="Removes a historical content category. Category must not be associated with any content."
+)
+async def delete_history_category(
     id: int,
-    categoria_historia_service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)):
+    service: ICategoriaHistoriaService = Depends(build_categoria_historia_service)
+):
     try:
-        return await categoria_historia_service.delete_categoria_historia(id)
+        return await service.delete_categoria_historia(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

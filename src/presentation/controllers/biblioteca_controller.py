@@ -5,134 +5,171 @@ from src.presentation.dto.biblioteca_dto import BibliotecaDTO, BibliotecaUpdateD
 from src.core.models.biblioteca_domain import BibliotecaDomain
 from src.presentation.responses.base_response import Response
 
-biblioteca_controller = APIRouter(prefix="/api/v1", tags=["biblioteca"])
+biblioteca_router = APIRouter(prefix="/api/v1/library", tags=["library"])
 
 # ─────────────────────────────────────────────
-# 📌 Create a new biblioteca
+# 📌 Create a new library entry
 # ─────────────────────────────────────────────
-@biblioteca_controller.post("/biblioteca", response_model=Response[None])
-async def createBiblioteca(
+@biblioteca_router.post(
+    "",
+    response_model=Response[None],
+    summary="Create new library entry"
+)
+async def create_biblioteca(
     biblioteca: BibliotecaDTO,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.create_biblioteca(biblioteca)
+        return await biblioteca_service.create_biblioteca(biblioteca)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 # ─────────────────────────────────────────────
-# 📚 Get all bibliotecas
+# 📚 Get all library entries
 # ─────────────────────────────────────────────
-@biblioteca_controller.get("/bibliotecas", response_model=Response[list[BibliotecaDomain]])
-async def getBibliotecas(
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+@biblioteca_router.get(
+    "",
+    response_model=Response[list[BibliotecaDomain]],
+    summary="List all library entries"
+)
+async def get_bibliotecas(
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.get_all_bibliotecas()
+        return await biblioteca_service.get_all_bibliotecas()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 # ─────────────────────────────────────────────
-# 🔍 Get biblioteca by ID
+# 🔍 Get library entry by ID
 # ─────────────────────────────────────────────
-@biblioteca_controller.get("/biblioteca/{id}", response_model=Response[BibliotecaDomain])
-async def getBibliotecaById(
+@biblioteca_router.get(
+    "/{id}",
+    response_model=Response[BibliotecaDomain],
+    summary="Get library entry by ID"
+)
+async def get_biblioteca_by_id(
     id: int,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.get_biblioteca_by_id(id)
+        return await biblioteca_service.get_biblioteca_by_id(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 # ─────────────────────────────────────────────
-# 🔍 Get biblioteca by category, title, author or date
+# 🔍 Get library entries by category
 # ─────────────────────────────────────────────
-@biblioteca_controller.get("/biblioteca/category/{categoryName}", response_model=Response[list[BibliotecaDomain]])
-async def getBibliotecaByCategory(
+@biblioteca_router.get(
+    "/ByCategory/{categoryName}",
+    response_model=Response[list[BibliotecaDomain]],
+    summary="Filter by category"
+)
+async def get_bibliotecas_by_category(
     categoryName: str,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.get_biblioteca_by_category(categoryName)
+        return await biblioteca_service.get_biblioteca_by_category(categoryName)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
-@biblioteca_controller.get("/biblioteca/title/{title}", response_model=Response[BibliotecaDomain])
-async def getBibliotecaByTitle(
+# ─────────────────────────────────────────────
+# 🔍 Get library entry by title
+# ─────────────────────────────────────────────
+@biblioteca_router.get(
+    "/ByTitle/{title}",
+    response_model=Response[BibliotecaDomain],
+    summary="Search by title"
+)
+async def get_biblioteca_by_title(
     title: str,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.get_biblioteca_by_title(title)
+        return await biblioteca_service.get_biblioteca_by_title(title)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
-@biblioteca_controller.get("/biblioteca/author/{author}", response_model=Response[list[BibliotecaDomain]])
-async def getBibliotecaByAuthor(
+# ─────────────────────────────────────────────
+# 🔍 Get library entries by author
+# ─────────────────────────────────────────────
+@biblioteca_router.get(
+    "/ByAuthor/{author}",
+    response_model=Response[list[BibliotecaDomain]],
+    summary="Filter by author"
+)
+async def get_bibliotecas_by_author(
     author: str,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.get_biblioteca_by_author(author)
+        return await biblioteca_service.get_biblioteca_by_author(author)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
-@biblioteca_controller.get("/biblioteca/publicationDate/{publicationDate}", response_model=Response[list[BibliotecaDomain]])
-async def getBibliotecaByPublicationDate(
+# ─────────────────────────────────────────────
+# 🔍 Get library entries by publication date
+# ─────────────────────────────────────────────
+@biblioteca_router.get(
+    "/ByPublicationDate/{publicationDate}",
+    response_model=Response[list[BibliotecaDomain]],
+    summary="Filter by publication date"
+)
+async def get_bibliotecas_by_publication_date(
     publicationDate: str,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.get_biblioteca_by_publication_date(publicationDate)
+        return await biblioteca_service.get_biblioteca_by_publication_date(publicationDate)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 # ─────────────────────────────────────────────
-# ✏️ Update biblioteca by ID
+# ✏️ Update library entry by ID
 # ─────────────────────────────────────────────
-@biblioteca_controller.put("/biblioteca/{id}", response_model=Response[None])
-async def updateBiblioteca(
+@biblioteca_router.put(
+    "/{id}",
+    response_model=Response[None],
+    summary="Update library entry"
+)
+async def update_biblioteca(
     id: int,
-    bibliotecaUpdate: BibliotecaUpdateDTO,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_update: BibliotecaUpdateDTO,
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        existingBiblioteca: BibliotecaDomain = await bibliotecaService.get_biblioteca_by_id(id)
+        existing = await biblioteca_service.get_biblioteca_by_id(id)
 
-        updatedBiblioteca = BibliotecaDomain(
+        updated = BibliotecaDomain(
             id=id,
-            titulo=bibliotecaUpdate.titulo,
-            autor=bibliotecaUpdate.autor,
-            imagen=bibliotecaUpdate.imagen,
-            fecha_publicacion=bibliotecaUpdate.fecha_publicacion,
-            edicion=bibliotecaUpdate.edicion,
-            id_tipo=bibliotecaUpdate.id_tipo,
-            id_usuario=existingBiblioteca.id_usuario,
-            fuente=bibliotecaUpdate.fuente,
-            enlace=bibliotecaUpdate.enlace,
+            titulo=biblioteca_update.titulo,
+            autor=biblioteca_update.autor,
+            imagen=biblioteca_update.imagen,
+            fecha_publicacion=biblioteca_update.fecha_publicacion,
+            edicion=biblioteca_update.edicion,
+            id_tipo=biblioteca_update.id_tipo,
+            id_usuario=existing.id_usuario,
+            fuente=biblioteca_update.fuente,
+            enlace=biblioteca_update.enlace,
         )
-        return await bibliotecaService.update_biblioteca(id, updatedBiblioteca)
+        return await biblioteca_service.update_biblioteca(id, updated)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 # ─────────────────────────────────────────────
-# 🗑️ Delete biblioteca by ID
+# 🗑️ Delete library entry by ID
 # ─────────────────────────────────────────────
-@biblioteca_controller.delete("/biblioteca/{id}", response_model=Response[None])
-async def deleteBiblioteca(
+@biblioteca_router.delete(
+    "/{id}",
+    response_model=Response[None],
+    summary="Delete library entry"
+)
+async def delete_biblioteca(
     id: int,
-    bibliotecaService: IBibliotecaService = Depends(build_biblioteca_service)
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await bibliotecaService.delete_biblioteca(id)
+        return await biblioteca_service.delete_biblioteca(id)
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))

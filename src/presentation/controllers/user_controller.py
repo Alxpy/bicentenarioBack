@@ -6,9 +6,9 @@ from src.core.models.user_domain import UsuarioDomain
 from src.resources.responses.response import Response
 
 
-user_controller = APIRouter(prefix="/api/v1/user", tags=["user"])
+user_router = APIRouter(prefix="/api/v1/user", tags=["user"])
 
-@user_controller.post(
+@user_router.post(
     "",
     summary="Register user",
     description="Creates a new user in the system.",
@@ -23,7 +23,7 @@ async def register(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@user_controller.get(
+@user_router.get(
     "",
     summary="Get all users",
     description="Returns a list of all registered users.",
@@ -38,7 +38,7 @@ async def get_users(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@user_controller.get(
+@user_router.get(
     "/{userId}",
     summary="Get user by ID",
     description="Returns a single user based on the given ID.",
@@ -53,7 +53,7 @@ async def get_user_by_id(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@user_controller.put(
+@user_router.put(
     "/{userId}",
     summary="Update user data",
     description="Updates basic user information for the specified user ID.",
@@ -70,7 +70,7 @@ async def update_user(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@user_controller.put(
+@user_router.put(
     "/change-password",
     summary="Change user password",
     description="Changes the user's password based on their email.",
@@ -89,7 +89,7 @@ async def change_password(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@user_controller.delete(
+@user_router.delete(
     "/{userId}",
     summary="Delete user",
     description="Deletes a user from the system by ID.",
