@@ -25,14 +25,22 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
+    - name: Create virtual environment
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+
     - name: Install all requirements files
       run: |
+        source venv/bin/activate
         for req in requirements*.txt; do pip install -r "$req"; done
 
     - name: Run tests (opcional)
       run: |
+        source venv/bin/activate
         pytest || true  # Evita fallos si no tienes tests aún
 
     - name: Run FastAPI app with uvicorn
       run: |
+        source venv/bin/activate
         nohup uvicorn main:app --host 0.0.0.0 --port 8000 --reload &
