@@ -47,3 +47,6 @@ jobs:
       run: |
         source venv/bin/activate
         nohup uvicorn main:app --host 0.0.0.0 --port 8000 --reload &
+
+    - name: Ver logs de la aplicación
+      run: tail -n 20 /home/ironroot/alxpy/bicentenarioBack/actions-runner/_work/bicentenarioBack/bicentenarioBack/app.log
