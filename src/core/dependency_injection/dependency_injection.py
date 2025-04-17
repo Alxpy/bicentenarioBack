@@ -33,10 +33,23 @@ from src.core.services.cultura_service import CulturaService
 from src.infrastructure.repository.implementations.presidente_repository import PresidenteRepository
 from src.core.services.presidente_service import PresidenteService
 
-
 from src.infrastructure.repository.implementations.rol_repository import RolRepository
 from src.core.services.role_service import RolService
 
+from src.infrastructure.repository.implementations.multimedia_repository import MultimediaRepository
+from src.core.services.multimedia_service import MultimediaService
+
+from src.infrastructure.repository.implementations.multimedia_historia_repository import MultimediaHistoriaRepository
+from src.core.services.multimedia_historia_service import MultimediaHistoriaService
+
+from src.infrastructure.repository.implementations.multimedia_cultura_repository import MultimediaCulturaRepository
+from src.core.services.multimedia_cultura_service import MultimediaCulturaService
+
+from src.infrastructure.repository.implementations.categoria_historia_repository import CategoriaHistoriaRepository
+from src.core.services.categoria_historia_service import CategoriaHistoriaService
+
+from src.infrastructure.repository.implementations.historia_repository import HistoriaRepository
+from src.core.services.historia_service import HistoriaService
 
 def build_usuario_service(
     connection = Depends(get_connection),
@@ -95,3 +108,27 @@ def build_rol_service(
 ):
     return RolService(RolRepository(connection))
 
+def build_multimedia_service(
+    connection = Depends(get_connection),
+):
+    return MultimediaService(MultimediaRepository(connection))
+
+def build_multimedia_historia_service(
+    connection = Depends(get_connection),
+):
+    return MultimediaHistoriaService(MultimediaHistoriaRepository(connection))
+
+def build_multimedia_cultura_service(
+    connection = Depends(get_connection),
+):
+   return MultimediaCulturaService(MultimediaCulturaRepository(connection))
+
+def build_categoria_historia_service(
+    connection = Depends(get_connection),
+):
+    return CategoriaHistoriaService(CategoriaHistoriaRepository(connection))
+
+def build_historia_service(
+    connection = Depends(get_connection),
+):
+    return HistoriaService(HistoriaRepository(connection))
