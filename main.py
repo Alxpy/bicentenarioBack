@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.presentation.controllers.user_controller import user_controller
+from src.presentation.controllers.user_controller import user_router
 from src.presentation.controllers.auth_controller import auth_controller
 from src.presentation.controllers.email_controller import email_controller
 from src.presentation.controllers.categoriaNoticia_controller import category_controller
@@ -37,7 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(user_controller)
+app.include_router(user_router)
 app.include_router(auth_controller)
 app.include_router(email_controller)
 app.include_router(category_controller)
