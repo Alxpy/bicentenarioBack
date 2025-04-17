@@ -1,7 +1,11 @@
 import mysql.connector
+from mysql.connector import pooling
+from typing import Optional
+
 import logging
 from mysql.connector import Error, IntegrityError
 from typing import List, Optional
+
 
 from src.core.abstractions.infrastructure.repository.cultura_repository_abstract import ICulturaRepository
 from src.core.models.cultura_domain import CulturaDomain
@@ -161,7 +165,6 @@ class CulturaRepository(ICulturaRepository):
                     message=CULTURA_NOT_FOUND_MSG,
                     status=HTTP_404_NOT_FOUND
                 )
-            
             logger.info(f"Cultura actualizada exitosamente ID: {id}")
             return success_response(
                 message=CULTURA_UPDATED_MSG
@@ -171,6 +174,7 @@ class CulturaRepository(ICulturaRepository):
             return error_response(
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
                 status=HTTP_500_INTERNAL_SERVER_ERROR
+
             )
 
     async def delete_cultura(self, id: int) -> Response:

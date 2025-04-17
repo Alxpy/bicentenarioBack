@@ -136,6 +136,66 @@ PRESIDENTE_DELETED_MSG = "Presidente eliminado correctamente."
 NO_PRESIDENTE_MDG = "No hay presidentes registrados."
 PRESIDENTE_EXISTS_MSG = "El presidente ya existe."
 
+# Mensajes de multimedia
+MULTIMEDIA_NOT_FOUND_MSG = "Multimedia no encontrada."
+MULTIMEDIA_FOUND_MSG= "Multimedia encontrada."
+MULTIMEDIA_CREATED_MSG= "Multimedia creada correctamente."
+MULTIMEDIA_UPDATED_MSG= "Multimedia actualizada correctamente."
+MULTIMEDIA_DELETED_MSG= "Multimedia eliminada correctamente."
+NO_MULTIMEDIA_MSG= "No hay multimedia registrada."
+MULTIMEDIA_EXISTS_MSG= "La multimedia ya existe."
+MULTIMEDIA_BY_ID_MSG= "Multimedia por ID encontrada."
+MULTIMEDIA_BY_ID_NOT_FOUND_MSG= "Multimedia por ID no encontrada."
+
+#Mensajes multimedia historia
+MULTIMEDIA_HISTORIA_NOT_FOUND_MSG = "Multimedia historia no encontrada."
+MULTIMEDIA_HISTORIA_FOUND_MSG = "Multimedia historia encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_USER_MSG = "Multimedia historia por ID encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_HISTORIA_NOT_FOUND_MSG = "Multimedia historia por ID HISTORIA no encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_HISTORIA_MSG = "Multimedia historia por ID HISTORIA encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_MULTIMEDIA_NOT_FOUND_MSG = "Multimedia historia por ID MULTIMEDIA no encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_MULTIMEDIA_MSG = "Multimedia historia por ID MULTIMEDIA encontrada."
+MULTIMEDIA_HISTORIA_BY_ID_NOT_FOUND_MSG = "Multimedia historia por ID no encontrada."
+MULTIMEDIA_HISTORIA_CREATED_MSG = "Multimedia historia creada correctamente."
+MULTIMEDIA_HISTORIA_DELETED_MSG = "Multimedia historia eliminada correctamente."
+
+# Mensajes multimedia cultura
+MULTIMEDIA_CULTURA_NOT_FOUND_MSG = "Multimedia cultura no encontrada."
+MULTIMEDIA_CULTURA_FOUND_MSG = "Multimedia cultura encontrada."
+MULTIMEDIA_CULTURA_BY_ID_USER_MSG = "Multimedia cultura por ID encontrada."
+MULTIMEDIA_CULTURA_BY_ID_CULTURA_NOT_FOUND_MSG = "Multimedia cultura por ID CULTURA no encontrada."
+MULTIMEDIA_CULTURA_BY_ID_CULTURA_MSG = "Multimedia cultura por ID CULTURA encontrada."
+MULTIMEDIA_CULTURA_BY_ID_MULTIMEDIA_NOT_FOUND_MSG = "Multimedia cultura por ID MULTIMEDIA no encontrada."
+MULTIMEDIA_CULTURA_BY_ID_MULTIMEDIA_MSG = "Multimedia cultura por ID MULTIMEDIA encontrada."
+MULTIMEDIA_CULTURA_BY_ID_NOT_FOUND_MSG = "Multimedia cultura por ID no encontrada."
+MULTIMEDIA_CULTURA_CREATED_MSG = "Multimedia cultura creada correctamente."
+MULTIMEDIA_CULTURA_DELETED_MSG = "Multimedia cultura eliminada correctamente."
+
+# Mensajes Categoria Historia
+CATEGORIA_HISTORIA_NOT_FOUND_MSG = "Categoría de historia no encontrada."
+CATEGORIA_HISTORIA_FOUND_MSG = "Categoría de historia encontrada."
+CATEGORIAS_HISTORIA_FOUND_MSG = "Categorías de historia encontradas."
+CATEGORIA_HISTORIA_CREATED_MSG = "Categoría de historia creada correctamente."
+CATEGORIA_HISTORIA_UPDATED_MSG = "Categoría de historia actualizada correctamente."
+CATEGORIA_HISTORIA_DELETED_MSG = "Categoría de historia eliminada correctamente."
+NO_CATEGORIAS_HISTORIA_MSG = "No hay categorías de historia registradas."
+CATEGORIA_HISTORIA_EXISTS_MSG = "La categoría de historia ya existe."
+
+# Mensajes historia
+HISTORIA_NOT_FOUND_MSG = "Historia no encontrada."
+HISTORIA_FOUND_MSG = "Historia encontrada."
+HISTORIAS_FOUND_MSG = "Historias encontradas."
+HISTORIA_CREATED_MSG = "Historia creada correctamente."
+HISTORIA_UPDATED_MSG = "Historia actualizada correctamente."
+HISTORIA_BY_TITULO_MSG = "Historia por título encontrada."
+HISTORIA_BY_TITULO_NOT_FOUND_MSG = "Historia por título no encontrada."
+HISTORIA_BY_UBICACION_MSG = "Historia por ubicación encontrada."
+HISTORIA_BY_UBICACION_NOT_FOUND_MSG = "Historia por ubicación no encontrada."
+HISTORIA_BY_CATEGORIA_MSG = "Historia por categoría encontrada."
+HISTORIA_BY_CATEGORIA_NOT_FOUND_MSG = "Historia por categoría no encontrada."
+HISTORIA_BY_ID_MSG = "Historia por ID encontrada."
+HISTORIA_BY_ID_NOT_FOUND_MSG = "Historia por ID no encontrada."
+HISTORIA_DELETED_MSG= "Historia eliminada correctamente."
 
 
 # Mensajes de rol

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class MultimediaDomain(BaseModel):
+class CategoriaHistoriaDomain(BaseModel):
     id: Optional[int] = None
-    enlace : str
-    tipo: str
+    nombre: str
+    descripcion: str
