@@ -2,7 +2,6 @@ from fastapi import Depends
 from src.infrastructure.repository.connection_mail import get_gmail_service
 from src.infrastructure.repository.dependency_injection.dependency_injection import get_connection
 
-
 from src.infrastructure.repository.implementations.user_repository import UserRepository
 from src.core.services.user_service import UsuarioService
 
@@ -136,6 +135,8 @@ def build_historia_service(
 ):
     return HistoriaService(HistoriaRepository(connection))
 
+
 def build_file_storage_service(
 ):
     return FileStorageService()
+

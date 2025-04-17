@@ -21,6 +21,8 @@ from src.presentation.controllers.multimedia_cultura_controller import multimedi
 from src.presentation.controllers.categoria_historia_controller import categoria_historia_controller
 from src.presentation.controllers.historia_controller import historia_controller
 from src.presentation.controllers.file_controller import routerfile
+
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -52,6 +54,7 @@ app.include_router(multimedia_cultura_controller)
 app.include_router(categoria_historia_controller)
 app.include_router(historia_controller)
 app.include_router(routerfile)
+
 
 if __name__ == "__main__":
     import uvicorn
