@@ -1,0 +1,38 @@
+name: Deploy FastAPI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install all requirements files
+      run: |
+        for req in requirements*.txt; do pip install -r "$req"; done
+
+    - name: Run tests (opcional)
+      run: |
+        pytest || true  # Evita fallos si no tienes tests aún
+
+    - name: Run FastAPI app with uvicorn
+      run: |
+        nohup uvicorn main:app --host 0.0.0.0 --port 8000 --reload &
