@@ -17,12 +17,21 @@ class TipoDocumentoRepository(ITipoDocumentoRepository):
     def __init__(self, connection) -> None:
         self.connection = connection
     
-    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+    async def _execute_query(self, query: str, params: tuple = None) -> Optional[List[dict]]:
         """Ejecuta una consulta y retorna los resultados"""
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
-                return cursor.fetchall() if fetch_all else cursor.fetchone()
+                return cursor.fetchone()
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
+
+    async def _execute_query_all(self, query: str, params: tuple = None) -> Optional[List[dict]]:
+        """Ejecuta una consulta y retorna los resultados"""
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall()
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
             
@@ -60,7 +69,7 @@ class TipoDocumentoRepository(ITipoDocumentoRepository):
     async def get_all_tipos_documento(self) -> Response:
         """Obtiene todos los tipos de documento"""
         try:
-            result = await self._execute_query(GET_ALL_TIPOS_DOCUMENTO, fetch_all=True)
+            result = await self._execute_query_all(GET_ALL_TIPOS_DOCUMENTO)
             if not result:
                 logger.info("No se encontraron tipos de documento")
                 return error_response(

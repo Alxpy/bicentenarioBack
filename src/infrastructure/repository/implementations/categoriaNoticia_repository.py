@@ -18,12 +18,21 @@ class CategoriaNoticiaRepository(ICategoriaNoticiaRepository):
         self.connection = connection
 
 
-    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+    async def _execute_query(self, query: str, params: tuple = None) -> Optional[List[dict]]:
         """Ejecuta una consulta y retorna los resultados"""
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
-                return cursor.fetchall() if fetch_all else cursor.fetchone()
+                return cursor.fetchone()
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
+
+    async def _execute_query_all(self, query: str, params: tuple = None) -> Optional[List[dict]]:
+        """Ejecuta una consulta y retorna los resultados"""
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall()
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
 
@@ -65,7 +74,7 @@ class CategoriaNoticiaRepository(ICategoriaNoticiaRepository):
     async def get_all_categorias_noticia(self) -> Response:
         """Obtiene todas las categorías de noticia"""
         try:
-            result = await self._execute_query(GET_ALL_CATEGORIAS_NOTICIA, fetch_all=True)
+            result = await self._execute_query_all(GET_ALL_CATEGORIAS_NOTICIA)
             
             logger.info(f"Encontradas {len(result) if result else 0} categorías de noticia")
             return success_response(
