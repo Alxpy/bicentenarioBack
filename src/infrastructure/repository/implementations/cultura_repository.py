@@ -22,12 +22,21 @@ class CulturaRepository(ICulturaRepository):
         self.connection = connection
 
 
-    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+    async def _execute_query(self, query: str, params: tuple = None) -> Optional[List[dict]]:
         """Ejecuta una consulta SQL y retorna los resultados"""
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
-                return cursor.fetchall() if fetch_all else cursor.fetchone()
+                return cursor.fetchone()
+        except Error as e:
+            logger.error(f"Error en consulta SQL: {str(e)}")
+    
+    async def _execute_query_all(self, query: str, params: tuple = None) -> Optional[List[dict]]:
+        """Ejecuta una consulta SQL y retorna los resultados"""
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall()
         except Error as e:
             logger.error(f"Error en consulta SQL: {str(e)}")
 
@@ -44,7 +53,7 @@ class CulturaRepository(ICulturaRepository):
     async def get_all_culturas(self) -> Response:
         """Obtiene todas las culturas registradas"""
         try:
-            result = await self._execute_query(GET_ALL_CULTARAS, fetch_all=True)
+            result = await self._execute_query_all(GET_ALL_CULTARAS)
             
             if not result:
                 logger.info("No se encontraron culturas registradas")
@@ -109,7 +118,7 @@ class CulturaRepository(ICulturaRepository):
     async def get_cultura_by_ubicacion(self, ubicacion: str) -> Response:
         """Obtiene culturas por ubicación"""
         try:
-            result = await self._execute_query(GET_CULTURA_BY_UBICACION, (ubicacion,), fetch_all=True)
+            result = await self._execute_query_all(GET_CULTURA_BY_UBICACION, (ubicacion,))
             
             logger.info(f"Se encontraron {len(result) if result else 0} culturas para la ubicación: {ubicacion}")
             return success_response(

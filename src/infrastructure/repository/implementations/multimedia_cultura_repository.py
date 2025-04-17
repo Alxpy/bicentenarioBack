@@ -19,12 +19,21 @@ class MultimediaCulturaRepository(IMultimediaCulturaRepository):
         self.connection = connection
 
 
-    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+    async def _execute_query(self, query: str, params: tuple = None) -> Optional[List[dict]]:
         """Ejecuta una consulta y retorna los resultados"""
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
-                return cursor.fetchall() if fetch_all else cursor.fetchone()
+                return cursor.fetchone()
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
+    
+    async def _execute_query_all(self, query: str, params: tuple = None) -> Optional[List[dict]]:
+        """Ejecuta una consulta y retorna los resultados"""
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall()
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
 
@@ -40,7 +49,7 @@ class MultimediaCulturaRepository(IMultimediaCulturaRepository):
     
     async def get_all_multimedia_cultura(self) -> Response:
         try:
-            result = await self._execute_query(GET_ALL_MULTIMEDIA_CULTURA, fetch_all=True)
+            result = await self._execute_query_all(GET_ALL_MULTIMEDIA_CULTURA)
             if not result:
                 return error_response(
                     message=MULTIMEDIA_CULTURA_NOT_FOUND_MSG,
@@ -59,7 +68,7 @@ class MultimediaCulturaRepository(IMultimediaCulturaRepository):
 
     async def get_multimedia_cultura_by_id_cultura(self, id: int) -> Response:
         try:
-            result = await self._execute_query(GET_MULTIMEDIA_CULTURA_BY_ID_CULTURA, (id,), fetch_all=True)  # <-- Asegura fetch_all=True
+            result = await self._execute_query_all(GET_MULTIMEDIA_CULTURA_BY_ID_CULTURA, (id,))
             if not result:
                 return error_response(
                     message=MULTIMEDIA_CULTURA_NOT_FOUND_MSG,

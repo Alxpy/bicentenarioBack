@@ -20,15 +20,23 @@ class MultimediaRepository(IMultimediaRepository):
         self.connection = connection
     
 
-    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+    async def _execute_query(self, query: str, params: tuple = None) -> Optional[List[dict]]:
         """Ejecuta una consulta y retorna los resultados"""
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
-                return cursor.fetchall() if fetch_all else cursor.fetchone()
+                return cursor.fetchone()
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
     
+    async def _execute_query_all(self, query: str, params: tuple = None) -> Optional[List[dict]]:
+        """Ejecuta una consulta y retorna los resultados"""
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall()
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
 
     async def _execute_update(self, query: str, params: tuple = None) -> int:
         """Ejecuta una consulta de actualización y retorna el rowcount"""
@@ -42,7 +50,7 @@ class MultimediaRepository(IMultimediaRepository):
         
     async def get_all_multimedia(self) -> Response:
         try:
-            result = await self._execute_query(GET_ALL_MULTIMEDIA, fetch_all=True)
+            result = await self._execute_query_all(GET_ALL_MULTIMEDIA)
             if not result:
                 return error_response(
                     message=MULTIMEDIA_NOT_FOUND_MSG,
