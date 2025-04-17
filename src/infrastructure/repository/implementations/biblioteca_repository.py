@@ -18,11 +18,19 @@ class BibliotecaRepository(IBibliotecaRepository):
         self.connection = connection
 
 
-    async def _execute_query(self, query: str, params: tuple = None, fetch_all: bool = False) -> Optional[List[dict]]:
+    async def _execute_query(self, query: str, params: tuple = None) -> Optional[List[dict]]:
         try:
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
-                return cursor.fetchall() if fetch_all else cursor.fetchone()
+                return cursor.fetchone()
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
+            
+    async def _execute_query_all(self, query: str, params: tuple = None) -> Optional[List[dict]]:
+        try:
+            with self.connection.cursor(dictionary=True) as cursor:
+                cursor.execute(query, params or ())
+                return cursor.fetchall()
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
 
@@ -38,7 +46,7 @@ class BibliotecaRepository(IBibliotecaRepository):
     async def get_all_bibliotecas(self) -> Response:
         """Obtiene todas las bibliotecas registradas"""
         try:
-            result = await self._execute_query(GET_ALL_BIBLIOTECAS, fetch_all=True)
+            result = await self._execute_query_all(GET_ALL_BIBLIOTECAS)
             if not result:
                 logger.info("No se encontraron bibliotecas")
                 return error_response(
@@ -95,7 +103,7 @@ class BibliotecaRepository(IBibliotecaRepository):
     async def get_biblioteca_by_categoria(self, categoria: str) -> Response:
         """Obtiene bibliotecas por categoría"""
         try:
-            result = await self._execute_query(GET_BIBLIOTECA_BY_CATEGORIA, (categoria,), fetch_all=True)
+            result = await self._execute_query_all(GET_BIBLIOTECA_BY_CATEGORIA, (categoria,))
             return success_response(
                 data=[BibliotecaDomain(**row) for row in result] if result else [],
                 message=BIBLIOTECAS_FOUND_MSG if result else BIBLIOTECA_NOT_FOUND_MSG
@@ -110,7 +118,7 @@ class BibliotecaRepository(IBibliotecaRepository):
     async def get_biblioteca_by_autor(self, autor: str) -> Response:
         """Obtiene bibliotecas por autor"""
         try:
-            result = await self._execute_query(GET_BIBLIOTECA_BY_AUTOR, (autor,), fetch_all=True)
+            result = await self._execute_query_all(GET_BIBLIOTECA_BY_AUTOR, (autor,))
             return success_response(
                 data=[BibliotecaDomain(**row) for row in result] if result else [],
                 message=BIBLIOTECAS_FOUND_MSG if result else BIBLIOTECA_NOT_FOUND_MSG
@@ -125,7 +133,7 @@ class BibliotecaRepository(IBibliotecaRepository):
     async def get_biblioteca_by_fecha(self, fecha: str) -> Response:
         """Obtiene bibliotecas por fecha de publicación"""
         try:
-            result = await self._execute_query(GET_BIBLIOTECA_BY_FECHA, (fecha,), fetch_all=True)
+            result = await self._execute_query_all(GET_BIBLIOTECA_BY_FECHA, (fecha,))
             return success_response(
                 data=[BibliotecaDomain(**row) for row in result] if result else [],
                 message=BIBLIOTECAS_FOUND_MSG if result else BIBLIOTECA_NOT_FOUND_MSG

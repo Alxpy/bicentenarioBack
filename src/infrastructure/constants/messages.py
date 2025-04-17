@@ -146,6 +146,9 @@ NO_MULTIMEDIA_MSG= "No hay multimedia registrada."
 MULTIMEDIA_EXISTS_MSG= "La multimedia ya existe."
 MULTIMEDIA_BY_ID_MSG= "Multimedia por ID encontrada."
 MULTIMEDIA_BY_ID_NOT_FOUND_MSG= "Multimedia por ID no encontrada."
+MULTIMEDIA_NOT_CREATED_MSG= "No se pudo crear la multimedia."
+MULTIMEDIA_NOT_UPDATED_MSG= "No se pudo actualizar la multimedia."
+MULTIMEDIA_NOT_DELETED_MSG= "No se pudo eliminar la multimedia."
 
 #Mensajes multimedia historia
 MULTIMEDIA_HISTORIA_NOT_FOUND_MSG = "Multimedia historia no encontrada."
@@ -170,6 +173,8 @@ MULTIMEDIA_CULTURA_BY_ID_MULTIMEDIA_MSG = "Multimedia cultura por ID MULTIMEDIA 
 MULTIMEDIA_CULTURA_BY_ID_NOT_FOUND_MSG = "Multimedia cultura por ID no encontrada."
 MULTIMEDIA_CULTURA_CREATED_MSG = "Multimedia cultura creada correctamente."
 MULTIMEDIA_CULTURA_DELETED_MSG = "Multimedia cultura eliminada correctamente."
+MULTIMEDIA_CULTURA_NOT_CREATED_MSG = "No se pudo crear la multimedia cultura."
+MULTIMEDIA_CULTURA_EXISTS_MSG = "La multimedia cultura ya existe."
 
 # Mensajes Categoria Historia
 CATEGORIA_HISTORIA_NOT_FOUND_MSG = "Categoría de historia no encontrada."
@@ -180,6 +185,10 @@ CATEGORIA_HISTORIA_UPDATED_MSG = "Categoría de historia actualizada correctamen
 CATEGORIA_HISTORIA_DELETED_MSG = "Categoría de historia eliminada correctamente."
 NO_CATEGORIAS_HISTORIA_MSG = "No hay categorías de historia registradas."
 CATEGORIA_HISTORIA_EXISTS_MSG = "La categoría de historia ya existe."
+MULTIMEDIA_HISTORIA_NOT_CREATED_MSG = "No se pudo crear la multimedia historia."
+CATEGORIA_HISTORIA_BY_ID_MSG = "Categoría de historia por ID encontrada."
+MULTIMEDIA_HISTORIA_NOT_DELETED_MSG = "No se pudo eliminar la multimedia historia."
+CATEGORIA_HISTORIA_BY_ID_NOT_FOUND_MSG = "Categoría de historia por ID no encontrada."
 
 # Mensajes historia
 HISTORIA_NOT_FOUND_MSG = "Historia no encontrada."

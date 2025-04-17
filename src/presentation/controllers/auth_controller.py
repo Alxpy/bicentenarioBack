@@ -4,9 +4,9 @@ from src.core.dependency_injection.dependency_injection import build_auth_servic
 from src.presentation.dto.auth_dto import AuthLoginDTO, AuthLogoutDTO, AuthVerifyCodeDTO,AuthResponseDTO
 from src.resources.responses.response import Response
 
-auth_controller = APIRouter(prefix="/api/v1/auth", tags=["auth"])
+auth_router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 
-@auth_controller.post(
+@auth_router.post(
     "/login",
     summary="Login",
     description="Allows the user to log in and obtain a JWT access token.",
@@ -18,7 +18,7 @@ async def login(
 ):
     return await auth_service.login(auth_login_dto)
 
-@auth_controller.put(
+@auth_router.put(
     "/logout",
     summary="Logout",
     description="Logs out the user and invalidates the current token.",
@@ -30,7 +30,7 @@ async def logout(
 ):
     return await auth_service.logout(auth_logout_dto)
 
-@auth_controller.get(
+@auth_router.get(
     "/login/verifyCode/{email}/{code}",
     summary="Verify Login Code",
     description="Verifies the login authentication code sent to the user's email.",
