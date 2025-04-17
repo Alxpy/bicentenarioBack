@@ -31,4 +31,5 @@ class ChangePasswordUserDTO(BaseModel):
 
 class NewPasswordDTO(BaseModel):
     correo: str
+    code: str
     nueva_contrasena: str

@@ -1,56 +1,65 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Form
+from fastapi import APIRouter, Depends, HTTPException
 from src.core.abstractions.services.categoriaNoticia_service_abstract import ICategoriaNoticiaService
 from src.core.dependency_injection.dependency_injection import build_categoriaNoticia_service
 from src.presentation.dto.categoriaNoticia_dto import CategoriaNoticiaDTO
-from src.presentation.mappers.categoriaNoticia_mapper import map_categoriaNoticia_domain_to_dto
 from src.core.models.categoriaNoticia_domain import CategoriaNoticiaDomain
+from src.presentation.responses.base_response import Response
 
-categoriaNoticia_controller = APIRouter(prefix="/api/v1", tags=["categoriaNoticia"])
+category_controller = APIRouter(prefix="/api/v1/categories", tags=["categories"])
 
-@categoriaNoticia_controller.post("/categoriaNoticia")
-async def create_categoriaNoticia(
-    categoriaNoticia: CategoriaNoticiaDTO,
-    categoriaNoticia_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)):
+@category_controller.post("", response_model=Response[None])
+async def create_category(
+    category_dto: CategoriaNoticiaDTO,
+    category_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)
+):
     try:
-        return await categoriaNoticia_service.create_categoria_noticia(categoriaNoticia)
+        return await category_service.create_categoria_noticia(category_dto)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoriaNoticia_controller.get("/categoriaNoticias")
-async def get_categoriaNoticias(
-    categoriaNoticia_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)):
+
+@category_controller.get("", response_model=Response[list[CategoriaNoticiaDomain]])
+async def get_all_categories(
+    category_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)
+):
     try:
-        return await categoriaNoticia_service.get_all_categorias_noticia()
+        return await category_service.get_all_categorias_noticia()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoriaNoticia_controller.get("/categoriaNoticia/{id}")
-async def get_categoriaNoticia(
+
+@category_controller.get("/{id}", response_model=Response[CategoriaNoticiaDomain])
+async def get_category_by_id(
     id: int,
-    categoriaNoticia_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)):
+    category_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)
+):
     try:
-        return await categoriaNoticia_service.get_categoria_noticia(id)
+        return await category_service.get_categoria_noticia(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoriaNoticia_controller.put("/categoriaNoticia/{id}")
-async def update_categoriaNoticia(
+
+@category_controller.put("/{id}", response_model=Response[None])
+async def update_category(
     id: int,
-    categoriaNoticiaUpdate: CategoriaNoticiaDTO,
-    categoriaNoticia_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)):
+    category_dto: CategoriaNoticiaDTO,
+    category_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)
+):
     try:
-        updateCategoriaNoticia = CategoriaNoticiaDomain(
-            nombre_categoria=categoriaNoticiaUpdate.nombre_categoria,
+        updated_category = CategoriaNoticiaDomain(
+            nombre_categoria=category_dto.nombre_categoria
         )
-        return await categoriaNoticia_service.update_categoria_noticia(id, updateCategoriaNoticia)
+        return await category_service.update_categoria_noticia(id, updated_category)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@categoriaNoticia_controller.delete("/categoriaNoticia/{id}")
-async def delete_categoriaNoticia(
+
+@category_controller.delete("/{id}", response_model=Response[None])
+async def delete_category(
     id: int,
-    categoriaNoticia_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)):
+    category_service: ICategoriaNoticiaService = Depends(build_categoriaNoticia_service)
+):
     try:
-        return await categoriaNoticia_service.delete_categoria_noticia(id)
+        return await category_service.delete_categoria_noticia(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

@@ -1,63 +1,62 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Form
+from fastapi import APIRouter, Depends, HTTPException
 from src.core.abstractions.services.ubicacion_service_abstract import IUbicacionService
 from src.core.dependency_injection.dependency_injection import build_ubicacion_service
 from src.presentation.dto.ubicacion_dto import UbicacionDTO
-from src.presentation.mappers.ubicacion_mapper import map_ubicacion_domain_to_dto
 from src.core.models.ubicacion_domain import UbicacionDomain
+from src.presentation.responses.base_response import Response
 
-ubicacion_controller = APIRouter(prefix="/api/v1", tags=["ubicacion"])
+location_controller = APIRouter(prefix="/api/v1/location", tags=["location"])
 
-@ubicacion_controller.post("/ubicacion")
-async def create_ubicacion(
-    ubicacion: UbicacionDTO,
-    ubicacion_service: IUbicacionService = Depends(build_ubicacion_service)):
+@location_controller.post("", response_model=Response[None])
+async def create_location(
+    location: UbicacionDTO,
+    location_service: IUbicacionService = Depends(build_ubicacion_service)):
     try:
-        return await ubicacion_service.create_ubicacion(ubicacion)
+        return await location_service.create_ubicacion(location)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@ubicacion_controller.get("/ubicaciones")
-async def get_ubicaciones(
-    ubicacion_service: IUbicacionService = Depends(build_ubicacion_service)):
+@location_controller.get("/getAll", response_model=Response[list[UbicacionDomain]])
+async def get_all_locations(
+    location_service: IUbicacionService = Depends(build_ubicacion_service)):
     try:
-        return await ubicacion_service.get_all_ubicaciones()
+        return await location_service.get_all_ubicaciones()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@ubicacion_controller.get("/ubicacion/{id}")
-async def get_ubicacion(
+@location_controller.get("/getById/{id}", response_model=Response[UbicacionDomain])
+async def get_location_by_id(
     id: int,
-    ubicacion_service: IUbicacionService = Depends(build_ubicacion_service)):
+    location_service: IUbicacionService = Depends(build_ubicacion_service)):
     try:
-        return await ubicacion_service.get_ubicacion_by_id(id)
+        return await location_service.get_ubicacion_by_id(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@ubicacion_controller.get("/ubicacion/nombre/{nombre}")
-async def get_ubicacion_by_name(
-    nombre: str,
-    ubicacion_service: IUbicacionService = Depends(build_ubicacion_service)):
+@location_controller.get("/getByName/{name}", response_model=Response[UbicacionDomain])
+async def get_location_by_name(
+    name: str,
+    location_service: IUbicacionService = Depends(build_ubicacion_service)):
     try:
-        return await ubicacion_service.get_ubicacion_by_name(nombre)
+        return await location_service.get_ubicacion_by_name(name)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@ubicacion_controller.put("/ubicacion/{id}")
-async def update_ubicacion(
+@location_controller.put("/{id}", response_model=Response[None])
+async def update_location(
     id: int,
-    ubicacion: UbicacionDTO,
-    ubicacion_service: IUbicacionService = Depends(build_ubicacion_service)):
+    location_update: UbicacionDTO,
+    location_service: IUbicacionService = Depends(build_ubicacion_service)):
     try:
-        return await ubicacion_service.update_ubicacion(id, ubicacion)
+        return await location_service.update_ubicacion(id, location_update)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
-@ubicacion_controller.delete("/ubicacion/{id}")
-async def delete_ubicacion(
+@location_controller.delete("/{id}", response_model=Response[None])
+async def delete_location(
     id: int,
-    ubicacion_service: IUbicacionService = Depends(build_ubicacion_service)):
+    location_service: IUbicacionService = Depends(build_ubicacion_service)):
     try:
-        return await ubicacion_service.delete_ubicacion(id)
+        return await location_service.delete_ubicacion(id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-

@@ -1,7 +1,7 @@
 from src.core.abstractions.infrastructure.repository.user_repository_abstract import IUsuarioRepository
 from src.core.abstractions.services.user_service_abstract import IUsuarioService
 from src.core.models.user_domain import UsuarioDomain
-from src.presentation.dto.user_dto import UsuarioDTO
+from src.presentation.dto.user_dto import UsuarioDTO,NewPasswordDTO
 
 class UsuarioService(IUsuarioService):
     
@@ -25,8 +25,8 @@ class UsuarioService(IUsuarioService):
     async def update_usuario(self, id: int, usuario: UsuarioDomain) -> None:
         return await self.usuario_repository.update_usuario(id, usuario)
     
-    async def change_password(self, correo, password):
-        return await self.usuario_repository.change_password(correo, password)
+    async def change_password(self, data: NewPasswordDTO):
+        return await self.usuario_repository.change_password(data)
     
     async def delete_usuario(self, id: int) -> None:
         return await self.usuario_repository.delete_usuario(id)
