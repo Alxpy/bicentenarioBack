@@ -70,7 +70,7 @@ async def get_bibliotecas_by_category(
     biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await biblioteca_service.get_biblioteca_by_category(categoryName)
+        return await biblioteca_service.get_biblioteca_by_categoria(categoryName)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -104,7 +104,7 @@ async def get_bibliotecas_by_author(
     biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await biblioteca_service.get_biblioteca_by_author(author)
+        return await biblioteca_service.get_biblioteca_by_autor(author)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -121,7 +121,7 @@ async def get_bibliotecas_by_publication_date(
     biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
 ):
     try:
-        return await biblioteca_service.get_biblioteca_by_publication_date(publicationDate)
+        return await biblioteca_service.get_biblioteca_by_fecha(publicationDate)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

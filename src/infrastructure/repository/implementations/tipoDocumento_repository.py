@@ -90,10 +90,10 @@ class TipoDocumentoRepository(ITipoDocumentoRepository):
     async def create_tipo_documento(self, tipo_documento: TipoDocumentoDTO) -> Response:
         """Crea un nuevo tipo de documento"""
         try:
-            conn = self._get_connection()
-            with conn.cursor() as cursor:
+            
+            with self.connection.cursor() as cursor:
                 cursor.execute(CREATE_TIPO_DOCUMENTO, (tipo_documento.tipo,))
-                conn.commit()
+                self.connection.commit()
                 return success_response(
                     data=TipoDocumentoDomain(
                         id_tipo=cursor.lastrowid,
@@ -114,9 +114,6 @@ class TipoDocumentoRepository(ITipoDocumentoRepository):
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
                 status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-        finally:
-            if conn:
-                conn.close()
 
     async def update_tipo_documento(self, id: int, tipo_documento: TipoDocumentoDomain) -> Response:
         """Actualiza un tipo de documento existente"""

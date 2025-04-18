@@ -25,7 +25,7 @@ async def send_verification_email(
     email_service: IEmailServiceAbstract = Depends(build_email_service)
 ):
     try:
-        return await email_service.send_verification_email(email_data)
+        return await email_service.sendEmail_to_verify_email(email_data)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -44,7 +44,7 @@ async def send_login_notification(
     email_service: IEmailServiceAbstract = Depends(build_email_service)
 ):
     try:
-        return await email_service.send_login_notification(email_data)
+        return await email_service.sendEmail_to_notify_new_login(email_data)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -63,7 +63,7 @@ async def send_password_recovery(
     email_service: IEmailServiceAbstract = Depends(build_email_service)
 ):
     try:
-        return await email_service.send_password_recovery(email_data)
+        return await email_service.sendEmail_to_change_password(email_data)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
