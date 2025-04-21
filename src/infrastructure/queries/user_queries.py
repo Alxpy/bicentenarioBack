@@ -36,7 +36,7 @@ ASSIGN_DEFAULT_ROLE = """
     INSERT INTO usuario_rol (id_usuario, id_rol)
     SELECT LAST_INSERT_ID(), r.id
     FROM rol r
-    WHERE r.nombre_rol LIKE 'usuario'
+    WHERE r.nombre_rol LIKE 'user'
 """
 
 UPDATE_USER = """

@@ -110,8 +110,7 @@ class UserRepository(IUsuarioRepository):
         try:
             hashed_password = bcrypt.hashpw(usuario.contrasena.encode('utf-8'), bcrypt.gensalt())
             
-            conn = self._get_connection()
-            with conn.cursor() as cursor:
+            with self.connection.cursor() as cursor:
                 # Insertar usuario
                 cursor.execute(CREATE_USER, (
                     usuario.nombre, 
@@ -127,7 +126,7 @@ class UserRepository(IUsuarioRepository):
                 
                 # Asignar rol por defecto
                 cursor.execute(ASSIGN_DEFAULT_ROLE)
-                conn.commit()
+                self.connection.commit()
                 
                 logger.info(f"Usuario creado con email: {usuario.correo}")
                 return success_response(
