@@ -112,10 +112,8 @@ class UbicacionRepository(IUbicacionRepository):
 
     async def create_ubicacion(self, ubicacion: UbicacionDTO) -> Response:
         """Crea una nueva ubicación"""
-        conn = None
         try:
-            conn = self._get_connection()
-            with conn.cursor() as cursor:
+            with self.connection.cursor() as cursor:
                 cursor.execute(CREATE_UBICACION, (
                     ubicacion.nombre,
                     ubicacion.latitud,
@@ -123,7 +121,7 @@ class UbicacionRepository(IUbicacionRepository):
                     ubicacion.imagen,
                     ubicacion.descripcion
                 ))
-                conn.commit()
+                self.connection.commit()
                 return success_response(
                     message=UBICACION_CREATED_MSG,
                     status=HTTP_201_CREATED
@@ -140,9 +138,6 @@ class UbicacionRepository(IUbicacionRepository):
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
                 status=HTTP_500_INTERNAL_SERVER_ERROR
             )
-        finally:
-            if conn:
-                conn.close()
 
     async def update_ubicacion(self, id: int, ubicacion: UbicacionDomain) -> Response:
         """Actualiza una ubicación existente"""
