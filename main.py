@@ -27,6 +27,7 @@ from src.presentation.controllers.noticia_controller import news_router
 from src.presentation.controllers.presidente_controller import president_router
 from src.presentation.controllers.rol_controller import rol_router
 from src.presentation.controllers.user_controller import user_router
+from src.presentation.controllers.routes_controller import routes_controller
 
 app = FastAPI()
 
@@ -54,6 +55,7 @@ app.include_router(multimedia_router)
 app.include_router(news_router)
 app.include_router(president_router)
 app.include_router(rol_router)
+app.include_router(routes_controller)
 app.include_router(user_router)
 
 if __name__ == "__main__":

@@ -11,11 +11,12 @@ class FileStorageService:
     async def upload_file(self, data_file: FileDTO) -> Response:
         try:
             file = self.cliente.upload_file(data_file.file, data_file.file_name)
+            print(file)
             return success_response(
                 message="File uploaded successfully",
-                data=ResponseFileDTO(
-                    file_url=file,
-                ),
+                data={
+                    "file_url": file,
+                },
             )
         except Exception as e:
             return error_response(

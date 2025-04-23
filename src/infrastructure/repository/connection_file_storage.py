@@ -12,5 +12,5 @@ class GCSClient:
     def upload_file(self, local_path, destination_name):
         blob = self.bucket.blob(destination_name)
         blob.upload_from_filename(local_path)
-        blob.make_public()
+        #blob.make_public()
         return f"https://storage.googleapis.com/{bucket_name}/{destination_name}"

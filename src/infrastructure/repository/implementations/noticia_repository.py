@@ -24,9 +24,9 @@ class NoticiaRepository(INoticiaRepository):
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
                 return cursor.fetchone()
-        finally:
-            if self.connection:
-             self.connection.close()
+        except mysql.connector.Error as err:
+            logger.error(f"Error en _execute_query: {str(err)}")
+            raise err
 
     async def _execute_query_all(self, query: str, params: tuple = None) -> List[dict]:
         """Ejecuta una consulta y retorna los resultados"""
@@ -34,9 +34,9 @@ class NoticiaRepository(INoticiaRepository):
             with self.connection.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params or ())
                 return cursor.fetchall()
-        finally:
-            if self.connection:
-             self.connection.close()
+        except mysql.connector.Error as err:
+            logger.error(f"Error en _execute_query_all: {str(err)}")
+            raise err
 
     async def _execute_update(self, query: str, params: tuple = None) -> int:
         """Ejecuta una consulta de actualización y retorna el rowcount"""
@@ -45,9 +45,9 @@ class NoticiaRepository(INoticiaRepository):
                 cursor.execute(query, params or ())
                 self.connection.commit()
                 return cursor.rowcount
-        finally:
-            if self.connection:
-             self.connection.close()
+        except mysql.connector.Error as err:
+            logger.error(f"Error en _execute_update: {str(err)}")
+            raise err
 
     async def get_all_noticias(self) -> Response:
         try:
