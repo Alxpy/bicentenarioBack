@@ -83,7 +83,7 @@ class AuthRepository(IAuthRepositoryAbstract):
                 )
             )
 
-            logger.info(f"Login exitoso para usuario: {auth_login.email}")
+            logger.info(f"Login exitoso para usuario: {response_dto}")
             return success_response(
                 data=response_dto, 
                 message=LOGIN_SUCCESS_MSG

@@ -7,3 +7,6 @@ class UbicacionDTO(BaseModel):
     longitud: float
     imagen: str
     descripcion: str
+    
+class ResponseUbicacionCreateDTO(BaseModel):
+    id: int

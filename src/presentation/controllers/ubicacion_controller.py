@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.core.abstractions.services.ubicacion_service_abstract import IUbicacionService
 from src.core.dependency_injection.dependency_injection import build_ubicacion_service
-from src.presentation.dto.ubicacion_dto import UbicacionDTO
+from src.presentation.dto.ubicacion_dto import UbicacionDTO, ResponseUbicacionCreateDTO
 from src.core.models.ubicacion_domain import UbicacionDomain
 from src.presentation.responses.base_response import Response
 
@@ -10,7 +10,7 @@ location_router = APIRouter(
     tags=["location"]
 )
 
-@location_router.post("", response_model=Response[None], summary="Create a new location")
+@location_router.post("", response_model=Response[ResponseUbicacionCreateDTO], summary="Create a new location")
 async def create_location(
     location: UbicacionDTO,
     location_service: IUbicacionService = Depends(build_ubicacion_service)):

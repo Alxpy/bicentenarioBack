@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from src.core.abstractions.infrastructure.repository.ubicacion_repository_abstract import IUbicacionRepository
 from src.core.models.ubicacion_domain import UbicacionDomain
-from src.presentation.dto.ubicacion_dto import UbicacionDTO
+from src.presentation.dto.ubicacion_dto import UbicacionDTO, ResponseUbicacionCreateDTO
 from src.presentation.responses.response_factory import Response,success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
@@ -122,9 +122,11 @@ class UbicacionRepository(IUbicacionRepository):
                     ubicacion.descripcion
                 ))
                 self.connection.commit()
+                id_ubicacion = cursor.lastrowid
+                logger.info(f"Ubicación creada con ID: {id_ubicacion}")
                 return success_response(
                     message=UBICACION_CREATED_MSG,
-                    status=HTTP_201_CREATED
+                    data=ResponseUbicacionCreateDTO(id=id_ubicacion)
                 )
         except IntegrityError as e:
             logger.error(f"Error de integridad al crear ubicación: {str(e)}")
