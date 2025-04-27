@@ -6,7 +6,7 @@ from typing import List, Optional
 
 from src.core.abstractions.infrastructure.repository.multimedia_repository_abstract import IMultimediaRepository
 from src.core.models.multimedia_domain import MultimediaDomain
-from src.presentation.dto.multimedia_dto import MultimediaDTO
+from src.presentation.dto.multimedia_dto import MultimediaDTO, ResponseCreateMultimedia
 from src.presentation.responses.response_factory import Response, success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
@@ -88,21 +88,27 @@ class MultimediaRepository(IMultimediaRepository):
     
     async def create_multimedia(self, multimedia_dto: MultimediaDTO) -> Response:
         try:
-            params=(
+            params = (
                 multimedia_dto.enlace,
                 multimedia_dto.tipo
             )
-            await self._execute_update(CREATE_MULTIMEDIA, params)
+            with self.connection.cursor() as cursor:
+                cursor.execute(CREATE_MULTIMEDIA, params)
+                self.connection.commit()
+                id = cursor.lastrowid
             return success_response(
                 message=MULTIMEDIA_CREATED_MSG,
-                status=HTTP_201_CREATED
+                status=HTTP_201_CREATED,
+                data=ResponseCreateMultimedia(id=id)
             )
         except IntegrityError:
+            await self.connection.rollback()
             return error_response(
                 message=MULTIMEDIA_EXISTS_MSG,
                 status=HTTP_400_BAD_REQUEST
             )
         except Exception as e:
+            await self.connection.rollback()
             logger.error(f"Error in create_multimedia: {str(e)}")
             return error_response(
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",

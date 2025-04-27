@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.core.abstractions.services.multimedia_service_abstract import IMultimediaService
 from src.core.dependency_injection.dependency_injection import build_multimedia_service
-from src.presentation.dto.multimedia_dto import MultimediaDTO
+from src.presentation.dto.multimedia_dto import MultimediaDTO, ResponseCreateMultimedia
 from src.presentation.responses.base_response import Response
 from src.core.models.multimedia_domain import MultimediaDomain
 
@@ -10,7 +10,7 @@ multimedia_router = APIRouter(
     tags=["multimedia"]
 )
 
-@multimedia_router.post("", response_model=Response[None], summary="Create a new multimedia entry")
+@multimedia_router.post("", response_model=Response[ResponseCreateMultimedia], summary="Create a new multimedia entry")
 async def create_multimedia(
     multimedia: MultimediaDTO,
     multimedia_service: IMultimediaService = Depends(build_multimedia_service)):

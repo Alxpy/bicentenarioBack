@@ -5,3 +5,5 @@ class MultimediaDTO(BaseModel):
     enlace: str
     tipo: str
 
+class ResponseCreateMultimedia(BaseModel):
+    id: int
