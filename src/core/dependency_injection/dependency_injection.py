@@ -51,6 +51,9 @@ from src.core.services.categoria_historia_service import CategoriaHistoriaServic
 from src.infrastructure.repository.implementations.historia_repository import HistoriaRepository
 from src.core.services.historia_service import HistoriaService
 
+from src.infrastructure.repository.implementations.tipo_evento_repository import TipoEventoRepository
+from src.core.services.tipo_evento_service import TipoEventoService
+
 from src.core.services.file_storage_service import FileStorageService
 
 from src.core.services.file_storage_service import FileStorageService
@@ -140,3 +143,8 @@ def build_historia_service(
 def build_file_storage_service(
 ):
     return FileStorageService()
+
+def build_tipo_evento_service(
+    connection = Depends(get_connection),
+):
+    return TipoEventoService(TipoEventoRepository(connection))

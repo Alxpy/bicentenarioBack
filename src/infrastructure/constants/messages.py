@@ -206,6 +206,19 @@ HISTORIA_BY_ID_MSG = "Historia por ID encontrada."
 HISTORIA_BY_ID_NOT_FOUND_MSG = "Historia por ID no encontrada."
 HISTORIA_DELETED_MSG= "Historia eliminada correctamente."
 
+#Mensajes tipo evento
+
+TIPO_EVENTO_NOT_FOUND_MSG = "Tipo de evento no encontrado."
+TIPO_EVENTO_FOUND_MSG = "Tipo de evento encontrado."
+TIPO_EVENTOS_FOUND_MSG = "Tipos de evento encontrados."
+TIPO_EVENTO_CREATED_MSG = "Tipo de evento creado correctamente."
+TIPO_EVENTO_UPDATED_MSG = "Tipo de evento actualizado correctamente."
+TIPO_EVENTO_DELETED_MSG = "Tipo de evento eliminado correctamente."
+NO_TIPOS_EVENTO_MSG = "No hay tipos de evento registrados."
+TIPO_EVENTO_EXISTS_MSG = "El tipo de evento ya existe."
+TIPO_EVENTO_NOT_CREATED_MSG = "No se pudo crear el tipo de evento."
+TIPO_EVENTO_NOT_UPDATED_MSG = "No se pudo actualizar el tipo de evento."
+
 
 # Mensajes de rol
 ROLES_NOT_FOUND_MSG = "Roles no encontrados."
