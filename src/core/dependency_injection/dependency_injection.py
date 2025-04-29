@@ -54,6 +54,9 @@ from src.core.services.historia_service import HistoriaService
 from src.infrastructure.repository.implementations.tipo_evento_repository import TipoEventoRepository
 from src.core.services.tipo_evento_service import TipoEventoService
 
+from src.infrastructure.repository.implementations.evento_repository import EventoRepository
+from src.core.services.evento_service import EventoService
+
 from src.core.services.file_storage_service import FileStorageService
 
 from src.core.services.file_storage_service import FileStorageService
@@ -148,3 +151,8 @@ def build_tipo_evento_service(
     connection = Depends(get_connection),
 ):
     return TipoEventoService(TipoEventoRepository(connection))
+
+def build_evento_service(
+    connection = Depends(get_connection),
+):
+    return EventoService(EventoRepository(connection))

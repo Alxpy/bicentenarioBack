@@ -219,6 +219,21 @@ TIPO_EVENTO_EXISTS_MSG = "El tipo de evento ya existe."
 TIPO_EVENTO_NOT_CREATED_MSG = "No se pudo crear el tipo de evento."
 TIPO_EVENTO_NOT_UPDATED_MSG = "No se pudo actualizar el tipo de evento."
 
+#Mensajes de evento
+EVENTO_NOT_FOUND_MSG = "Evento no encontrado."
+EVENTO_FOUND_MSG = "Evento encontrado."
+EVENTOS_FOUND_MSG = "Eventos encontrados."
+EVENTO_CREATED_MSG = "Evento creado correctamente."
+EVENTO_BY_ID_NOT_FOUND_MSG = "Evento por ID no encontrado."
+EVENTO_BY_NOMBRE_NOT_FOUND_MSG = "Evento por nombre no encontrado."
+EVENTO_BY_FECHA_NOT_FOUND_MSG = "Evento por fecha no encontrado."
+EVENTO_BY_TIPO_NOT_FOUND_MSG = "Evento por tipo no encontrado."
+EVENTO_BY_UBICACION_NOT_FOUND_MSG = "Evento por ubicación no encontrado."
+EVENTO_NOT_CREATED_MSG = "No se pudo crear el evento."
+EVENTO_NOT_UPDATED_MSG = "No se pudo actualizar el evento."
+EVENTO_UPDATED_MSG = "Evento actualizado correctamente."
+EVENTO_NOT_DELETED_MSG = "No se pudo eliminar el evento."
+EVENTO_DELETED_MSG = "Evento eliminado correctamente."
 
 # Mensajes de rol
 ROLES_NOT_FOUND_MSG = "Roles no encontrados."

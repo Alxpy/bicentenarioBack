@@ -29,6 +29,7 @@ from src.presentation.controllers.rol_controller import rol_router
 from src.presentation.controllers.user_controller import user_router
 from src.presentation.controllers.routes_controller import routes_controller
 from src.presentation.controllers.tipo_evento_controller import tipo_evento_router
+from src.presentation.controllers.evento_controller import evento_router
 
 app = FastAPI()
 
@@ -59,6 +60,7 @@ app.include_router(rol_router)
 app.include_router(routes_controller)
 app.include_router(user_router)
 app.include_router(tipo_evento_router)
+app.include_router(evento_router)
 
 if __name__ == "__main__":
     uvicorn.run(
