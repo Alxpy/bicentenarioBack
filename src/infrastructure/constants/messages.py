@@ -235,6 +235,16 @@ EVENTO_UPDATED_MSG = "Evento actualizado correctamente."
 EVENTO_NOT_DELETED_MSG = "No se pudo eliminar el evento."
 EVENTO_DELETED_MSG = "Evento eliminado correctamente."
 
+#Mensajes de usuario evento
+USUARIO_EVENTO_NOT_FOUND_MSG = "Usuario evento no encontrado."
+USUARIO_EVENTO_FOUND_MSG = "Usuario evento encontrado."
+USUARIO_EVENTO_NOT_CREATED_MSG = "No se pudo crear el usuario evento."
+USUARIO_EVENTO_CREATED_MSG = "Usuario evento creado correctamente."
+USUARIO_EVENTO_NOT_UPDATED_MSG = "No se pudo actualizar el usuario evento."
+USUARIO_EVENTO_UPDATED_MSG = "Usuario evento actualizado correctamente."
+USUARIO_EVENTO_NOT_DELETED_MSG = "No se pudo eliminar el usuario evento."
+USUARIO_EVENTO_DELETED_MSG = "Usuario evento eliminado correctamente."
+
 # Mensajes de rol
 ROLES_NOT_FOUND_MSG = "Roles no encontrados."
 ROLES_FOUND_MSG = "Roles encontrados."
