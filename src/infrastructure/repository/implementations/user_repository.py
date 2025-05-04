@@ -11,7 +11,7 @@ from src.presentation.responses.response_factory import Response, success_respon
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
 from src.infrastructure.queries.user_queries import *
-from src.infrastructure.queries.auth_queries import VERIFY_EMAIL
+from src.infrastructure.queries.auth_queries import VERIFY_EMAIL, VERIFY_CODE_LOGIN
 
 logger = logging.getLogger(__name__)
 
@@ -190,12 +190,11 @@ class UserRepository(IUsuarioRepository):
     async def change_password(self, data: NewPasswordDTO) -> Response:
         """Cambia la contraseña de un usuario"""
         try:
-            hashed_password = bcrypt.hashpw(data.password.encode('utf-8'), bcrypt.gensalt())
+            hashed_password = bcrypt.hashpw(data.nueva_contrasena.encode('utf-8'), bcrypt.gensalt())
             
-            conn = self._get_connection()
-            with conn.cursor() as cursor:
+            with self.connection.cursor() as cursor:
                 # Verificar código de verificación
-                cursor.execute(VERIFY_EMAIL, (data.correo, data.code))
+                cursor.execute(VERIFY_CODE_LOGIN, (data.correo, data.code))
                 user = cursor.fetchone()
                 
                 if not user:

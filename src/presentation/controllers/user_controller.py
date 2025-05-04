@@ -71,19 +71,19 @@ async def update_user(
 
 
 @user_router.put(
-    "/change-password",
+    "/{email}/change-password",
     summary="Change user password",
     description="Changes the user's password based on their email.",
     response_model=Response[None]
 )
 async def change_password(
+    email: str,	
     new_password_data: NewPasswordDTO,
     user_service: IUsuarioService = Depends(build_usuario_service)
 ):
     try:
         return await user_service.change_password(
-            new_password_data.correo,
-            new_password_data.nueva_contrasena
+            data=new_password_data
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

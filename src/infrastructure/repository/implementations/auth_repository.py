@@ -13,6 +13,7 @@ from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
 from src.infrastructure.queries.auth_queries import *
 from src.infrastructure.config.auth_config import *
+from src.core.models.user_domain import UsuarioDomain
 
 logger = logging.getLogger(__name__)
 
@@ -66,21 +67,17 @@ class AuthRepository(IAuthRepositoryAbstract):
             if not bcrypt.checkpw(auth_login.password.encode(), user["contrasena"].encode()):
                 logger.info(f"Contraseña incorrecta para usuario: {auth_login.email}")
                 return error_response(INVALID_CREDENTIALS_MSG)
-
+            logger.info(user)
             # Obtener roles del usuario
-            roles_result = await self._execute_query(GET_USER_ROLES, (auth_login.email,), fetch_all=True)
-            roles = [row["rol"] for row in roles_result] if roles_result else []
+            roles_result = await self._execute_query(GET_USER_ROLES, (user['id'],), fetch_all=True)
+            roles = [row["nombre_rol"] for row in roles_result] if roles_result else []
             user["roles"] = roles
-
+            logger.info(user)
             # Generar token JWT
             token = self._generate_token(user)
             response_dto = AuthResponseDTO(
                 token=token,
-                user=AuthenticatedUserDTO(
-                    nombre=user["nombre"],
-                    correo=user["correo"],
-                    roles=roles
-                )
+                user=UsuarioDomain(**user)
             )
 
             logger.info(f"Login exitoso para usuario: {response_dto}")

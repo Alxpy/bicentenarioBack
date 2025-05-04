@@ -1,25 +1,25 @@
 GET_ALL_CULTARAS = """
-    SELECT c.id, c.nombre, c.imagen, c.descripcion,c.id_ubicacion, ct.nombre as nombre_ubicacion
+    SELECT c.id, c.nombre, c.imagen, c.descripcion,c.id_ubicacion, ct.nombre as nombre_ubicacion, ct.latitud, ct.longitud
     FROM cultura AS c
     INNER JOIN ubicacion AS ct ON c.id_ubicacion = ct.id
 """
 
 GET_CULTURA_BY_ID = """
-    SELECT c.id, c.nombre, c.imagen, c.descripcion,c.id_ubicacion, ct.nombre as nombre_ubicacion
+    SELECT c.id, c.nombre, c.imagen, c.descripcion,c.id_ubicacion, ct.nombre as nombre_ubicacion, ct.latitud, ct.longitud
     FROM cultura AS c
     INNER JOIN ubicacion AS ct ON c.id_ubicacion = ct.id
     WHERE c.id = %s
 """
 
 GET_CULTURA_BY_NOMBRE= """
-    SELECT c.id, c.nombre, c.imagen, c.descripcion,c.id_ubicacion, ct.nombre as nombre_ubicacion
+    SELECT c.id, c.nombre, c.imagen, c.descripcion,c.id_ubicacion, ct.nombre as nombre_ubicacion, ct.latitud, ct.longitud
     FROM cultura AS c 
     INNER JOIN ubicacion AS ct ON c.id_ubicacion = ct.id
     WHERE c.nombre = %s    
 """
 
 GET_CULTURA_BY_UBICACION = """
-    SELECT c.id, c.nombre, c.imagen, c.descripcion, c.id_ubicacion, ct.nombre AS nombre_ubicacion
+    SELECT c.id, c.nombre, c.imagen, c.descripcion, c.id_ubicacion, ct.nombre AS nombre_ubicacion, ct.latitud, ct.longitud
     FROM cultura c
     INNER JOIN ubicacion AS ct ON c.id_ubicacion = ct.id
     WHERE ct.nombre = %s;

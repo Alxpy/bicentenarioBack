@@ -8,3 +8,5 @@ class CulturaDomain(BaseModel):
     descripcion: str
     id_ubicacion: Optional[int] = None
     nombre_ubicacion: Optional[str] = None
+    latitud: Optional[float] = None
+    longitud: Optional[float] = None

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List
+from src.core.models.user_domain import UsuarioDomain
 
 class AuthLoginDTO(BaseModel):
     email: str
@@ -19,5 +20,5 @@ class AuthenticatedUserDTO(BaseModel):
 
 class AuthResponseDTO(BaseModel):
     token: str
-    user: AuthenticatedUserDTO
+    user: UsuarioDomain
 
