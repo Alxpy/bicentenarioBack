@@ -3,18 +3,18 @@ import logging
 from mysql.connector import pooling, IntegrityError
 from typing import List, Optional
 
-from src.core.abstractions.infrastructure.repository.usuario_evento_repository_abstract import IUsuarioEventoRepository
-from src.core.models.usuario_evento_domain import UsuarioEventoDomain
-from src.presentation.dto.usuario_evento_dto import UsuarioEventoDTO, UpdateAsistioUsuarioEventoDTO
+from src.core.abstractions.infrastructure.repository.tipo_evento_repository_abstract import ITipoEventoRepository
+from src.core.models.tipo_evento_domain import TipoEventoDomain
+from src.presentation.dto.tipo_evento_dto import TipoEventoDTO
 from src.presentation.responses.response_factory import Response, success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
-from src.infrastructure.queries.usuario_evento_queries import *
+from src.infrastructure.queries.tipo_evento_queries import *
 
 
 logger = logging.getLogger(__name__)
 
-class UsuarioEventoRepository(IUsuarioEventoRepository):
+class TipoEventoRepository(ITipoEventoRepository):
     def __init__(self, connection) -> None:
         self.connection = connection
 
@@ -26,8 +26,8 @@ class UsuarioEventoRepository(IUsuarioEventoRepository):
                 return cursor.fetchone()
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
-    
 
+    
     async def _execute_query_all(self, query: str, params: tuple = None) -> Optional[List[dict]]:
         """Ejecuta una consulta y retorna los resultados"""
         try:
@@ -49,129 +49,106 @@ class UsuarioEventoRepository(IUsuarioEventoRepository):
             logger.error(f"Error executing update: {str(e)}")
         
     
-    async def get_usuario_evento_by_id_usuario(self, id: int) -> Response:
+    async def get_all_tipo_eventos(self) -> Response:
         try:
-            result = await self._execute_query_all(GET_USUARIO_EVENTO_BY_ID_USUARIO, (id,))
+            result = await self._execute_query_all(GET_ALL_TIPO_EVENTO)
             if not result:
                 return error_response(
-                    message=USUARIO_EVENTO_NOT_FOUND_MSG,
+                    message=TIPO_EVENTO_NOT_FOUND_MSG,
                     status=HTTP_404_NOT_FOUND
                 )
             return success_response(
-                message=USUARIO_EVENTO_FOUND_MSG,
-                data=[UsuarioEventoDomain(**row) for row in result],
-                status=HTTP_200_OK
+                data=[TipoEventoDTO(**row) for row in result],
+                message=TIPO_EVENTO_FOUND_MSG
             )
         except Exception as e:
-            logger.error(f"Error getting user event by user ID: {str(e)}")
+            logger.error(f"Error getting all tipo_eventos: {str(e)}")
             return error_response(
-                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
-                status=HTTP_500_INTERNAL_SERVER_ERROR
+                message=TIPO_EVENTO_NOT_FOUND_MSG,
+                status=HTTP_404_NOT_FOUND
             )
-
-    async def get_usuario_evento_by_id_evento(self, id: int) -> Response:
+    
+    async def get_tipo_evento_by_id(self, id: int) -> Response:
         try:
-            result = await self._execute_query_all(GET_USUARIO_EVENTOS_BY_ID_EVENTO, (id,))
+            result = await self._execute_query(GET_TIPO_EVENTO_BY_ID, (id,))
             if not result:
                 return error_response(
-                    message=USUARIO_EVENTO_NOT_FOUND_MSG,
+                    message=TIPO_EVENTO_NOT_FOUND_MSG,
                     status=HTTP_404_NOT_FOUND
                 )
             return success_response(
-                message=USUARIO_EVENTO_FOUND_MSG,
-                data=[UsuarioEventoDomain(**row) for row in result],
-                status=HTTP_200_OK
+                data=TipoEventoDTO(**result),
+                message=TIPO_EVENTO_FOUND_MSG
             )
         except Exception as e:
-            logger.error(f"Error getting user events by event ID: {str(e)}")
+            logger.error(f"Error getting tipo_evento by id: {str(e)}")
             return error_response(
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
                 status=HTTP_500_INTERNAL_SERVER_ERROR
             )
     
-    async def get_all_usuario_eventos(self) -> Response:
+    async def create_tipo_evento(self, tipo_evento: TipoEventoDTO) -> Response:
         try:
-            result = await self._execute_query_all(GET_ALL_USUARIO_EVENTOS)
-            if not result:
-                return error_response(
-                    message=USUARIO_EVENTO_NOT_FOUND_MSG,
-                    status=HTTP_404_NOT_FOUND
-                )
-            return success_response(
-                data=[UsuarioEventoDomain(**row) for row in result],
-                message=USUARIO_EVENTO_FOUND_MSG
-            )
-        except Exception as e:
-            logger.error(f"Error getting all user events: {str(e)}")
-            return error_response(
-                message=USUARIO_EVENTO_NOT_FOUND_MSG,
-                status=HTTP_404_NOT_FOUND
-            )
-
-    async def create_usuario_evento(self, usuario_evento: UsuarioEventoDTO) -> Response:
-        try:
-            params = (usuario_evento.id_usuario, usuario_evento.id_evento, usuario_evento.asistio)
-            rowcount = await self._execute_update(CREATE_USUARIO_EVENTO, params)
+            params = (tipo_evento.nombre_evento,)
+            rowcount = await self._execute_update(CREATE_TIPO_EVENTO, params)
             if rowcount == 0:
                 return error_response(
-                    message=USUARIO_EVENTO_NOT_CREATED_MSG,
+                    message=TIPO_EVENTO_NOT_CREATED_MSG,
                     status=HTTP_400_BAD_REQUEST
                 )
             return success_response(
-                message=USUARIO_EVENTO_CREATED_MSG,
+                message=TIPO_EVENTO_CREATED_MSG,
                 status=HTTP_201_CREATED
             )
         except IntegrityError as e:
             logger.error(f"Integrity error: {str(e)}")
             return error_response(
-                message=f"{USUARIO_EVENTO_NOT_CREATED_MSG} Detalles: {str(e)}",
+                message=f"{TIPO_EVENTO_NOT_CREATED_MSG} Detalles: {str(e)}",
                 status=HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logger.error(f"Error creating user event: {str(e)}")
+            logger.error(f"Error creating tipo_evento: {str(e)}")
             return error_response(
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
                 status=HTTP_500_INTERNAL_SERVER_ERROR
             )
     
-    async def update_asistio_usuario_evento(self, id: int, asistio: UpdateAsistioUsuarioEventoDTO) -> Response:
+    async def update_tipo_evento(self, id: int, tipo_evento: TipoEventoDomain) -> Response:
         try:
-            params = (asistio.asistio, id)
-            rowcount = await self._execute_update(UPDATE_ASISTIO_USUARIO_EVENTO, params)
+            params = (tipo_evento.nombre_evento, id)
+            rowcount = await self._execute_update(UPDATE_TIPO_EVENTO, params)
             if rowcount == 0:
                 return error_response(
-                    message=USUARIO_EVENTO_NOT_UPDATED_MSG,
+                    message=TIPO_EVENTO_NOT_UPDATED_MSG,
                     status=HTTP_400_BAD_REQUEST
                 )
             return success_response(
-                message=USUARIO_EVENTO_UPDATED_MSG,
+                message=TIPO_EVENTO_UPDATED_MSG,
                 status=HTTP_200_OK
             )
         except Exception as e:
-            logger.error(f"Error updating user event: {str(e)}")
+            logger.error(f"Error updating tipo_evento: {str(e)}")
             return error_response(
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
                 status=HTTP_500_INTERNAL_SERVER_ERROR
             )
     
-    async def delete_usuario_evento(self, id: int) -> Response:
+    async def delete_tipo_evento(self, id: int) -> Response:
         try:
-            rowcount = await self._execute_update(DELETE_USUARIO_EVENTO, (id,))
+            rowcount = await self._execute_update(DELETE_TIPO_EVENTO, (id,))
             if rowcount == 0:
                 return error_response(
-                    message=USUARIO_EVENTO_NOT_DELETED_MSG,
-                    status=HTTP_400_BAD_REQUEST
+                    message=TIPO_EVENTO_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
                 )
             return success_response(
-                message=USUARIO_EVENTO_DELETED_MSG,
+                message=TIPO_EVENTO_DELETED_MSG,
                 status=HTTP_200_OK
             )
         except Exception as e:
-            logger.error(f"Error deleting user event: {str(e)}")
+            logger.error(f"Error deleting tipo_evento: {str(e)}")
             return error_response(
                 message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
                 status=HTTP_500_INTERNAL_SERVER_ERROR
             )
     
-    
-
