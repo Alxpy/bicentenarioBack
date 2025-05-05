@@ -33,6 +33,7 @@ from src.presentation.controllers.evento_controller import evento_router
 from src.presentation.controllers.usuario_evento_controller import usuario_evento_router
 from src.presentation.controllers.patrocinador_controller import patrocinador_router
 from src.presentation.controllers.patrocinador_evento_controller import patrocinador_evento_router
+from src.presentation.controllers.chat_controller import chat_router
 
 app = FastAPI()
 
@@ -67,6 +68,7 @@ app.include_router(evento_router)
 app.include_router(usuario_evento_router)
 app.include_router(patrocinador_router)
 app.include_router(patrocinador_evento_router)
+app.include_router(chat_router)
 
 if __name__ == "__main__":
     uvicorn.run(
