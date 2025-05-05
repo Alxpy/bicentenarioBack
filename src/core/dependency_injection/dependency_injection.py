@@ -60,9 +60,13 @@ from src.core.services.evento_service import EventoService
 from src.infrastructure.repository.implementations.usuario_evento_repository import UsuarioEventoRepository
 from src.core.services.usuario_evento_service import UsuarioEventoService
 
+from src.infrastructure.repository.implementations.patrosinador_repository import PatrocinadorRepository
+from src.core.services.patrosinador_service import PatrocinadorService
+
+from src.core.services.patrocinador_evento_service import PatrocinadorEventoService
+from src.infrastructure.repository.implementations.patrocinador_evento_repository import PatrocinadorEventoRepository
 
 from src.core.services.file_storage_service import FileStorageService
-
 from src.core.services.file_storage_service import FileStorageService
 
 def build_usuario_service(
@@ -165,3 +169,13 @@ def build_usuario_evento_service(
     connection = Depends(get_connection),
 ):
     return UsuarioEventoService(UsuarioEventoRepository(connection))
+
+def build_patrocinador_service(
+    connection = Depends(get_connection),
+):
+    return PatrocinadorService(PatrocinadorRepository(connection))
+
+def build_patrocinador_evento_service(
+    connection = Depends(get_connection),
+):
+    return PatrocinadorEventoService(PatrocinadorEventoRepository(connection))

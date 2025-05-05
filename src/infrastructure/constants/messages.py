@@ -250,3 +250,24 @@ USUARIO_EVENTO_DELETED_MSG = "Usuario evento eliminado correctamente."
 ROLES_NOT_FOUND_MSG = "Roles no encontrados."
 ROLES_FOUND_MSG = "Roles encontrados."
 
+
+#Mensajes de patrocinador
+PATROCINADOR_NOT_FOUND_MSG = "Patrocinador no encontrado."
+PATROCINADOR_FOUND_MSG = "Patrocinador encontrado."
+PATROCINADORES_FOUND_MSG = "Patrocinadores encontrados."
+PATROCINADOR_CREATED_MSG = "Patrocinador creado correctamente."
+PATROCINADOR_UPDATED_MSG = "Patrocinador actualizado correctamente."
+PATROCINADOR_DELETED_MSG = "Patrocinador eliminado correctamente."
+NO_PATROCINADORES_MSG = "No hay patrocinadores registrados."
+PATROCINADOR_EXISTS_MSG = "El patrocinador ya existe."
+PATROCINADOR_NOT_CREATED_MSG = "No se pudo crear el patrocinador."
+PATROCINADOR_NOT_UPDATED_MSG = "No se pudo actualizar el patrocinador."
+PATROCINADOR_NOT_DELETED_MSG = "No se pudo eliminar el patrocinador."
+
+
+#Mensajes de patrocinador evento
+PATROCINADOR_EVENTO_NOT_FOUND_MSG = "Patrocinador evento no encontrado."
+PATROCINADOR_EVENTO_FOUND_MSG = "Patrocinador evento encontrado."
+PATROCINADOR_EVENTO_CREATED_MSG = "Patrocinador evento creado correctamente."
+PATROCINADOR_EVENTO_UPDATED_MSG = "Patrocinador evento actualizado correctamente."
+PATROCINADOR_EVENTO_DELETED_MSG = "Patrocinador evento eliminado correctamente."
