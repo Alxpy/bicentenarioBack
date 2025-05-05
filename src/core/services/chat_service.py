@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import Dict
+from typing import Dict, List
 
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
@@ -13,8 +13,13 @@ logging.basicConfig(level=logging.INFO)
 
 class Conversation:
     def __init__(self):
-        self.messages: list[Dict[str, str]] = [
-            {"role": "system", "content": "You are a helpful assistant and you only answer about Bolivia."}
+        self.messages: List[Dict[str, str]] = [
+            {"role": "system", "content": (
+                "Eres un asistente especializado en Bolivia. "
+                "Para libros, historias, etnias, noticias, presidentes y eventos "
+                "consultas directamente de la base de datos oficial. "
+                "Solo responde sobre temas bolivianos."
+            )}
         ]
         self.active: bool = True
 
@@ -34,8 +39,40 @@ class ChatService:
             _conversations[conversation_id] = convo
         return convo
 
+    def _is_db_topic(self, query: str) -> bool:
+            """Determina si la consulta requiere información de la base de datos"""
+            keywords = [
+                'libro', 'historia', 'etnia', 
+                'noticia', 'presidente', 'evento',
+                'literatura', 'cultura', 'gobierno'
+            ]
+            return any(keyword in query.lower() for keyword in keywords)
+        
+    def _query_database(self, query: str) -> str:
+       
+        db_data = {
+            'libros': "Libro destacado: 'Juan de la Rosa' de Nataniel Aguirre",
+            'presidentes': "Presidente actual: Luis Arce Catacora (desde 2020)",
+            'etnias': "Principales grupos étnicos: Quechua, Aymara, Guaraní"
+        }
+        
+        for key in db_data:
+            if key in query.lower():
+                return f"[Base de datos] {db_data[key]}"
+        
+        return "[Base de datos] Información no encontrada"
+
     def query_groq_api(self, conversation: Conversation) -> str:
         try:
+            user_questions = [m for m in conversation.messages if m['role'] == 'user']
+            if not user_questions:
+                return "Por favor haz una pregunta sobre Bolivia"
+            
+            last_query = user_questions[-1]['content']
+            
+            if self._is_db_topic(last_query):
+                return self._query_database(last_query)
+            
             completion = self.client.chat.completions.create(
                 model="llama-3.1-8b-instant",
                 messages=conversation.messages,
@@ -45,9 +82,10 @@ class ChatService:
                 stream=True,
             )
             return ''.join(chunk.choices[0].delta.content or '' for chunk in completion)
+            
         except Exception:
-            logger.exception("Error querying GROQ API")
-            raise
+            logger.exception("Error en procesamiento")
+            return "Ocurrió un error al procesar tu solicitud"
 
 
 def get_chat_service() -> ChatService:
