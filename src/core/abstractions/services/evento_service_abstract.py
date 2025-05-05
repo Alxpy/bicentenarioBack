@@ -36,6 +36,12 @@ class IEventoService(ABC):
         pass
 
     @abstractmethod
+    async def get_evento_by_organizador(self, organizador: str) -> Response:
+        """Get evento by organizer."""
+        pass
+
+
+    @abstractmethod
     async def create_evento(self, evento: EventoPostDTO) -> Response:
         """Create a new evento record."""
         pass

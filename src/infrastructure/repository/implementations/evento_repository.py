@@ -167,6 +167,26 @@ class EventoRepository(IEventoRepository):
                 status=HTTP_500_INTERNAL_SERVER_ERROR
             )
     
+    async def get_evento_by_organizador(self, organizador: str) -> Response:
+        try:
+            result = await self._execute_query(GET_EVENTO_BY_ORGANIZADOR, (organizador,))
+            if not result:
+                return error_response(
+                    message=EVENTO_BY_ORGANIZADOR_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
+                )
+            return success_response(
+                data=EventoDomain(**result),
+                message=EVENTO_FOUND_MSG,
+                status=HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error(f"Error getting evento by organizador: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
     async def create_evento(self, evento: EventoPostDTO) -> Response:
         try:
             result = await self._execute_update(CREATE_EVENTO, (
@@ -177,7 +197,8 @@ class EventoRepository(IEventoRepository):
                 evento.fecha_fin,              
                 evento.id_tipo_evento,
                 evento.id_ubicacion,  
-                evento.id_usuario
+                evento.id_usuario,
+                evento.id_organizador
             ))
             if result == 0:
                 return error_response(

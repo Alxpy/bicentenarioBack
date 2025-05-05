@@ -57,6 +57,20 @@ async def get_evento_by_id(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@evento_router.get(
+    "/organizer/{organizador}",
+    response_model=Response[EventoDomain],
+    summary="Get event by organizer",
+    description="Fetches a specific event using its organizer."
+)
+async def get_evento_by_organizador(
+    organizador: str,
+    evento_service: IEventoService = Depends(build_evento_service)
+):
+    try:
+        return await evento_service.get_evento_by_organizador(organizador)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @evento_router.get(
     "/name/{nombre}",

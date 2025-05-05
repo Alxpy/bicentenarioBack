@@ -14,3 +14,5 @@ class EventoDomain(BaseModel):
     nombre_ubicacion: Optional[str] = None
     id_usuario: Optional[int] = None
     nombre_usuario: Optional[str] = None
+    id_organizador: Optional[int] = None
+    nombre_organizador: Optional[str] = None

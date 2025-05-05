@@ -234,6 +234,7 @@ EVENTO_NOT_UPDATED_MSG = "No se pudo actualizar el evento."
 EVENTO_UPDATED_MSG = "Evento actualizado correctamente."
 EVENTO_NOT_DELETED_MSG = "No se pudo eliminar el evento."
 EVENTO_DELETED_MSG = "Evento eliminado correctamente."
+EVENTO_BY_ORGANIZADOR_NOT_FOUND_MSG = "Evento por organizador no encontrado."
 
 #Mensajes de usuario evento
 USUARIO_EVENTO_NOT_FOUND_MSG = "Usuario evento no encontrado."

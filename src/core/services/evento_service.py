@@ -27,6 +27,9 @@ class EventoService(IEventoService):
     async def get_evento_by_ubicacion(self, ubicacion: str) -> Response:
         return await self.evento_repository.get_evento_by_ubicacion(ubicacion)
 
+    async def get_evento_by_organizador(self, organizador: str) -> Response:
+        return await self.evento_repository.get_evento_by_organizador(organizador)
+
     async def create_evento(self, evento: EventoPostDTO) -> Response:
         return await self.evento_repository.create_evento(evento)
     

@@ -33,6 +33,11 @@ class IEventoRepository(ABC):
     async def get_evento_by_ubicacion(self, ubicacion: str) -> Response:
         """Get evento by location."""
         pass
+    
+    @abstractmethod
+    async def get_evento_by_organizador(self, organizador: str) -> Response:
+        """Get evento by organizer."""
+        pass
 
     @abstractmethod
     async def create_evento(self, evento: EventoPostDTO) -> Response:
