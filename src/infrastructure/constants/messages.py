@@ -271,3 +271,13 @@ PATROCINADOR_EVENTO_FOUND_MSG = "Patrocinador evento encontrado."
 PATROCINADOR_EVENTO_CREATED_MSG = "Patrocinador evento creado correctamente."
 PATROCINADOR_EVENTO_UPDATED_MSG = "Patrocinador evento actualizado correctamente."
 PATROCINADOR_EVENTO_DELETED_MSG = "Patrocinador evento eliminado correctamente."
+
+# Mensajes de agenda personal
+AGENDA_PERSONAL_NOT_FOUND_MSG = "Agenda personal no encontrada."
+AGENDA_PERSONAL_FOUND_MSG = "Agenda personal encontrada."
+AGENDA_PERSONAL_CREATED_MSG = "Agenda personal creada correctamente."
+AGENDA_PERSONAL_UPDATED_MSG = "Agenda personal actualizada correctamente."
+AGENDA_PERSONAL_DELETED_MSG = "Agenda personal eliminada correctamente."
+NO_AGENDA_PERSONAL_MSG = "No hay agenda personal registrada."
+AGENDA_PERSONAL_NOT_UPDATED_MSG = "No se pudo actualizar la agenda personal."
+AGENDA_PERSONAL_NOT_CREATED_MSG = "No se pudo crear la agenda personal."
