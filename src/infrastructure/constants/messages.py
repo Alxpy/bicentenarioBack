@@ -281,3 +281,13 @@ AGENDA_PERSONAL_DELETED_MSG = "Agenda personal eliminada correctamente."
 NO_AGENDA_PERSONAL_MSG = "No hay agenda personal registrada."
 AGENDA_PERSONAL_NOT_UPDATED_MSG = "No se pudo actualizar la agenda personal."
 AGENDA_PERSONAL_NOT_CREATED_MSG = "No se pudo crear la agenda personal."
+
+# Mensajes de comentario
+COMENTARIO_NOT_FOUND_MSG = "Comentario no encontrado."
+COMENTARIO_FOUND_MSG = "Comentario encontrado."
+COMENTARIO_NOT_CREATED_MSG = "No se pudo crear el comentario."
+COMENTARIO_CREATED_MSG = "Comentario creado correctamente."
+COMENTARIO_NOT_UPDATED_MSG = "No se pudo actualizar el comentario."
+COMENTARIO_UPDATED_MSG = "Comentario actualizado correctamente."
+COMENTARIO_NOT_DELETED_MSG = "No se pudo eliminar el comentario."
+COMENTARIO_DELETED_MSG = "Comentario eliminado correctamente."

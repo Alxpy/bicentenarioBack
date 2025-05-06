@@ -72,6 +72,9 @@ from src.core.services.agenda_personal_service import AgendaPersonalService
 from src.core.services.file_storage_service import FileStorageService
 from src.core.services.file_storage_service import FileStorageService
 
+from src.infrastructure.repository.implementations.comentario_repository import ComentarioRepository
+from src.core.services.comentario_service import ComentarioService
+
 def build_usuario_service(
     connection = Depends(get_connection),
 ):
@@ -187,3 +190,8 @@ def build_agenda_personal_service(
     connection = Depends(get_connection),
 ):
     return AgendaPersonalService(AgendaPersonalRepository(connection))
+
+def build_comentario_service(
+    connection = Depends(get_connection),
+):
+    return ComentarioService(ComentarioRepository(connection))

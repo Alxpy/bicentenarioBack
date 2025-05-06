@@ -35,6 +35,8 @@ from src.presentation.controllers.patrocinador_controller import patrocinador_ro
 from src.presentation.controllers.patrocinador_evento_controller import patrocinador_evento_router
 from src.presentation.controllers.chat_controller import chat_router
 from src.presentation.controllers.agenda_personal_controller import agenda_personal_router
+from src.presentation.controllers.comentario_controller import comentario_router
+
 
 app = FastAPI()
 
@@ -71,6 +73,7 @@ app.include_router(patrocinador_router)
 app.include_router(patrocinador_evento_router)
 app.include_router(chat_router)
 app.include_router(agenda_personal_router)
+app.include_router(comentario_router)
 
 
 if __name__ == "__main__":
