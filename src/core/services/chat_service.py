@@ -16,8 +16,8 @@ class Conversation:
         self.messages: List[Dict[str, str]] = [
             {"role": "system", "content": (
                 "Eres un asistente especializado en Bolivia. "
-                "Para libros, historias, etnias, noticias, presidentes y eventos "
-                "consultas directamente de la base de datos oficial. "
+               # "Para libros, historias, etnias, noticias, presidentes y eventos "
+               # "consultas directamente de la base de datos oficial. "
                 "Solo responde sobre temas bolivianos."
             )}
         ]
@@ -42,10 +42,11 @@ class ChatService:
     def _is_db_topic(self, query: str) -> bool:
             """Determina si la consulta requiere información de la base de datos"""
             keywords = [
-                'libro', 'historia', 'etnia', 
-                'noticia', 'presidente', 'evento',
-                'literatura', 'cultura', 'gobierno'
+                 'gobierno'
             ]
+        #    'libro', 'historia', 'etnia', 
+        #        'noticia', 'presidente', 'evento',
+        #        'literatura', 'cultura',
             return any(keyword in query.lower() for keyword in keywords)
         
     def _query_database(self, query: str) -> str:
