@@ -98,7 +98,7 @@ class TipoEventoRepository(ITipoEventoRepository):
                 )
             return success_response(
                 message=TIPO_EVENTO_CREATED_MSG,
-                status=HTTP_201_CREATED
+                status=HTTP_201_CREATED,
             )
         except IntegrityError as e:
             logger.error(f"Integrity error: {str(e)}")

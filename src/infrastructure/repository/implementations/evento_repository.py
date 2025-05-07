@@ -42,7 +42,7 @@ class EventoRepository(IEventoRepository):
             with self.connection.cursor() as cursor:
                 cursor.execute(query, params or ())
                 self.connection.commit()
-                return cursor.rowcount
+                return cursor.lastrowid
         except Exception as e:
             logger.error(f"Error executing update: {str(e)}")
     
@@ -205,9 +205,25 @@ class EventoRepository(IEventoRepository):
                     message=EVENTO_NOT_CREATED_MSG,
                     status=HTTP_400_BAD_REQUEST
                 )
+            logger.info(f"Evento created with id:  {result}")
+            
+            
             return success_response(
                 message=EVENTO_CREATED_MSG,
-                status=HTTP_201_CREATED
+                status=HTTP_201_CREATED,
+                data=EventoDomain(
+                    id=result,
+                    nombre=evento.nombre,
+                    descripcion=evento.descripcion,
+                    imagen=evento.imagen,
+                    fecha_inicio=evento.fecha_inicio,
+                    fecha_fin=evento.fecha_fin,
+                    id_tipo_evento=evento.id_tipo_evento,
+                    id_ubicacion=evento.id_ubicacion,
+                    id_usuario=evento.id_usuario,
+                    id_organizador=evento.id_organizador
+                )
+                
             )
         except IntegrityError as e:
             logger.error(f"Integrity error in create_evento: {str(e)}")

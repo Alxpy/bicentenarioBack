@@ -13,7 +13,7 @@ evento_router = APIRouter(
 
 @evento_router.post(
     "",
-    response_model=Response[None],
+    response_model=Response[EventoDomain],
     summary="Create a new event",
     description="Adds a new event with its name, description, image, start date, end date, location, and associated category."
 )
