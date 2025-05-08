@@ -75,6 +75,14 @@ from src.core.services.file_storage_service import FileStorageService
 from src.infrastructure.repository.implementations.comentario_repository import ComentarioRepository
 from src.core.services.comentario_service import ComentarioService
 
+from src.infrastructure.repository.implementations.comentario_evento_repository import ComentarioEventoRepository
+from src.core.services.comentario_evento_service import ComentarioEventoService
+
+from src.infrastructure.repository.implementations.comentario_biblioteca_repository import ComentarioBibliotecaRepository
+from src.core.services.comentario_biblioteca_service import ComentarioBibliotecaService
+
+
+
 def build_usuario_service(
     connection = Depends(get_connection),
 ):
@@ -195,3 +203,14 @@ def build_comentario_service(
     connection = Depends(get_connection),
 ):
     return ComentarioService(ComentarioRepository(connection))
+
+
+def build_comentario_evento_service(
+    connection = Depends(get_connection),
+):
+    return ComentarioEventoService(ComentarioEventoRepository(connection))
+
+def build_comentario_biblioteca_service(
+    connection = Depends(get_connection),
+):
+    return ComentarioBibliotecaService(ComentarioBibliotecaRepository(connection))

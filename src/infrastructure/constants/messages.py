@@ -291,3 +291,22 @@ COMENTARIO_NOT_UPDATED_MSG = "No se pudo actualizar el comentario."
 COMENTARIO_UPDATED_MSG = "Comentario actualizado correctamente."
 COMENTARIO_NOT_DELETED_MSG = "No se pudo eliminar el comentario."
 COMENTARIO_DELETED_MSG = "Comentario eliminado correctamente."
+
+
+# Mensajes de comentario biblioteca
+COMENTARIO_BIBLIOTECA_NOT_FOUND_MSG = "Comentario biblioteca no encontrado."
+COMENTARIO_EVENTO_NOT_FOUND_MSG = "Comentario evento no encontrado."
+COMENTARIO_EVENTO_FOUND_MSG = "Comentario evento encontrado."
+COMENTARIO_EVENTO_NOT_CREATED_MSG = "No se pudo crear el comentario evento."
+COMENTARIO_EVENTO_CREATED_MSG = "Comentario evento creado correctamente."
+COMENTARIO_EVENTO_NOT_DELETED_MSG = "No se pudo eliminar el comentario evento."
+COMENTARIO_EVENTO_DELETED_MSG = "Comentario evento eliminado correctamente."
+
+
+#Mensajes de comentario evento
+COMENTARIO_BIBLIOTECA_FOUND_MSG = "Comentario biblioteca encontrado."
+COMENTARIO_BIBLIOTECA_NOT_CREATED_MSG = "No se pudo crear el comentario biblioteca."
+COMENTARIO_BIBLIOTECA_CREATED_MSG = "Comentario biblioteca creado correctamente."
+COMENTARIO_BIBLIOTECA_NOT_DELETED_MSG = "No se pudo eliminar el comentario biblioteca."
+COMENTARIO_BIBLIOTECA_DELETED_MSG = "Comentario biblioteca eliminado correctamente."
+COMENTARIO_BIBLIOTECA_UPDATED_MSG = "Comentario biblioteca actualizado correctamente."
