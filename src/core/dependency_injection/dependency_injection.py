@@ -81,7 +81,8 @@ from src.core.services.comentario_evento_service import ComentarioEventoService
 from src.infrastructure.repository.implementations.comentario_biblioteca_repository import ComentarioBibliotecaRepository
 from src.core.services.comentario_biblioteca_service import ComentarioBibliotecaService
 
-
+from src.infrastructure.repository.implementations.usuario_rol_repository import UsuarioRolRepository
+from src.core.services.usuario_rol_service import UsuarioRolService
 
 def build_usuario_service(
     connection = Depends(get_connection),
@@ -214,3 +215,8 @@ def build_comentario_biblioteca_service(
     connection = Depends(get_connection),
 ):
     return ComentarioBibliotecaService(ComentarioBibliotecaRepository(connection))
+
+def build_usuario_rol_service(
+    connection = Depends(get_connection),
+):
+    return UsuarioRolService(UsuarioRolRepository(connection))

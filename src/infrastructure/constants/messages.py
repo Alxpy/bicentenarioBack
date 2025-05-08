@@ -310,3 +310,10 @@ COMENTARIO_BIBLIOTECA_CREATED_MSG = "Comentario biblioteca creado correctamente.
 COMENTARIO_BIBLIOTECA_NOT_DELETED_MSG = "No se pudo eliminar el comentario biblioteca."
 COMENTARIO_BIBLIOTECA_DELETED_MSG = "Comentario biblioteca eliminado correctamente."
 COMENTARIO_BIBLIOTECA_UPDATED_MSG = "Comentario biblioteca actualizado correctamente."
+
+# Mensajes de usuario rol
+USUARIO_ROL_DELETED_MSG = "Usuario rol eliminado correctamente."
+USUARIO_ROL_NOT_FOUND_MSG = "Usuario rol no encontrado."
+USUARIO_ROL_CREATED_MSG = "Usuario rol creado correctamente."
+USUARIO_ROL_FOUND_MSG = "Usuario rol encontrado."
+INTERNAL_SERVER_ERROR_MSG = "Error interno del servidor."

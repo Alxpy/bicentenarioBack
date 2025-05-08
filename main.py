@@ -38,7 +38,7 @@ from src.presentation.controllers.chat_controller import chat_router
 #from src.presentation.controllers.comentario_controller import comentario_router
 #from presentation.controllers.comentario_evento_controller import comentario_evento_router
 #from src.presentation.controllers.comentario_biblioteca_controller import comentario_biblioteca_router  
-
+from src.presentation.controllers.usuario_rol_controller import usuario_rol_router
 
 app = FastAPI()
 
@@ -68,6 +68,7 @@ app.include_router(president_router)
 app.include_router(rol_router)
 app.include_router(routes_controller)
 app.include_router(user_router)
+app.include_router(usuario_rol_router)
 app.include_router(tipo_evento_router)
 app.include_router(evento_router)
 app.include_router(usuario_evento_router)
