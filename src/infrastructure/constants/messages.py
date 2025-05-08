@@ -271,3 +271,42 @@ PATROCINADOR_EVENTO_FOUND_MSG = "Patrocinador evento encontrado."
 PATROCINADOR_EVENTO_CREATED_MSG = "Patrocinador evento creado correctamente."
 PATROCINADOR_EVENTO_UPDATED_MSG = "Patrocinador evento actualizado correctamente."
 PATROCINADOR_EVENTO_DELETED_MSG = "Patrocinador evento eliminado correctamente."
+
+# Mensajes de agenda personal
+AGENDA_PERSONAL_NOT_FOUND_MSG = "Agenda personal no encontrada."
+AGENDA_PERSONAL_FOUND_MSG = "Agenda personal encontrada."
+AGENDA_PERSONAL_CREATED_MSG = "Agenda personal creada correctamente."
+AGENDA_PERSONAL_UPDATED_MSG = "Agenda personal actualizada correctamente."
+AGENDA_PERSONAL_DELETED_MSG = "Agenda personal eliminada correctamente."
+NO_AGENDA_PERSONAL_MSG = "No hay agenda personal registrada."
+AGENDA_PERSONAL_NOT_UPDATED_MSG = "No se pudo actualizar la agenda personal."
+AGENDA_PERSONAL_NOT_CREATED_MSG = "No se pudo crear la agenda personal."
+
+# Mensajes de comentario
+COMENTARIO_NOT_FOUND_MSG = "Comentario no encontrado."
+COMENTARIO_FOUND_MSG = "Comentario encontrado."
+COMENTARIO_NOT_CREATED_MSG = "No se pudo crear el comentario."
+COMENTARIO_CREATED_MSG = "Comentario creado correctamente."
+COMENTARIO_NOT_UPDATED_MSG = "No se pudo actualizar el comentario."
+COMENTARIO_UPDATED_MSG = "Comentario actualizado correctamente."
+COMENTARIO_NOT_DELETED_MSG = "No se pudo eliminar el comentario."
+COMENTARIO_DELETED_MSG = "Comentario eliminado correctamente."
+
+
+# Mensajes de comentario biblioteca
+COMENTARIO_BIBLIOTECA_NOT_FOUND_MSG = "Comentario biblioteca no encontrado."
+COMENTARIO_EVENTO_NOT_FOUND_MSG = "Comentario evento no encontrado."
+COMENTARIO_EVENTO_FOUND_MSG = "Comentario evento encontrado."
+COMENTARIO_EVENTO_NOT_CREATED_MSG = "No se pudo crear el comentario evento."
+COMENTARIO_EVENTO_CREATED_MSG = "Comentario evento creado correctamente."
+COMENTARIO_EVENTO_NOT_DELETED_MSG = "No se pudo eliminar el comentario evento."
+COMENTARIO_EVENTO_DELETED_MSG = "Comentario evento eliminado correctamente."
+
+
+#Mensajes de comentario evento
+COMENTARIO_BIBLIOTECA_FOUND_MSG = "Comentario biblioteca encontrado."
+COMENTARIO_BIBLIOTECA_NOT_CREATED_MSG = "No se pudo crear el comentario biblioteca."
+COMENTARIO_BIBLIOTECA_CREATED_MSG = "Comentario biblioteca creado correctamente."
+COMENTARIO_BIBLIOTECA_NOT_DELETED_MSG = "No se pudo eliminar el comentario biblioteca."
+COMENTARIO_BIBLIOTECA_DELETED_MSG = "Comentario biblioteca eliminado correctamente."
+COMENTARIO_BIBLIOTECA_UPDATED_MSG = "Comentario biblioteca actualizado correctamente."
