@@ -51,13 +51,22 @@ class ComentarioBibliotecaRepository(IComentarioBibliotecaRepository):
     async def get_all_comentario_biblioteca(self) -> Response:
         try:
             result = await self._execute_query_all(GET_ALL_COMENTARIO_BIBLIOTECA)
+            logger.info(result)
             if not result:
                 return error_response(
                     message=COMENTARIO_BIBLIOTECA_NOT_FOUND_MSG,
                     status=HTTP_404_NOT_FOUND
                 )
+            
+            # Convertir las fechas a string ISO
+            processed_result = []
+            for row in result:
+                if 'fecha_creacion' in row and isinstance(row['fecha_creacion'], date):
+                    row['fecha_creacion'] = row['fecha_creacion'].isoformat()
+                processed_result.append(row)
+            
             return success_response(
-                data=[ComentarioBibliotecaDTO(**row) for row in result],
+                data=[ComentarioDatosBibliotecaDTO(**row) for row in processed_result],
                 message=COMENTARIO_BIBLIOTECA_FOUND_MSG
             )
         except Exception as e:
@@ -88,7 +97,8 @@ class ComentarioBibliotecaRepository(IComentarioBibliotecaRepository):
         
     async def create_comentario_biblioteca(self, comentario_biblioteca: ComentarioBibliotecaDTO) -> None:
         try:
-            result = await self._execute_update(CREATE_COMENTARIO_BIBLIOTECA, (comentario_biblioteca.id_usuario, comentario_biblioteca.id_biblioteca, comentario_biblioteca.comentario))
+            logger.info(f"Creating comentario_biblioteca: {comentario_biblioteca}")
+            result = await self._execute_update(CREATE_COMENTARIO_BIBLIOTECA, (comentario_biblioteca.id_biblioteca, comentario_biblioteca.id_comentario))
             if result == 0:
                 return error_response(
                     message=COMENTARIO_BIBLIOTECA_NOT_CREATED_MSG,

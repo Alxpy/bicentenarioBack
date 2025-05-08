@@ -51,18 +51,30 @@ class ComentarioEventoRepository(IComentarioEventoRepository):
             result = await self._execute_query_all(GET_ALL_COMENTARIO_EVENTO)
             if not result:
                 return error_response(
+                    status=404,
+                    success=False,
                     message=COMENTARIO_EVENTO_NOT_FOUND_MSG,
-                    status=HTTP_404_NOT_FOUND
+                    data=None
                 )
+            
+            processed_result = []
+            for row in result:
+                if 'fecha_creacion' in row and isinstance(row['fecha_creacion'], date):
+                    row['fecha_creacion'] = row['fecha_creacion'].isoformat()
+                processed_result.append(row)
+            
             return success_response(
-                data=[ComentarioEventoDTO(**row) for row in result],
-                message=COMENTARIO_EVENTO_FOUND_MSG
+                message=COMENTARIO_EVENTO_FOUND_MSG,
+                data=[ComentarioDatosEventoDTO(**row) for row in processed_result]
             )
+            
         except Exception as e:
             logger.error(f"Error getting all comentario_evento: {str(e)}")
             return error_response(
+                status=404,
+                success=False,
                 message=COMENTARIO_EVENTO_NOT_FOUND_MSG,
-                status=HTTP_404_NOT_FOUND
+                data=None
             )
     
     async def get_comentario_evento_by_id_evento(self, id: int) -> Response:
@@ -86,7 +98,7 @@ class ComentarioEventoRepository(IComentarioEventoRepository):
     
     async def create_comentario_evento(self, comentario_evento: ComentarioEventoDTO) -> None:
         try:
-            result = await self._execute_update(CREATE_COMENTARIO_EVENTO, (comentario_evento.id_evento, comentario_evento.comentario, comentario_evento.id_usuario))
+            result = await self._execute_update(CREATE_COMENTARIO_EVENTO, (comentario_evento.id_evento, comentario_evento.id_comentario))
             if result == 0:
                 return error_response(
                     message=COMENTARIO_EVENTO_NOT_CREATED_MSG,

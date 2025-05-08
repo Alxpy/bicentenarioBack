@@ -34,20 +34,30 @@ from src.presentation.controllers.usuario_evento_controller import usuario_event
 from src.presentation.controllers.patrocinador_controller import patrocinador_router
 from src.presentation.controllers.patrocinador_evento_controller import patrocinador_evento_router
 from src.presentation.controllers.chat_controller import chat_router
-#from src.presentation.controllers.agenda_personal_controller import agenda_personal_router
-#from src.presentation.controllers.comentario_controller import comentario_router
-#from presentation.controllers.comentario_evento_controller import comentario_evento_router
-#from src.presentation.controllers.comentario_biblioteca_controller import comentario_biblioteca_router  
+from src.presentation.controllers.agenda_personal_controller import agenda_personal_router
+from src.presentation.controllers.comentario_controller import comentario_router
+from src.presentation.controllers.comentario_evento_controller import comentario_evento_router
+from src.presentation.controllers.comentario_biblioteca_controller import comentario_biblioteca_router  
 from src.presentation.controllers.usuario_rol_controller import usuario_rol_router
 
 app = FastAPI()
 
+# Configuración para desarrollo
+origins = [
+    "http://localhost",
+    "http://localhost:5173",  # Vite
+    "http://127.0.0.1",
+    "http://127.0.0.1:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,  # Lista explícita de orígenes permitidos
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],  # Solo métodos necesarios
+    allow_headers=["Authorization", "Content-Type"],  # Solo headers necesarios
+    expose_headers=["X-Custom-Header"],  # Headers expuestos al frontend
+    max_age=600,  # Tiempo de cache para preflight requests (segundos)
 )
 
 app.include_router(auth_router)
@@ -75,10 +85,10 @@ app.include_router(usuario_evento_router)
 app.include_router(patrocinador_router)
 app.include_router(patrocinador_evento_router)
 app.include_router(chat_router)
-#app.include_router(agenda_personal_router)
-#app.include_router(comentario_router)
-#app.include_router(comentario_evento_router)
-#app.include_router(comentario_biblioteca_router)
+app.include_router(agenda_personal_router)
+app.include_router(comentario_router)
+app.include_router(comentario_evento_router)
+app.include_router(comentario_biblioteca_router)
 
 
 

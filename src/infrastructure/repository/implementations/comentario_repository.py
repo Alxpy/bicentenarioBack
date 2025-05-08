@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from src.core.abstractions.infrastructure.repository.comentario_repository_abstract import IComentarioRepository
 from src.core.models.comentario_domain import ComentarioDomain
-from src.presentation.dto.comentario_dto import ComentarioDTO, ComentarioUpdateDTO
+from src.presentation.dto.comentario_dto import ComentarioDTO, ComentarioUpdateDTO,ComentarioResponseCreate
 from src.presentation.responses.response_factory import Response, success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
@@ -96,16 +96,18 @@ class ComentarioRepository(IComentarioRepository):
                 comentario_dto.contenido,
                 comentario_dto.fecha_creacion
             )
-            rowcount = await self._execute_update(CREATE_COMENTARIO, params)
-            if rowcount == 0:
-                return error_response(
-                    message=COMENTARIO_NOT_CREATED_MSG,
-                    status=HTTP_400_BAD_REQUEST
+            with self.connection.cursor() as cursor:
+                cursor.execute(CREATE_COMENTARIO, params)
+                self.connection.commit()
+                id_comentario = cursor.lastrowid
+                logger.info(f"Comentario created with ID: {id_comentario}")
+                return success_response(
+                    message=COMENTARIO_CREATED_MSG,
+                    status=HTTP_201_CREATED,
+                    data=ComentarioResponseCreate(
+                        id=id_comentario,
+                    )
                 )
-            return success_response(
-                message=COMENTARIO_CREATED_MSG,
-                status=HTTP_201_CREATED
-            )
         except IntegrityError as e:
             logger.error(f"Integrity error: {str(e)}")
             return error_response(

@@ -1,17 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.core.abstractions.services.comentario_service_abstract import IComentarioService
 from src.core.dependency_injection.dependency_injection import build_comentario_service
-from src.presentation.dto.comentario_dto import ComentarioDTO, ComentarioUpdateDTO
+from src.presentation.dto.comentario_dto import ComentarioDTO, ComentarioUpdateDTO,ComentarioResponseCreate
 from src.presentation.responses.base_response import Response
 from src.core.models.comentario_domain import ComentarioDomain
-
+from src.presentation.dto.comentario_evento_dto import ComentarioDatosEventoDTO
 
 comentario_router = APIRouter(
     prefix="/api/v1/comentario",
     tags=["comentario"]
 )
 
-@comentario_router.post("", response_model=Response[ComentarioDomain], summary="Create a new comentario entry")
+@comentario_router.post("", response_model=Response[ComentarioResponseCreate], summary="Create a new comentario entry")
 async def create_comentario(
     comentario: ComentarioDTO,
     comentario_service: IComentarioService = Depends(build_comentario_service)):
@@ -24,7 +24,7 @@ async def create_comentario(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@comentario_router.get("", response_model=Response[list[ComentarioDomain]], summary="Get all comentario entries")
+@comentario_router.get("", response_model=Response[list], summary="Get all comentario entries")
 async def get_all_comentarios(
     comentario_service: IComentarioService = Depends(build_comentario_service)):
     """

@@ -14,4 +14,5 @@ class ComentarioUpdateDTO(BaseModel):
     contenido: str
     fecha_creacion: date
 
-
+class ComentarioResponseCreate(BaseModel):
+    id: int
