@@ -3,9 +3,11 @@ GET_NOTICIA_BY_ID = """
            n.id_categoria AS id_Categoria, 
            n.id_usuario AS id_usuario, 
            n.fecha_publicacion, 
-           c.nombre_categoria
+           c.nombre_categoria,
+              u.nombre AS nombre_usuario
     FROM noticia AS n
     INNER JOIN categorianoticia AS c ON n.id_categoria = c.id
+    INNER JOIN usuario AS u ON n.id_usuario = u.id
     WHERE n.id = %s
 """
 
