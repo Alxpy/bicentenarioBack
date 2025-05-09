@@ -3,12 +3,15 @@ SELECT
     ce.id_comentario,
     ce.id_evento,
     c.id_usuario,
+    u.nombre,
     c.contenido,
     c.fecha_creacion
 FROM 
     comentario_evento AS ce
 JOIN 
     comentario AS c ON ce.id_comentario = c.id
+INNER JOIN
+    usuario AS u ON c.id_usuario = u.id
 """
 
 GET_COMENTARIO_EVENTO_BY_ID_EVENTO = """

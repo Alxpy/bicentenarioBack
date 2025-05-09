@@ -3,12 +3,15 @@ SELECT
     cb.id_comentario,
     cb.id_biblioteca,
     c.id_usuario,
+    u.nombre,
     c.contenido,
     c.fecha_creacion
 FROM 
     comentario_biblioteca AS cb
 JOIN 
     comentario AS c ON cb.id_comentario = c.id
+INNER JOIN
+    usuario AS u ON c.id_usuario = u.id
 """
 
 GET_COMENTARIO_BIBLIOTECA_BY_ID_BIBLIOTECA = """
