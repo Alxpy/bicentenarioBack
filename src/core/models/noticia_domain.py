@@ -10,6 +10,7 @@ class NoticiaDomain(BaseModel):
     imagen: Optional[str] = None
     id_Categoria: Optional[int] = None
     id_usuario: Optional[int] = None
+    nombre_usuario: Optional[str] = None
     nombre_categoria: Optional[str] = None
     fecha_publicacion: Optional[datetime] = None
     
