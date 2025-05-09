@@ -78,14 +78,20 @@ class ComentarioBibliotecaRepository(IComentarioBibliotecaRepository):
     
     async def get_comentario_biblioteca_by_id_biblioteca(self, id: int) -> Response:
         try:
-            result = await self._execute_query(GET_COMENTARIO_BIBLIOTECA_BY_ID_BIBLIOTECA, (id,))
+            result = await self._execute_query_all(GET_COMENTARIO_BIBLIOTECA_BY_ID_BIBLIOTECA, (id,))
             if not result:
                 return error_response(
                     message=COMENTARIO_BIBLIOTECA_NOT_FOUND_MSG,
                     status=HTTP_404_NOT_FOUND
                 )
+            # Convertir las fechas a string ISO
+            processed_result = []
+            for row in result:
+                if 'fecha_creacion' in row and isinstance(row['fecha_creacion'], date):
+                    row['fecha_creacion'] = row['fecha_creacion'].isoformat()
+                processed_result.append(row)
             return success_response(
-                data=[ComentarioBibliotecaDTO(**row) for row in result],
+                data=[ComentarioDatosBibliotecaDTO(**row) for row in processed_result],
                 message=COMENTARIO_BIBLIOTECA_FOUND_MSG
             )
         except Exception as e:

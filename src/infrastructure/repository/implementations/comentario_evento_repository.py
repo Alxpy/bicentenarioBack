@@ -79,14 +79,19 @@ class ComentarioEventoRepository(IComentarioEventoRepository):
     
     async def get_comentario_evento_by_id_evento(self, id: int) -> Response:
         try:
-            result = await self._execute_query(GET_COMENTARIO_EVENTO_BY_ID_EVENTO, (id,))
+            result = await self._execute_query_all(GET_COMENTARIO_EVENTO_BY_ID_EVENTO, (id,))
             if not result:
                 return error_response(
                     message=COMENTARIO_EVENTO_NOT_FOUND_MSG,
                     status=HTTP_404_NOT_FOUND
                 )
+            processed_result = []
+            for row in result:
+                if 'fecha_creacion' in row and isinstance(row['fecha_creacion'], date):
+                    row['fecha_creacion'] = row['fecha_creacion'].isoformat()
+                processed_result.append(row)
             return success_response(
-                data=[ComentarioEventoDTO(**row) for row in result],
+                data=[ComentarioDatosEventoDTO(**row) for row in processed_result],
                 message=COMENTARIO_EVENTO_FOUND_MSG
             )
         except Exception as e:
