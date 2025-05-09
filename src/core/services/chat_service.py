@@ -52,7 +52,7 @@ class ChatService:
     def _query_database(self, query: str) -> str:
        
         db_data = {
-            'libros': "Libro destacado: 'Juan de la Rosa' de Nataniel Aguirre",
+     #       'libros': self._libro_Service,
             'presidentes': "Presidente actual: Luis Arce Catacora (desde 2020)",
             'etnias': "Principales grupos étnicos: Quechua, Aymara, Guaraní"
         }
@@ -63,6 +63,10 @@ class ChatService:
         
         return "[Base de datos] Información no encontrada"
 
+    #def _libro_Service():
+        #return BibliotecaService().get_all_bibliotecas()
+    
+        
     def query_groq_api(self, conversation: Conversation) -> str:
         try:
             user_questions = [m for m in conversation.messages if m['role'] == 'user']
