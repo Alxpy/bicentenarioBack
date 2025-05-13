@@ -84,6 +84,9 @@ from src.core.services.comentario_biblioteca_service import ComentarioBiblioteca
 from src.infrastructure.repository.implementations.usuario_rol_repository import UsuarioRolRepository
 from src.core.services.usuario_rol_service import UsuarioRolService
 
+from src.infrastructure.repository.implementations.expositor_repository import ExpositorRepository
+from src.core.services.expositor_service import ExpositorService
+
 def build_usuario_service(
     connection = Depends(get_db_connection),
 ):
@@ -220,3 +223,8 @@ def build_usuario_rol_service(
     connection = Depends(get_db_connection),
 ):
     return UsuarioRolService(UsuarioRolRepository(connection))
+
+def build_expositor_service(
+    connection = Depends(get_db_connection),
+):
+    return ExpositorService(ExpositorRepository(connection))

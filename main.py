@@ -39,6 +39,7 @@ from src.presentation.controllers.comentario_controller import comentario_router
 from src.presentation.controllers.comentario_evento_controller import comentario_evento_router
 from src.presentation.controllers.comentario_biblioteca_controller import comentario_biblioteca_router  
 from src.presentation.controllers.usuario_rol_controller import usuario_rol_router
+from src.presentation.controllers.expositor_controller import expositor_router
 
 app = FastAPI()
 
@@ -89,7 +90,7 @@ app.include_router(agenda_personal_router)
 app.include_router(comentario_router)
 app.include_router(comentario_evento_router)
 app.include_router(comentario_biblioteca_router)
-
+app.include_router(expositor_router)
 
 
 if __name__ == "__main__":
