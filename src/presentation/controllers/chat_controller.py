@@ -1,6 +1,11 @@
 import os
 import logging
 
+from src.core.abstractions.services.biblioteca_service_abstract import IBibliotecaService
+from src.core.dependency_injection.dependency_injection import build_biblioteca_service
+from src.presentation.dto.biblioteca_dto import BibliotecaDTO, BibliotecaUpdateDTO
+from src.core.models.biblioteca_domain import BibliotecaDomain
+
 from fastapi import Depends, FastAPI, HTTPException, BackgroundTasks, APIRouter
 from dotenv import load_dotenv
 from src.core.services.chat_service import ChatService, get_chat_service, _conversations
@@ -36,8 +41,18 @@ async def chat(
     return {"response": assistant_text, "conversation_id": user_input.conversation_id}
 
 @chat_router.get("/{conversation_id}", summary="Get full conversation history")
-async def get_conversation(conversation_id: str):
+async def get_conversation(conversation_id: str,):
     convo = _conversations.get(conversation_id)
     if not convo:
         raise HTTPException(status_code=404, detail="Conversation not found.")
     return {"conversation_id": conversation_id, "messages": convo.messages}
+
+@chat_router.get('/libros', summary="Get books by author")
+async def get_book_intention(
+    biblioteca_service: IBibliotecaService = Depends(build_biblioteca_service)
+):
+    try:
+        libros = await biblioteca_service.get_all_bibliotecas()
+        return libros
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
