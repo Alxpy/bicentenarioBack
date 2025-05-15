@@ -13,7 +13,7 @@ patrocinador_router = APIRouter(
 
 @patrocinador_router.post(
     "",
-    response_model=Response[None],
+    response_model=Response[PatrocinadorDomain],
     summary="Crear patrocinador",
     description="Crea un nuevo patrocinador en la base de datos."
 )

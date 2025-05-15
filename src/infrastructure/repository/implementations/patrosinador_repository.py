@@ -39,9 +39,16 @@ class PatrocinadorRepository(IPatrocinadorRepositoryAbstract):
             with self.connection.cursor() as cursor:
                 cursor.execute(CREATE_PATROCINADOR, (patrocinador.nombre, patrocinador.imagen, patrocinador.contacto))
                 self.connection.commit()
+                id = cursor.lastrowid
                 return success_response(
                     message=PATROCINADOR_CREATED_MSG,
-                    status=HTTP_201_CREATED
+                    status=HTTP_201_CREATED,
+                    data=PatrocinadorDomain(
+                        id=id,
+                        nombre=patrocinador.nombre,
+                        imagen=patrocinador.imagen,
+                        contacto=patrocinador.contacto
+                    )
                 )
         except Exception as e:
             logger.error(f"Error creating patrocinador: {str(e)}", exc_info=True)
