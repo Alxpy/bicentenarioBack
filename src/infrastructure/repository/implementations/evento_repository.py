@@ -189,6 +189,12 @@ class EventoRepository(IEventoRepository):
     
     async def create_evento(self, evento: EventoPostDTO) -> Response:
         try:
+            id_ubicacion = None
+            if evento.id_ubicacion!=0:
+                id_ubicacion = evento.id_ubicacion
+            
+                
+            
             result = await self._execute_update(CREATE_EVENTO, (
                 evento.nombre,
                 evento.descripcion,
@@ -196,9 +202,11 @@ class EventoRepository(IEventoRepository):
                 evento.fecha_inicio,
                 evento.fecha_fin,              
                 evento.id_tipo_evento,
-                evento.id_ubicacion,  
+                id_ubicacion,
                 evento.id_usuario,
-                evento.id_organizador
+                evento.id_organizador,
+                evento.categoria,
+                evento.enlace
             ))
             if result == 0:
                 return error_response(

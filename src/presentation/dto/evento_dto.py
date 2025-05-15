@@ -12,6 +12,9 @@ class EventoPostDTO(BaseModel):
     id_ubicacion: Optional[int] = None
     id_usuario: Optional[int] = None
     id_organizador: Optional[int] = None
+    categoria: Optional[str] = None
+    enlace: Optional[str] = None
+    precio: Optional[float] = None
 
 class EventoDTO(BaseModel):
     id: Optional[int] = None

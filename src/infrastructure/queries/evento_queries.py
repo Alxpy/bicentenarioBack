@@ -5,7 +5,8 @@ GET_ALL_EVENTO = """
        e.fecha_inicio, e.fecha_fin, e.id_ubicacion, ub.nombre AS nombre_ubicacion,
        e.id_tipo_evento, t.nombre_evento AS nombre_evento,
        e.id_usuario, us.nombre AS nombre_usuario,
-       e.id_organizador, o.nombre AS nombre_organizador
+       e.id_organizador, o.nombre AS nombre_organizador,
+       e.categoria, e.enlace, e.precio
     FROM evento AS e
     INNER JOIN tipo_evento AS t ON e.id_tipo_evento = t.id
     INNER JOIN ubicacion AS ub ON e.id_ubicacion = ub.id
@@ -18,7 +19,8 @@ GET_EVENTO_BY_ID = """
            e.fecha_inicio, e.fecha_fin, e.id_ubicacion, ub.nombre AS nombre_ubicacion,
            e.id_tipo_evento, t.nombre_evento AS nombre_evento,
            e.id_usuario, us.nombre AS nombre_usuario,
-           e.id_organizador, o.nombre AS nombre_organizador
+           e.id_organizador, o.nombre AS nombre_organizador,
+           e.categoria, e.enlace, e.precio
     FROM evento AS e
     INNER JOIN tipo_evento AS t ON e.id_tipo_evento = t.id
     INNER JOIN ubicacion AS ub ON e.id_ubicacion = ub.id
@@ -32,7 +34,8 @@ GET_EVENTO_BY_NOMBRE = """
            e.fecha_inicio, e.fecha_fin, e.id_ubicacion, ub.nombre AS nombre_ubicacion,
            e.id_tipo_evento, t.nombre_evento AS nombre_evento,
            e.id_usuario, us.nombre AS nombre_usuario,
-              e.id_organizador, o.nombre AS nombre_organizador
+           e.id_organizador, o.nombre AS nombre_organizador,
+           e.categoria, e.enlace, e.precio
     FROM evento AS e
     INNER JOIN tipo_evento AS t ON e.id_tipo_evento = t.id
     INNER JOIN ubicacion AS ub ON e.id_ubicacion = ub.id
@@ -46,7 +49,8 @@ GET_EVENTO_BY_FECHA = """
            e.fecha_inicio, e.fecha_fin, e.id_ubicacion, ub.nombre AS nombre_ubicacion,
            e.id_tipo_evento, t.nombre_evento AS nombre_evento,
            e.id_usuario, us.nombre AS nombre_usuario,
-              e.id_organizador, o.nombre AS nombre_organizador
+           e.id_organizador, o.nombre AS nombre_organizador,
+           e.categoria, e.enlace, e.precio
     FROM evento AS e
     INNER JOIN tipo_evento AS t ON e.id_tipo_evento = t.id
     INNER JOIN ubicacion AS ub ON e.id_ubicacion = ub.id
@@ -60,7 +64,8 @@ GET_EVENTO_BY_TIPO = """
            e.fecha_inicio, e.fecha_fin, e.id_ubicacion, ub.nombre AS nombre_ubicacion,
            e.id_tipo_evento, t.nombre_evento AS nombre_evento,
            e.id_usuario, us.nombre AS nombre_usuario,
-              e.id_organizador, o.nombre AS nombre_organizador
+           e.id_organizador, o.nombre AS nombre_organizador,
+           e.categoria, e.enlace, e.precio
     FROM evento AS e
     INNER JOIN tipo_evento AS t ON e.id_tipo_evento = t.id
     INNER JOIN ubicacion AS ub ON e.id_ubicacion = ub.id
@@ -74,7 +79,8 @@ GET_EVENTO_BY_UBICACION = """
            e.fecha_inicio, e.fecha_fin, e.id_ubicacion, ub.nombre AS nombre_ubicacion,
            e.id_tipo_evento, t.nombre_evento AS nombre_evento,
            e.id_usuario, us.nombre AS nombre_usuario,
-              e.id_organizador, o.nombre AS nombre_organizador
+           e.id_organizador, o.nombre AS nombre_organizador,
+           e.categoria, e.enlace, e.precio
     FROM evento AS e
     INNER JOIN tipo_evento AS t ON e.id_tipo_evento = t.id
     INNER JOIN ubicacion AS ub ON e.id_ubicacion = ub.id
@@ -84,11 +90,12 @@ GET_EVENTO_BY_UBICACION = """
 """
 
 GET_EVENTO_BY_ORGANIZADOR = """
-SELECT e.id, e.nombre, e.descripcion, e.imagen, 
+    SELECT e.id, e.nombre, e.descripcion, e.imagen, 
            e.fecha_inicio, e.fecha_fin, e.id_ubicacion, ub.nombre AS nombre_ubicacion,
            e.id_tipo_evento, t.nombre_evento AS nombre_evento,
            e.id_usuario, us.nombre AS nombre_usuario,
-              e.id_organizador, o.nombre AS nombre_organizador
+           e.id_organizador, o.nombre AS nombre_organizador,
+           e.categoria, e.enlace, e.precio
     FROM evento AS e
     INNER JOIN tipo_evento AS t ON e.id_tipo_evento = t.id
     INNER JOIN ubicacion AS ub ON e.id_ubicacion = ub.id
@@ -97,18 +104,17 @@ SELECT e.id, e.nombre, e.descripcion, e.imagen,
     WHERE o.nombre = %s
 """
 
-
-
 CREATE_EVENTO = """
-    INSERT INTO evento (nombre, descripcion, imagen, fecha_inicio, fecha_fin, id_tipo_evento, id_ubicacion, id_usuario, id_organizador)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    INSERT INTO evento (nombre, descripcion, imagen, fecha_inicio, fecha_fin, id_tipo_evento, id_ubicacion, id_usuario, id_organizador, categoria, enlace, precio)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """
 
 UPDATE_EVENTO = """
     UPDATE evento
     SET nombre = %s, descripcion = %s, imagen = %s, 
         fecha_inicio = %s, fecha_fin = %s, 
-        id_ubicacion = %s, id_tipo_evento = %s
+        id_ubicacion = %s, id_tipo_evento = %s,
+        categoria = %s, enlace = %s, precio = %s
     WHERE id = %s
 """
 
