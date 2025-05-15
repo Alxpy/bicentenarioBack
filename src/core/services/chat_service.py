@@ -33,10 +33,7 @@ class Conversation:
         self.messages: List[Dict[str, str]] = [
             {
                 "role": "system",
-                "content": (
-                    "Eres un asistente especializado en Bolivia. "
-                    "Solo responde sobre temas bolivianos."
-                ),
+                
             }
         ]
         self.active: bool = True
