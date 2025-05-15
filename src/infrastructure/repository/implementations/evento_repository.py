@@ -206,7 +206,8 @@ class EventoRepository(IEventoRepository):
                 evento.id_usuario,
                 evento.id_organizador,
                 evento.categoria,
-                evento.enlace
+                evento.enlace,
+                evento.precio
             ))
             if result == 0:
                 return error_response(
