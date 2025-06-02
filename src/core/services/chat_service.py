@@ -77,5 +77,5 @@ class ChatService:
 
 
 def get_chat_service() -> ChatService:
-    api_key = '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'
+    api_key = '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'
     return ChatService(api_key=api_key)
