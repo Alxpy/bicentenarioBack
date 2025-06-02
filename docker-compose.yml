@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend_skinStore
+    container_name: backend_bicentenario
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "8018:8018"

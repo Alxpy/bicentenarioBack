@@ -12,9 +12,9 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt gunicorn
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8018
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONIOENCODING=UTF-8
 
-CMD ["gunicorn", "main:app", "--workers", "2", "--bind", "0.0.0.0:8000", "--timeout", "0", "-k", "uvicorn.workers.UvicornWorker", "--log-level", "debug"]
+CMD ["gunicorn", "main:app", "--workers", "2", "--bind", "0.0.0.0:8018", "--timeout", "0", "-k", "uvicorn.workers.UvicornWorker", "--log-level", "debug"]
