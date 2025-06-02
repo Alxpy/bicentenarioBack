@@ -1,36 +1,10 @@
-version: "3.8"
-
 services:
-  mysql:
-    image: mysql:8
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: midb
-      MYSQL_USER: usuario
-      MYSQL_PASSWORD: userpass
-    volumes:
-      - ./legado.sql:/docker-entrypoint-initdb.d/legado.sql
-    ports:
-      - "3306:3306"
-    networks:
-      - redapp
-
-  backend:
-    build: .
-    container_name: fastapi-backend
-    environment:
-      DB_HOST: mysql
-      DB_USER: usuario
-      DB_PASSWORD: userpass
-      DB_NAME: midb
+  backend_bicentenario:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend_skinStore
+    env_file:
+      - .env
     ports:
       - "8000:8000"
-    depends_on:
-      - mysql
-    networks:
-      - redapp
-
-networks:
-  redapp:
-    driver: bridge
