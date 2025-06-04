@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from src.core.abstractions.infrastructure.repository.usuario_evento_repository_abstract import IUsuarioEventoRepository
 from src.core.models.usuario_evento_domain import UsuarioEventoDomain
-from src.presentation.dto.usuario_evento_dto import UsuarioEventoDTO, UpdateAsistioUsuarioEventoDTO
+from src.presentation.dto.usuario_evento_dto import UsuarioEventoDTO, UpdateAsistioUsuarioEventoDTO, UsuarioEventoData
 from src.presentation.responses.response_factory import Response, success_response, error_response
 from src.infrastructure.constants.http_codes import *
 from src.infrastructure.constants.messages import *
@@ -175,3 +175,22 @@ class UsuarioEventoRepository(IUsuarioEventoRepository):
     
     
 
+    async def get_data_usuario_evento(self) -> Response:
+        try:
+            result = await self._execute_query_all(GET_DATA_USUARIO_EVENTO)
+            if not result:
+                return error_response(
+                    message=USUARIO_ROL_NOT_FOUND_MSG,
+                    status=HTTP_404_NOT_FOUND
+                )
+            return success_response(
+                data=[UsuarioEventoData(**row) for row in result],
+                message=USUARIO_ROL_FOUND_MSG,
+                status=HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error(f"Error getting user role data: {str(e)}")
+            return error_response(
+                message=f"{INTERNAL_ERROR_MSG} Detalles: {str(e)}",
+                status=HTTP_500_INTERNAL_SERVER_ERROR
+            )

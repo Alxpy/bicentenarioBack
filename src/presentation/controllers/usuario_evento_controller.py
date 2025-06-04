@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from src.core.abstractions.services.usuario_evento_service_abstract import IUsuarioEventoService
 from src.core.dependency_injection.dependency_injection import build_usuario_evento_service
-from src.presentation.dto.usuario_evento_dto import UsuarioEventoDTO, UpdateAsistioUsuarioEventoDTO
+from src.presentation.dto.usuario_evento_dto import UsuarioEventoDTO, UpdateAsistioUsuarioEventoDTO, UsuarioEventoData
 from src.core.models.usuario_evento_domain import UsuarioEventoDomain
 from src.resources.responses.response import Response
 
@@ -102,3 +102,17 @@ async def delete_usuario_evento(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
+
+@usuario_evento_router.get(
+    "/data",
+    summary="Get data usuario_evento",
+    description="Returns detailed data of usuario_eventos.",
+    response_model=Response[list[UsuarioEventoData]]
+)
+async def get_data_usuario_evento(
+    usuario_evento_service: IUsuarioEventoService = Depends(build_usuario_evento_service)
+):
+    try:
+        return await usuario_evento_service.get_data_usuario_evento()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

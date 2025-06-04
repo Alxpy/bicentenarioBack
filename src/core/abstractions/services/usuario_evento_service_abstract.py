@@ -35,4 +35,9 @@ class IUsuarioEventoService(ABC):
         """Delete a user event."""
         pass
 
+    @abstractmethod
+    async def get_data_usuario_evento(self) -> Response:
+        """Get data of user events."""
+        pass
+
     

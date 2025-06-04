@@ -25,3 +25,7 @@ class UsuarioEventoService(IUsuarioEventoService):
 
     async def delete_usuario_evento(self, id: int) -> None:
         return await self.usuario_evento_repository.delete_usuario_evento(id)
+    
+    async def get_data_usuario_evento(self) -> Response:
+        return await self.usuario_evento_repository.get_data_usuario_evento()
+    

@@ -30,3 +30,10 @@ DELETE_USUARIO_EVENTO = """
     DELETE FROM usuario_evento
     WHERE id = %s
 """
+
+GET_DATA_USUARIO_EVENTO = """
+    SELECT u.nombre, u.apellidoPaterno, u.apellidoMaterno, e.nombre AS nombre_evento, ue.asistio 
+    FROM usuario_evento ue
+    JOIN usuario u ON ue.id_usuario = u.id
+    JOIN evento e ON ue.id_evento = e.id
+"""
